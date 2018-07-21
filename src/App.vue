@@ -21,6 +21,7 @@ export default {
 </script>
 
 <style>
+@import './assets/w3.css';
 html{
   background-color: #ccc2d6;
   margin: 0px;
@@ -52,6 +53,12 @@ canvas{
 .vicon, .xicon{
     width: 20px;
     height: 20px;
+}
+ul{
+  list-style-type: none;
+}
+.instractionText{
+  width: 50%;
 }
 #arrowNext{
     float: right;
