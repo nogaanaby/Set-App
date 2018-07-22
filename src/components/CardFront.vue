@@ -129,9 +129,13 @@ canvas {
 .clicked {
  border: solid 3px black;
 }
-.takeSet{
-  transition: opacity 0.25s ease-in-out;
-  opacity: 0;
+.takeSet {
+    opacity: 1;
+    animation: fade 2s linear;
+}
+@keyframes fade {
+  0%,100% { opacity: 0 }
+  50% { opacity: 1 }
 }
 .notSet{
   animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
