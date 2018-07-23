@@ -19,6 +19,16 @@ export class CardView {
     return (this.cardContext)
   }
 
+  setNewCardAtrr (shape, color, fill, number) {
+    this.getCardContext.clearRect(0, 0, 150, 198)
+    this.getShapeContext.clearRect(0, 0, 150, 66)
+    this.shape = shape
+    this.color = color
+    this.fill = fill
+    this.number = number
+    this.drawCard()
+  }
+
   drawCard () {
     // set the properties to the shape - witch is not displayed
     this.drawShape()
@@ -211,5 +221,39 @@ export default{
      GAME
   *************************************/
   sameOrDiff: (a, b, c) =>
-    (a === b && b === c) || (a !== b && b !== c && c !== a)
+    (a === b && b === c) || (a !== b && b !== c && c !== a),
+
+  isSet: function (array, x, y, z) {
+    return (this.sameOrDiff(array[x].shape, array[y].shape, array[z].shape) &&
+    this.sameOrDiff(array[x].number, array[y].number, array[z].number) &&
+    this.sameOrDiff(array[x].color, array[y].color, array[z].color) &&
+    this.sameOrDiff(array[x].fill, array[y].fill, array[z].fill)
+    )
+  },
+
+  findSet: function (array, x, y, z) {
+    if (x > array.length - 3) {
+      return false
+    }
+
+    if (this.isSet(array, x, y, z)) {
+      return true
+    } else {
+      if (y === array.length - 2) {
+        x++
+        y = x + 1
+        z = y + 1
+        return (this.findSet(array, x, y, z))
+      } else {
+        if (z === array.length - 1) {
+          y = y + 1
+          z = y + 1
+          return (this.findSet(array, x, y, z))
+        } else {
+          z++
+          return (this.findSet(array, x, y, z))
+        }
+      }
+    }
+  }
 }

@@ -1,6 +1,10 @@
 <template>
   <div class="intemidiate">
     <h3>Set Game</h3>
+    <div class="fitures">
+      <h4>you collected {{this.collectedCards.length / 3}} sets</h4>
+      <button id="tellMe" @click = "findSetBotton()">Is There a set here? (check out the console for now)</button>
+    </div>
     <div class="cardsContainer">
       <!--{{JSON.stringify(cards)}}-->
       <div class="cardDiv" v-for="(card, i) in cardsOnTheTable" :key="card.index" v-bind:class="{notSet: notSet}">
@@ -12,15 +16,17 @@
   </div>
 </template>
 <script>
-import utils, { CardView, Set } from '../js/utils.js'
+import utils, { CardView } from '../js/utils.js'
 export default{
   name: 'cardFront',
   data () {
     return {
+      id: 0,
       notSet: false,
       beginners: false,
       intemidiate: false,
       cardsOnTheTable: [],
+      cardsViewsOnTheTable: [],
       cards: [],
       collectedCards: [],
       cardProperties: {
@@ -38,50 +44,77 @@ export default{
       .forEach(shape => this.cardProperties.numbers
         .forEach(number => this.cardProperties.colors
           .forEach(color => this.cardProperties.fills
-            .forEach((fill, id, isClicked, isTaked) => this.cards.push({id, shape, number, color, fill, isClicked: false, isTaked: false}))
+            .forEach((fill, id, isClicked, isTaked) => this.cards.push({id: this.id++, shape, number, color, fill, isClicked: false, isTaked: false}))
           )
         )
       )
     // pull out random card from the card deck and puts it on the table
     for (let i = 0; i < 9; i++) {
-      const randomCardIndex = Math.floor(Math.random() * this.cards.length)
-      this.cardsOnTheTable.push(this.cards.splice(randomCardIndex, 1)[0])
+      this.cardsOnTheTable.push(this.cards.splice(this.randomCardIndex(), 1)[0])
     }
   },
   mounted () {
     for (let i = 0; i < 9; i++) {
-      const context = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.cardsOnTheTable[i].shape, this.cardsOnTheTable[i].color, this.cardsOnTheTable[i].fill, this.cardsOnTheTable[i].number)
-      context.drawCard()
+      this.cardsViewsOnTheTable[i] = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.cardsOnTheTable[i].shape, this.cardsOnTheTable[i].color, this.cardsOnTheTable[i].fill, this.cardsOnTheTable[i].number)
+      this.cardsViewsOnTheTable[i].drawCard()
     }
   },
   methods: {
     /**************************************
      game
     *************************************/
-    isSet () {
-      if (utils.sameOrDiff(this.set[0].shape, this.set[1].shape, this.set[2].shape) &&
-        utils.sameOrDiff(this.set[0].number, this.set[1].number, this.set[2].number) &&
-        utils.sameOrDiff(this.set[0].color, this.set[1].color, this.set[2].color) &&
-        utils.sameOrDiff(this.set[0].fill, this.set[1].fill, this.set[2].fill)) {
-        this.set.forEach(function (card) {
-          card.isTaked = true
-        })
-        this.collectedCards.push(this.set[0], this.set[1], this.set[2])
+    isSet: function () {
+      debugger
+      if (utils.isSet(this.set, 0, 1, 2)) {
+        this.set.forEach(function (card) { card.isTaked = true })
+        this.collectedCards.push(this.set[0])
+        this.collectedCards.push(this.set[1])
+        this.collectedCards.push(this.set[2])
+        return true
       } else {
         this.notSet = true
       }
     },
 
-    clickedCard: function (card, i) {
+    // only for cardOnTheTable (without canvasses)
+    // because isSet uses simple obj cards
+    // it is render the simple card obj and than put a cardView obj in the array
+    changeCard: function (card1, card2) {
+      card1.shape = card2.shape
+      card1.number = card2.number
+      card1.color = card2.color
+      card1.fill = card2.fill
+      card1.id = card2.id
+    },
+
+    randomCardIndex: function () {
+      return (Math.floor(Math.random() * this.cards.length))
+    },
+
+    clickedCard: function (card) {
+      console.log(this.set)
       this.set.push(card)
-      console.log(card)
       if (card.isClicked) {
         card.isClicked = false
-        this.set.pop(card, this)
+        this.set.pop()
+        this.set.pop()
       } else {
         if (this.set.length === 3) {
-          card.isClicked = false
-          this.isSet()
+          card.isClicked = true
+          if (this.isSet()) {
+            this.set.splice(0)
+
+            for (let i = 0; i < this.cardsOnTheTable.length; i++) {
+              const element = this.cardsOnTheTable[i]
+
+              if (element.isClicked === true) {
+                const newCard = this.cards.splice(this.randomCardIndex(), 1)[0]
+
+                this.changeCard(element, newCard)
+                this.cardsViewsOnTheTable[i].setNewCardAtrr(newCard.shape, newCard.color, newCard.fill, newCard.number)
+              }
+            }
+          }
           this.set.splice(0)
           this.cardsOnTheTable.forEach(function (element) { element.isClicked = false })
         } else {
@@ -89,6 +122,9 @@ export default{
           this.notSet = false
         }
       }
+    }, // end of click
+    findSetBotton: function () {
+      console.log('' + utils.findSet(this.cardsOnTheTable, 0, 1, 2) + '')
     }
   }
 }
@@ -99,6 +135,14 @@ export default{
  display: flex;
  justify-content: center;
  flex-direction: column;
+}
+.fitures{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+#tellMe{
+  margin: 10px;
 }
 .cardsContainer {
  display: flex;
