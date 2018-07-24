@@ -1,15 +1,14 @@
 <template>
-  <div class="intemidiate">
-    <h3>Set Game</h3>
+  <div class="intemidiate game">
     <div class="fitures">
-      <h4>you collected {{this.collectedCards.length / 3}} sets</h4>
-      <button id="tellMe" @click = "findSetBotton()">Is There a set here? (check out the console for now)</button>
+      <h4 id="collected">you collected {{this.collectedCards.length / 3}} sets</h4>
+      <button id="tellMe" @click = "findSetBotton()">Tell Me</button>
     </div>
     <div class="cardsContainer">
       <!--{{JSON.stringify(cards)}}-->
       <div class="cardDiv" v-for="(card, i) in cardsOnTheTable" :key="card.index" v-bind:class="{notSet: notSet}">
-        <canvas v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
-        <canvas :ref="'card'+i" width="150" height="198" v-on:click = "clickedCard(card, i)" v-bind:class= "{clicked: card.isClicked, takeSet: card.isTaked}" ></canvas>
+        <canvas id="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
+        <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" v-on:click = "clickedCard(card, i)" v-bind:class= "{clicked: card.isClicked, takeSet: card.isTaked, findSet: card.inSet}" ></canvas>
       </div>
       <slot></slot>
     </div>
@@ -44,7 +43,7 @@ export default{
       .forEach(shape => this.cardProperties.numbers
         .forEach(number => this.cardProperties.colors
           .forEach(color => this.cardProperties.fills
-            .forEach((fill, id, isClicked, isTaked) => this.cards.push({id: this.id++, shape, number, color, fill, isClicked: false, isTaked: false}))
+            .forEach((fill, id, isClicked, isTaked, inSet) => this.cards.push({id: this.id++, shape, number, color, fill, isClicked: false, isTaked: false, inSet: false}))
           )
         )
       )
@@ -64,27 +63,13 @@ export default{
      game
     *************************************/
     isSet: function () {
-      debugger
       if (utils.isSet(this.set, 0, 1, 2)) {
         this.set.forEach(function (card) { card.isTaked = true })
-        this.collectedCards.push(this.set[0])
-        this.collectedCards.push(this.set[1])
-        this.collectedCards.push(this.set[2])
+        this.collectedCards.push(this.set[0], this.set[1], this.set[2])
         return true
       } else {
         this.notSet = true
       }
-    },
-
-    // only for cardOnTheTable (without canvasses)
-    // because isSet uses simple obj cards
-    // it is render the simple card obj and than put a cardView obj in the array
-    changeCard: function (card1, card2) {
-      card1.shape = card2.shape
-      card1.number = card2.number
-      card1.color = card2.color
-      card1.fill = card2.fill
-      card1.id = card2.id
     },
 
     randomCardIndex: function () {
@@ -92,93 +77,108 @@ export default{
     },
 
     clickedCard: function (card) {
-      console.log(this.set)
-      this.set.push(card)
       if (card.isClicked) {
         card.isClicked = false
         this.set.pop()
-        this.set.pop()
       } else {
+        this.set.push(card)
+        card.isClicked = true
+        card.inSet = false
+        this.notSet = false
+
         if (this.set.length === 3) {
-          card.isClicked = true
           if (this.isSet()) {
-            this.set.splice(0)
-
             for (let i = 0; i < this.cardsOnTheTable.length; i++) {
-              const element = this.cardsOnTheTable[i]
-
-              if (element.isClicked === true) {
+              if (this.cardsOnTheTable[i].isClicked === true) {
                 const newCard = this.cards.splice(this.randomCardIndex(), 1)[0]
 
-                this.changeCard(element, newCard)
+                utils.changeCard(this.cardsOnTheTable[i], newCard)
                 this.cardsViewsOnTheTable[i].setNewCardAtrr(newCard.shape, newCard.color, newCard.fill, newCard.number)
               }
             }
           }
-          this.set.splice(0)
           this.cardsOnTheTable.forEach(function (element) { element.isClicked = false })
-        } else {
-          card.isClicked = true
-          this.notSet = false
+          this.set.splice(0)
         }
       }
     }, // end of click
     findSetBotton: function () {
-      console.log('' + utils.findSet(this.cardsOnTheTable, 0, 1, 2) + '')
+      const setArray = new Array(3)
+      if (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) === 'no set here') {
+        console.log('no set here')
+      } else {
+        for (let i = 0; i < 3; i++) {
+          setArray[i] = utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2)[i]
+        }
+        this.cardsOnTheTable.forEach(function (card) {      
+          if (setArray[0].equalTo(card) || setArray[1].equalTo(card) || setArray[2].equalTo(card)) {
+            card.inSet = true
+          } })
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-.intemidiate {
+.game {
  display: flex;
  justify-content: center;
  flex-direction: column;
+}
+#setGame{
+  margin: 0px;
 }
 .fitures{
   display: flex;
   flex-direction: row;
   justify-content: center;
+  background-color: purple;
+  margin: 10px auto;
+  padding: 5px 20px;
 }
 #tellMe{
-  margin: 10px;
+  margin: 10px 20px;
+}
+#collected{
+  color: white;
 }
 .cardsContainer {
  display: flex;
  flex-direction: row;
- width: 400px;
- height: 400px;
- margin: auto;
- position: inherit;
+ width: 380px;
+ height: 480px;
+ margin: 0px auto 30px auto;
  flex-wrap: wrap;
  justify-content: center;
 }
 
 .cardDiv {
- display: flex;
- flex-direction: column;
- width: 120px;
- height: 160px;
- justify-content: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  width: 25%;
+  height: 27%;
+  margin: 0 3%;
 }
 
-canvas {
- margin: 0px;
- -webkit-transform: scale(0.7);
- -moz-transform: scale(0.7);
- -o-transform: scale(0.7);
- transform: scale(0.7);
+#cardCanvas{
+  width: 100%;
+  object-fit: contain;
+  height: 100%;
 }
+
 .clicked {
- border: solid 3px black;
+ border: solid 3px grey;
 }
 .takeSet {
     opacity: 1;
     animation: fade 2s linear;
 }
 @keyframes fade {
-  0%,100% { opacity: 0 }
+  0% { opacity: 0 }
   50% { opacity: 1 }
 }
 .notSet{
@@ -202,5 +202,8 @@ canvas {
   40%, 60% {
     transform: translate3d(4px, 0, 0);
   }
+}
+.findSet {
+ border: solid 3px lightgreen;
 }
 </style>

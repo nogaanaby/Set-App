@@ -9,6 +9,15 @@ export class CardView {
     this.fill = fill
   }
 
+  copyCardView (card) {
+    this.shapeCanvas = card.shapeCanvas
+    this.cardCanvas = card.cardCanvas
+    this.shape = card.shape
+    this.color = card.color
+    this.number = card.number
+    this.fill = card.fill
+  }
+
   get getShapeContext () {
     this.shapeContext = this.shapeCanvas.getContext('2d')
     return (this.shapeContext)
@@ -190,6 +199,16 @@ export class CardView {
       this.getCardContext.putImageData(imgData, 0, 105)
     }
   }
+
+  equalTo (card) {
+    if (this.shape === card.shape &&
+        this.color === card.color &&
+        this.number === card.number &&
+        this.fill === card.fill) {
+      return true
+    }
+    return false
+  }
 }
 
 export class Set {
@@ -231,13 +250,26 @@ export default{
     )
   },
 
+  // only for cardOnTheTable (without canvasses)
+  // because isSet uses simple obj cards
+  // it is render the simple card obj and than put a cardView obj in the array
+  changeCard: function (card1, card2) {
+    card1.shape = card2.shape
+    card1.number = card2.number
+    card1.color = card2.color
+    card1.fill = card2.fill
+    card1.id = card2.id
+  },
+
   findSet: function (array, x, y, z) {
+    const setArray = []
     if (x > array.length - 3) {
-      return false
+      return ('no set here')
     }
 
     if (this.isSet(array, x, y, z)) {
-      return true
+      setArray.push(array[x], array[y], array[z])
+      return (setArray)
     } else {
       if (y === array.length - 2) {
         x++
