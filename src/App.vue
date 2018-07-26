@@ -1,27 +1,31 @@
 <template>
   <div id="app">
-    <button id="openMenu" @click="openMenu()"> <img id="menuImg" src='@/assets/menu.png' width="80px" height="60px"></button>
-    <menu class="menu" v-show="menu">
-      <h3 id="menuTitle">Menu Title</h3>
-      <button class="menuButtons" id="instractionsButton"><router-link :to="{ name: 'SetInstractions' }" class="link">Instractions</router-link></button>
-      <button class="menuButtons" id="gameButton" ><router-link to="/CardFront" class="link" >Game</router-link></button>
-    </menu>
-    <div v-bind:class="{blur: blur}">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+  <span aria-hidden="true"></span>
+  <span aria-hidden="true"></span>
+  <span aria-hidden="true"></span>
+  </a>
+<gameMenu></gameMenu>
+    <div v-bind:class="{blur: blur}" class="main">
       <router-link to="/CardFront" class="link"></router-link>
       <router-view></router-view>
     </div>
   </div>
-</template>s
+</template>
 
 <script>
 import SetInstractions from '@/components/Set_Instractions'
 import CardFront from '@/components/CardFront.vue'
+import design from '@/components/design.vue'
+import gameMenu from '@/components/nav.vue'
 
 export default {
   name: 'app',
   components: {
     SetInstractions,
-    CardFront
+    CardFront,
+    gameMenu,
+    design
   },
   data () {
     return {
@@ -38,6 +42,10 @@ export default {
         this.menu = false
         this.blur = false
       }
+    },
+    closeMenu: function () {
+      this.menu = false
+      this.blur = false
     }
   }
 }
@@ -46,10 +54,29 @@ export default {
 
 <style>
 @import './assets/w3.css';
+@import './assets/bulma.css';
 html{
-  background-color: #ccc2d6;
+  background-color: gainsboro;
   margin: 0px;
   padding: 0px;
+}
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 0px;
+  margin: auto;
+  width: 70%;
+}
+*{
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+.openMenu{
+  background: none;
+  border: none;
+  float: right;
 }
 .blur{
   -webkit-filter: blur(3px);
@@ -64,9 +91,8 @@ html{
   border: solid 1px lightgrey;
   background-color: rgba(0,0, 0, 0.2);
   padding: 0;
-  width: 26%;
-  height: 90%;
-  margin-left: 25px;
+  width: 100%;
+  height: 100%;
   z-index: 1;
   position: absolute;
   animation: fade 1s linear;
@@ -81,8 +107,7 @@ html{
 .menuButtons{
   margin: 10px auto;
   padding: 10px;
-  background-color: ghostwhite;
-  border: none;
+  width: 10%;
 }
 #gameButton{
   padding: 10px 32px;
@@ -90,32 +115,14 @@ html{
 .link{
   text-decoration: none;
 }
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 10px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  flex-wrap: wrap;
-  margin: auto;
-  width: 30%;
-}
-*{
-  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-}
 canvas{
   border: 1px solid gray;
   border-radius: 4px;
   display: flex;
   flex-direction: column;
   width: 150px;
-  height: 198px;
   justify-content: center;
-  background-color: white;
+  background-color: #f5f5f0;
   font: inherit;
   outline: inherit;
 }
@@ -135,7 +142,7 @@ ul{
     color: inherit;
     border: none;
     padding: 0;
-    margin:5px;
+    margin-left:10%;
     font: inherit;
     cursor: pointer;
     outline: inherit;
@@ -146,19 +153,21 @@ ul{
     color: inherit;
     border: none;
     padding: 0;
-    margin:5px;
+    margin-right:10%;
     font: inherit;
     cursor: pointer;
     outline: inherit;
-    -moz-transform: scaleX(-1);
-    -o-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
-    filter: FlipH;
-    -ms-filter: "FlipH";
 }
 #arrowImg:hover{
-    width:85px;
-    height:65px;
+    width:50px;
+    height:50px;
+}
+h1 {
+    font-size: 1.5em;
+    text-align: center;
+    margin: 5px;
+}
+.card-header{
+  justify-content: center;        
 }
 </style>

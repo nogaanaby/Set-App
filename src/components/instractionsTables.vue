@@ -1,54 +1,68 @@
 <template>
-<div class="main">
+  <div class="main">
+    <div class="card">
+  <header class="card-header">
+    <h1>
+      {{title}}
+    </h1>
+    <a href="#" class="card-header-icon" aria-label="more options">
+      <span class="icon">
+        <i class="fas fa-angle-down" aria-hidden="true"></i>
+      </span>
+    </a>
+  </header>
+  <div class="card-content">
+    <div class="content">
+        {{setExplain}}
+    </div>
+      <div class="mainCardTables">
   <div class="cardTables">
-      <div class="instractionText">
-        <p>the first two have the same shape and color, and the third also have the same shape and color as the rest
-        <br>and in the different atributes: number and fill
-        <br>if the first two cards are different in some attribute -
-        <br>the first card has 1 shape on it, the second has two shapes, and the third is also different: it has 3 shapes
-        <br>and also that rull is exists in the attribute of fill
-        </p>
-      </div>
-  <table>
+  <table class="table is-striped">
+      <thead class="cardText">
+          <th class="grey"></th>
+          <th class="yellow">card 1</th>
+          <th class="yellow">card 2</th>
+          <th class="pink">card 3</th>
+      </thead>
       <tr class="cardText">
-          <th>atributes</th>
-          <th>card 1</th>
-          <th>card 2</th>
-          <th>card 3</th>
+          <td class="grey" style="font-weight: bold; width: 10%">shape</td>
+          <td v-for="(shape, i) in someSet" :key="shape.index">
+              {{someSet[i].shape}}
+          </td>
       </tr>
       <tr class="cardText">
-          <td style="font-weight: bold">shape</td>
-          <td>Sub <img class="vicon" src='@/assets/vicon.png'> </td>
-          <td>Sub <img class="vicon" src='@/assets/vicon.png'> </td>
-          <td>Sub <img class="vicon" src='@/assets/vicon.png'> </td>
+          <td class="grey" style="font-weight: bold">number</td>
+          <td v-for="(number, i) in someSet" :key="number.index">
+              {{someSet[i].number}} shapes
+         </td>
       </tr>
       <tr class="cardText">
-          <td style="font-weight: bold">number</td>
-          <td>1 shape <img class="xicon" src='@/assets/xicon.png'> </td>
-          <td>2 shape <img class="xicon" src='@/assets/xicon.png'> </td>
-          <td>3 shape <img class="xicon" src='@/assets/xicon.png'> </td>
+          <td class="grey" style="font-weight: bold">color</td>
+          <td v-for="(color, i) in someSet" :key="color.index">
+              {{someSet[i].color}}
+         </td>
       </tr>
       <tr class="cardText">
-          <td style="font-weight: bold">color</td>
-          <td>green <img class="vicon" src='@/assets/vicon.png'> </td>
-          <td>green <img class="vicon" src='@/assets/vicon.png'> </td>
-          <td>green <img class="vicon" src='@/assets/vicon.png'> </td>
-      </tr>
-      <tr class="cardText">
-          <td style="font-weight: bold">fill</td>
-          <td>stripes <img class="xicon" src='@/assets/xicon.png'> </td>
-          <td>empty <img class="xicon" src='@/assets/xicon.png'> </td>
-          <td>full <img class="xicon" src='@/assets/xicon.png'> </td>
+          <td class="grey" style="font-weight: bold">fill</td>
+          <td v-for="(fill, i) in someSet" :key="fill.index">
+              {{someSet[i].fill}}
+         </td>
       </tr>
       </table>
-      <div class="exampleSet2">
-        <div id="setCard" v-for="(card, i) in firstSet" :key="card.index">
-        <canvas :ref="'shape'+i" width="150" height="66" v-show="false" ></canvas>
-        <canvas :ref="'card'+i" width="150" height="198"></canvas>
-        </div>
-      </div>
   </div>
 </div>
+      <br>
+  </div>
+  <footer class="card-footer">
+<button @click="prevPage()" id="arrowBack"> <img id="arrowImg" src='@/assets/angle-left-solid.svg' width="25px" height="25px"></button>     
+        <div class="setCard" v-for="(card, i) in someSet" :key="card.index">
+        <canvas :ref="'shape'+i" width="150" height="66" v-show="false" ></canvas>
+        <canvas :ref="'card'+i" width="150" height="198" class="card-footer-item"></canvas>
+        </div>
+    <button @click="nextPage()" id="arrowNext"> <img id="arrowImg" src='@/assets/angle-right-solid.svg' width="25px" height="25px"></button>        
+  </footer>
+</div>
+  </div>
 </template>
 
 <script>
@@ -59,63 +73,147 @@ export default {
   name: 'instractionsTables',
   data () {
     return {
+      firstPage: true,
+      secondPage: false,
+      thirdPage: false,
+      title: '',
+      setExplain: '',
+      context: [],
+      someSet: [],
       firstSet: [
         utils.cardObject('example_for_set_in_the_table', 'sub', 'green', 1, 'stripes'),
         utils.cardObject('example_for_set_in_the_table', 'sub', 'green', 2, 'empty'),
         utils.cardObject('example_for_set_in_the_table', 'sub', 'green', 3, 'full')
+      ],
+      secondSet: [
+        utils.cardObject('example_for_set_in_the_table', 'sub', 'green', 2, 'stripes'),
+        utils.cardObject('example_for_set_in_the_table', 'tri', 'purple', 2, 'stripes'),
+        utils.cardObject('example_for_set_in_the_table', 'rect', 'red', 2, 'stripes')
+      ],
+      thirdSet: [
+        utils.cardObject('example_for_set_in_the_table', 'sub', 'green', 1, 'empty'),
+        utils.cardObject('example_for_set_in_the_table', 'tri', 'purple', 2, 'stripes'),
+        utils.cardObject('example_for_set_in_the_table', 'rect', 'red', 3, 'full')
+      ],
+      pageData: [
+        {
+          title: 'How To Play The Set Game',
+          setExplain: 'if the first two cards are *different* in some atributes - the third must be also different on that atributes. ' + 
+          'if the first two have *similar* attributes - the third must have those similarities'
+        },
+        {
+          title: 'This Is A Set Example',
+          setExplain: 'the first two cards are different in the numbers of shapes on the cards and in the fills - the third is cooperates. the first two has the same shape and color and that third also have them'
+        },
+        {
+          title: 'This Is Another Set Example',
+          setExplain: 'they all have the same numbers of shapes on the card and fill. they all different in the shapes and colors.'
+        }
       ]
+    }
+  },
+  created () {
+    for (let i = 0; i < 3; i++) {
+      this.someSet.push(this.firstSet[i])
     }
   },
   mounted () {
     for (let i = 0; i < this.firstSet.length; i++) {
-      const context = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.firstSet[i].shape, this.firstSet[i].color, this.firstSet[i].fill, this.firstSet[i].number)
-      context.drawCard()
+      const cardView = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.someSet[i].shape, this.someSet[i].color, this.someSet[i].fill, this.someSet[i].number)
+      this.context.push(cardView)
+      this.context[i].drawCard()
+    }
+
+    this.title = this.pageData[0].title
+    this.setExplain = this.pageData[0].setExplain
+  },
+  methods: {
+    nextPage: function () {
+      if (this.firstPage) {
+        this.secondPage = true
+        this.firstPage = false
+        this.changeContent(this.secondSet, 1)
+      } else if (this.secondPage) {
+        this.secondPage = false
+        this.thirdPage = true
+        this.changeContent(this.thirdSet, 2)
+      }
+    },
+    prevPage: function () {
+      if (this.thirdPage) {
+        this.secondPage = true
+        this.thirdPage = false
+        this.changeContent(this.secondSet, 1)
+      } else if (this.secondPage) {
+        this.secondPage = false
+        this.firstPage = true
+        this.changeContent(this.firstSet, 0)
+      }
+    },
+    changeContent: function (set, x) {
+      this.title = this.pageData[x].title
+      this.setExplain = this.pageData[x].setExplain
+      this.someSet.splice(0)
+      for (let i = 0; i < 3; i++) {
+        this.someSet.push(set[i])
+      }
+      for (let i = 0; i < 3; i++) {
+        this.context[i].setNewCardAtrr(set[i].shape, set[i].color, set[i].fill, set[i].number)
+      }
     }
   }
 }
 </script>
 
-<style>
-    canvas{
-      transform: rotate(90deg);
-      margin-top: 0px;
-    }
-    .exampleSet2{
-        -webkit-transform: scale(0.7);
-        -moz-transform: scale(0.7);
-        -o-transform: scale(0.7);
-        transform: scale(0.7);
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        width: 600px;
-        height: 100px;
-    }
+<style scoped>
     .cardTables{
         margin-left: 10px;
         margin-right: 10px;
-        width: 700px;
-        height: 400px;
-        background-color: white;
+        width: 100%;
         display: flex;
         justify-content: center;
-        border: 1px solid gray;
         border-radius: 7px;
         flex-direction: column;
         flex-wrap: wrap;
     }
     table{
-        margin: 10px;
+        margin-top: 10px;
     }
     table, th, td {
-        border: 1px solid black;
-        border-collapse: collapse;
         font-size: 1em;
         text-align: center;
         padding: 5px 0px;
     }
-    p{
-      font-size: 0.7em;
+    canvas{
+      transform: rotate(90deg);
+      margin: 0px;
+      width: 100%;
+      object-fit: contain;
+      height: 100%;
     }
+    .exampleSet2{
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+    }
+    .setCard{
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        width: 10%;
+        height: 10%;
+        margin: 0 5%;
+    }
+    .card-footer{
+        justify-content: center;
+    }
+    .grey{
+        background-color: lightgrey;
+    }
+    .pink{
+        background-color: pink;
+    }
+    .yellow{
+        background-color: yellow;
+    }    
 </style>

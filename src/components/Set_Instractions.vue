@@ -4,14 +4,15 @@
         <h3>How To Play The Set Game</h3>
         <div class="flippingCards">
             <div class="card">
-                <h4 class="cardText">each card has 4 atributes</h4>
+                <h4>each card has 4 atributes</h4>
                 <ul class="cardText">
                     <li>Shape</li>
                     <li>Color</li>
                     <li>Filling</li>
-                    <li>And Number Of shapes on the card</li>
+                    <li>And Number Of shapes
+                        <br> on the card</li>
                 </ul>
-                <div id="exampleCard1">
+                <div class="exampleCard1">
                 <canvas :ref="'shape'+0" width="150" height="66" v-show="false" ></canvas>
                 <canvas id="firstOne" :ref="'card'+0" width="150" height="198"></canvas>
                 </div>
@@ -20,7 +21,7 @@
                     <p class="cardText">your goal is to find three cards (lets say group of friend or family) that no one at the group is "outsider" </p>
                     <br>
                     <p class="cardText">lets say for example: </p>
-                    <div id="exampleSet1">
+                    <div class="exampleSet1">
                     <canvas :ref="'shape'+1" width="150" height="66" v-show="false" ></canvas>
                     <canvas :ref="'card'+1" width="150" height="198"></canvas>
                     <canvas :ref="'shape'+2" width="150" height="66" v-show="false" ></canvas>
@@ -33,17 +34,10 @@
         </div>
 
         <div class="page2" v-show="page2">
-            <h4>this is a set</h4>
-                <div class="instractionText">
-                <h4 id="rullTitle">The main Rull Is:</h4>
-                <p>if the first two cards are different in some attribute - the third must be also different from the first two in that attributes
-                <br>if the first two cards are same in some attribute - the third must have also the same attribute
-                </p>
-                </div>
-            <setExampleTable></setExampleTable>
+            <setExampleTable id="table"></setExampleTable>
         </div>
 
-    <button v-on:click="switchPages()" id="arrowNext"> <img id="arrowImg" src='@/assets/Arrow-Point-Right.png' width="80px" height="60px"></button>
+    <button v-on:click="switchPages()" id="arrowNext"> <img id="arrowImg" src='@/assets/angle-right-solid.svg' width="25px" height="25px"></button>
     <button v-on:click="switchBack()" id="arrowBack"> <img id="arrowImg" src='@/assets/Arrow-Point-Right.png' width="80px" height="60px"></button>
 
 </div>
@@ -97,11 +91,14 @@ export default {
         text-align: left;
         padding: 10px;
         margin: 10px 5px;
+        font-size: 1.1em;
     }
     canvas{
       transform: rotate(90deg);
-      margin-left: 60px;
-      margin-top: 0px;
+      width: 100%;
+      object-fit: contain;
+      height: 100%;
+      margin-left: 30px;
     }
     h3 {
        font-size: 2em;
@@ -109,8 +106,10 @@ export default {
        margin-bottom: 20px;
     }
     h4{
-        margin-top: 0px;
+        margin: 22px 10px;
         font-size: 1.2em;
+        text-align: left;
+        font-weight: bold;
     }
     .flippingCards{
         margin: auto;
@@ -120,43 +119,49 @@ export default {
         display: flex;
         justify-content: center;
     }
-    #exampleCard1{
-        -webkit-transform: scale(0.7);
-        -moz-transform: scale(0.7);
-        -o-transform: scale(0.7);
-        transform: scale(0.7);
+    .exampleCard1{
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
-        justify-content: left;
-        margin-bottom: 40px;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        width: 25%;
+        height: 38%;
+        margin-left: 30px;
+        padding: 0;
     }
-    #exampleSet1{
-        -webkit-transform: scale(0.4);
-        -moz-transform: scale(0.4);
-        -o-transform: scale(0.4);
-        transform: scale(0.4);
-        display: flex;
-        flex-direction: row;
-        justify-content: top;
+    .exampleSet1{
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    width: 20%;
+    height: 22%;
+    margin: 0;
+    flex-direction: column;
     }
     .card{
     border: 1px solid gray;
     border-radius: 7px;
     margin-left: 10px;
     margin-right: 10px;
-    width: 300px;
+    width: 100%;
     height: 380px;
-    float:left;
     background-color: white;
     display: flex;
-    justify-content: left;
+    justify-content: center;
     flex-direction: column;
+    flex-wrap: wrap;
     }
     .page2{
     display: flex;
     justify-content: center;
-    flex-direction: column;
+    flex-direction: row;
     }
     #rullTitle{
       font-size: 1.5em;
+    }
+    .instractionText{
+      width: 100%;
     }
 </style>

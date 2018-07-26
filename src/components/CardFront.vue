@@ -1,10 +1,19 @@
 <template>
   <div class="intemidiate game">
-    <div class="fitures">
-      <h4 id="collected">you collected {{this.collectedCards.length / 3}} sets</h4>
-      <button id="tellMe" @click = "findSetBotton()">Tell Me</button>
-    </div>
-    <div class="cardsContainer">
+  <div class="card">
+  <header class="card-header">
+    <h1 style="margin-left: 12%">
+      {{this.collectedCards.length / 3}} sets
+    </h1>
+    <button class="button" id="tellMe" @click = "findSetBotton()">Tell Me</button>
+    <a href="#" class="card-header-icon" aria-label="more options">
+      <span class="icon">
+        <i class="fas fa-angle-down" aria-hidden="true"></i>
+      </span>
+    </a>
+  </header>
+   <div class="card-content">
+      <div class="cardsContainer">
       <!--{{JSON.stringify(cards)}}-->
       <div class="cardDiv" v-for="(card, i) in cardsOnTheTable" :key="card.index" v-bind:class="{notSet: notSet}">
         <canvas id="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
@@ -13,6 +22,8 @@
       <slot></slot>
     </div>
   </div>
+  </div>
+  </div>
 </template>
 <script>
 import utils, { CardView } from '../js/utils.js'
@@ -20,6 +31,7 @@ export default{
   name: 'cardFront',
   data () {
     return {
+      circleTest: '',
       id: 0,
       notSet: false,
       beginners: false,
@@ -48,12 +60,12 @@ export default{
         )
       )
     // pull out random card from the card deck and puts it on the table
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 12; i++) {
       this.cardsOnTheTable.push(this.cards.splice(this.randomCardIndex(), 1)[0])
     }
   },
   mounted () {
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 12; i++) {
       this.cardsViewsOnTheTable[i] = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.cardsOnTheTable[i].shape, this.cardsOnTheTable[i].color, this.cardsOnTheTable[i].fill, this.cardsOnTheTable[i].number)
       this.cardsViewsOnTheTable[i].drawCard()
     }
@@ -64,8 +76,8 @@ export default{
     *************************************/
     isSet: function () {
       if (utils.isSet(this.set, 0, 1, 2)) {
-        this.set.forEach(function (card) { card.isTaked = true })
-        this.collectedCards.push(this.set[0], this.set[1], this.set[2])
+        this.set.forEach((card) => { card.isTaked = true })
+        this.collectedCards.push(...this.set)
         return true
       } else {
         this.notSet = true
@@ -85,6 +97,7 @@ export default{
         card.isClicked = true
         card.inSet = false
         this.notSet = false
+        card.isTaked = false
 
         if (this.set.length === 3) {
           if (this.isSet()) {
@@ -92,7 +105,7 @@ export default{
               if (this.cardsOnTheTable[i].isClicked === true) {
                 const newCard = this.cards.splice(this.randomCardIndex(), 1)[0]
 
-                utils.changeCard(this.cardsOnTheTable[i], newCard)
+                this.cardsOnTheTable[i] = newCard
                 this.cardsViewsOnTheTable[i].setNewCardAtrr(newCard.shape, newCard.color, newCard.fill, newCard.number)
               }
             }
@@ -103,17 +116,19 @@ export default{
       }
     }, // end of click
     findSetBotton: function () {
-      const setArray = new Array(3)
+      const setArray = []
       if (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) === 'no set here') {
         console.log('no set here')
       } else {
         for (let i = 0; i < 3; i++) {
           setArray[i] = utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2)[i]
         }
-        this.cardsOnTheTable.forEach(function (card) {      
-          if (setArray[0].equalTo(card) || setArray[1].equalTo(card) || setArray[2].equalTo(card)) {
-            card.inSet = true
-          } })
+        this.cardsOnTheTable
+          .forEach(function (card) {
+            if (setArray[0].equalTo(card) || setArray[1].equalTo(card) || setArray[2].equalTo(card)) {
+              card.inSet = true
+            }
+          })
       }
     }
   }
@@ -134,19 +149,19 @@ export default{
   flex-direction: row;
   justify-content: center;
   background-color: purple;
-  margin: 10px auto;
-  padding: 5px 20px;
+  margin:0 auto 20px auto;
+  padding: 5px 10px;
 }
 #tellMe{
   margin: 10px 20px;
 }
 #collected{
-  color: white;
+  font-size: 2em;
 }
 .cardsContainer {
  display: flex;
  flex-direction: row;
- width: 380px;
+ width: 550px;
  height: 480px;
  margin: 0px auto 30px auto;
  flex-wrap: wrap;
@@ -159,9 +174,9 @@ export default{
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 25%;
-  height: 27%;
-  margin: 0 3%;
+  width: 19%;
+  height: 28%;
+  margin: 0 2%;
 }
 
 #cardCanvas{
@@ -179,7 +194,7 @@ export default{
 }
 @keyframes fade {
   0% { opacity: 0 }
-  50% { opacity: 1 }
+  0%, 100% { opacity: 1 }
 }
 .notSet{
   animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;

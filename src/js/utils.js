@@ -49,6 +49,7 @@ export class CardView {
 
   draw (a, b, c, d, e, f, g, h) {
     this.getShapeContext.beginPath()
+    this.getShapeContext.lineWidth = 3
     this.getShapeContext.moveTo(a, b)
     this.getShapeContext.lineTo(c, d)
     this.getShapeContext.lineTo(e, f)
@@ -59,21 +60,31 @@ export class CardView {
   }
 
   drawShape () {
-    if (this.shape === 'sub') {
-      this.draw(37, 33, 75, 56, 112, 33, 75, 10)
-    } if (this.shape === 'rect') {
-      this.draw(37, 10, 112, 10, 112, 56, 37, 56)
-    } if (this.shape === 'tri') {
-      this.draw(75, 10, 112, 56, 112, 56, 37, 56)
-    }
+    (this.shape === 'sub')
+      ? this.draw(37, 33, 75, 56, 112, 33, 75, 10)
+      : (this.shape === 'rect')
+        ? this.draw(37, 10, 112, 10, 112, 56, 37, 56)
+        : (this.shape === 'tri')
+          ? this.draw(75, 10, 112, 56, 112, 56, 37, 56)
+          : this.drawCircle()
+  }
+
+  drawCircle () {
+    this.getShapeContext.beginPath()
+    this.getShapeContext.arc(75, 33, 25, 0, 2 * Math.PI)
+    this.getShapeContext.stroke()
   }
   /************************************
    shape fill
   ************************************/
+
+  /*******
+   sub
+  *******/
   drawStr (x, b, c, m) {
     let Ya = -m * x + b
     let Yb = m * x + c
-
+    this.getShapeContext.lineWidth = 1
     this.getShapeContext.moveTo(x, Ya)
     this.getShapeContext.lineTo(x, Yb)
 
@@ -107,12 +118,12 @@ export class CardView {
 
     }
   }
-  /************************************
+  /*********
    triangle
-  ************************************/
+  *********/
   drawStr1func (x, b, m) {
     let Ya = m * x + b
-
+    this.getShapeContext.lineWidth = 1
     this.getShapeContext.moveTo(x, Ya)
     this.getShapeContext.lineTo(x, 56)
 
@@ -145,10 +156,11 @@ export class CardView {
 
     }
   }
-  /************************************
+  /**********
    rectengle
-  ************************************/
+  ***********/
   rectStr (x) {
+    this.getShapeContext.lineWidth = 1
     this.getShapeContext.moveTo(x, 10)
     this.getShapeContext.lineTo(x, 56)
     this.getShapeContext.stroke()
@@ -162,6 +174,82 @@ export class CardView {
       for (let x = 37; x <= 112; x += 5) {
         this.rectStr(x)
       }
+    } else {
+
+    }
+  }
+
+  /*********
+   circle
+  *********/
+  circleStrips (x1, x2, y) {
+    this.getShapeContext.moveTo(x1, y)
+    this.getShapeContext.lineTo(x2, y)
+    this.getShapeContext.stroke()
+  }
+
+  circleStr (c) {
+    const xArray = [0, 1, 1, 2, 5]
+    let i = 0
+    let x1 = 50
+    let x2 = 100
+    for (let y = 33; y > 12; y = y - 5) {
+      this.circleStrips(x1 += xArray[i], x2 -= xArray[i], y)
+      i++
+    }
+    i = 1; x1 = 51; x2 = 99
+    for (let y = 38; y <= 53; y = y + 5) {
+      this.circleStrips(x1 += xArray[i], x2 -= xArray[i], y)
+      i++
+    }
+  }
+
+  circleFull () {
+    let x1 = 50
+    let x2 = 100
+    for (let y = 33; y >= 28; y--) {
+      this.getShapeContext.moveTo(x1 += 0.1, y)
+      this.getShapeContext.lineTo(x2 -= 0.1, y)
+    }
+    for (let y = 27; y >= 22; y--) {
+      this.getShapeContext.moveTo(x1 += 0.25, y)
+      this.getShapeContext.lineTo(x2 -= 0.25, y)
+    }
+    for (let y = 21; y >= 12; y--) {
+      this.getShapeContext.moveTo(x1 += 0.8, y)
+      this.getShapeContext.lineTo(x2 -= 0.8, y)
+    }
+    for (let y = 11; y >= 9; y--) {
+      this.getShapeContext.moveTo(x1 += 2, y)
+      this.getShapeContext.lineTo(x2 -= 2, y)
+    }
+
+    x1 = 51
+    x2 = 99
+    for (let y = 34; y <= 38; y++) {
+      this.getShapeContext.moveTo(x1 += 0.1, y)
+      this.getShapeContext.lineTo(x2 -= 0.1, y)
+    }
+    for (let y = 39; y <= 44; y++) {
+      this.getShapeContext.moveTo(x1 += 0.25, y)
+      this.getShapeContext.lineTo(x2 -= 0.25, y)
+    }
+    for (let y = 45; y <= 54; y++) {
+      this.getShapeContext.moveTo(x1 += 0.8, y)
+      this.getShapeContext.lineTo(x2 -= 0.8, y)
+    }
+    for (let y = 55; y <= 57; y++) {
+      this.getShapeContext.moveTo(x1 += 2, y)
+      this.getShapeContext.lineTo(x2 -= 2, y)
+    }
+    this.getShapeContext.stroke()
+  }
+
+  changeFillcircle () {
+    if (this.fill === 'full') {
+      this.circleFull()
+    } else if (this.fill === 'stripes') {
+      this.circleStr()
     } else {
 
     }
@@ -182,6 +270,9 @@ export class CardView {
       this.changeFillrect()
     } if (this.shape === 'tri') {
       this.changeFilltri()
+    }
+    if (this.shape === 'circle') {
+      this.changeFillcircle()
     }
   }
 
@@ -250,42 +341,16 @@ export default{
     )
   },
 
-  // only for cardOnTheTable (without canvasses)
-  // because isSet uses simple obj cards
-  // it is render the simple card obj and than put a cardView obj in the array
-  changeCard: function (card1, card2) {
-    card1.shape = card2.shape
-    card1.number = card2.number
-    card1.color = card2.color
-    card1.fill = card2.fill
-    card1.id = card2.id
-  },
-
   findSet: function (array, x, y, z) {
-    const setArray = []
-    if (x > array.length - 3) {
-      return ('no set here')
-    }
-
-    if (this.isSet(array, x, y, z)) {
-      setArray.push(array[x], array[y], array[z])
-      return (setArray)
-    } else {
-      if (y === array.length - 2) {
-        x++
-        y = x + 1
-        z = y + 1
-        return (this.findSet(array, x, y, z))
-      } else {
-        if (z === array.length - 1) {
-          y = y + 1
-          z = y + 1
-          return (this.findSet(array, x, y, z))
-        } else {
-          z++
-          return (this.findSet(array, x, y, z))
-        }
-      }
-    }
+    return (
+      (x > array.length - 3)
+        ? 'no set here'
+        : (this.isSet(array, x, y, z))
+          ? [array[x], array[y], array[z]]
+          : (y === array.length - 2)
+            ? this.findSet(array, x + 1, x + 2, x + 3)
+            : (z === array.length - 1)
+              ? this.findSet(array, x, y + 1, y + 2)
+              : this.findSet(array, x, y, z + 1))
   }
 }
