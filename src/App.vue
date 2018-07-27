@@ -170,4 +170,7 @@ h1 {
 .card-header{
   justify-content: center;        
 }
+.button:after{
+  border: none;
+}
 </style>

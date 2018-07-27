@@ -5,7 +5,7 @@
     <h1 style="margin-left: 12%">
       {{this.collectedCards.length / 3}} sets
     </h1>
-    <button class="button" id="tellMe" @click = "findSetBotton()">Tell Me</button>
+    <a class="button is-outlined" id="tellMe" @click = "findSetBotton()">Tell Me</a>
     <a href="#" class="card-header-icon" aria-label="more options">
       <span class="icon">
         <i class="fas fa-angle-down" aria-hidden="true"></i>
@@ -26,12 +26,12 @@
   </div>
 </template>
 <script>
-import utils, { CardView } from '../js/utils.js'
+import utils from '../js/utils.js'
+import { CardView } from '../js/CardViews.js'
 export default{
   name: 'cardFront',
   data () {
     return {
-      circleTest: '',
       id: 0,
       notSet: false,
       beginners: false,
@@ -61,7 +61,7 @@ export default{
       )
     // pull out random card from the card deck and puts it on the table
     for (let i = 0; i < 12; i++) {
-      this.cardsOnTheTable.push(this.cards.splice(this.randomCardIndex(), 1)[0])
+      this.cardsOnTheTable.push(this.cards.splice(utils.randomCardIndex(this.cards.length), 1)[0])
     }
   },
   mounted () {
@@ -84,10 +84,6 @@ export default{
       }
     },
 
-    randomCardIndex: function () {
-      return (Math.floor(Math.random() * this.cards.length))
-    },
-
     clickedCard: function (card) {
       if (card.isClicked) {
         card.isClicked = false
@@ -103,7 +99,7 @@ export default{
           if (this.isSet()) {
             for (let i = 0; i < this.cardsOnTheTable.length; i++) {
               if (this.cardsOnTheTable[i].isClicked === true) {
-                const newCard = this.cards.splice(this.randomCardIndex(), 1)[0]
+                const newCard = this.cards.splice(utils.randomCardIndex(this.cards.length), 1)[0]
 
                 this.cardsOnTheTable[i] = newCard
                 this.cardsViewsOnTheTable[i].setNewCardAtrr(newCard.shape, newCard.color, newCard.fill, newCard.number)
