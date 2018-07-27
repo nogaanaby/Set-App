@@ -6,6 +6,7 @@
       {{this.collectedCards.length / 3}} sets
     </h1>
     <a class="button is-outlined" id="tellMe" @click = "findSetBotton()">Tell Me</a>
+    <a class="button is-outlined" id="add3" @click = "add3()">add3</a>
     <a href="#" class="card-header-icon" aria-label="more options">
       <span class="icon">
         <i class="fas fa-angle-down" aria-hidden="true"></i>
@@ -82,6 +83,10 @@ export default{
       } else {
         this.notSet = true
       }
+    },
+
+    add3: function(){
+
     },
 
     clickedCard: function (card) {

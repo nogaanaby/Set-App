@@ -1,0 +1,7 @@
+to add the game
+add3 on automatic
+fade animation to the cards
+dont repit yourself on code
+
+move the utils and the card class to different files - ddone
+

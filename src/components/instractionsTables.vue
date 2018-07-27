@@ -67,7 +67,8 @@
 
 <script>
 
-import utils, { CardView } from '../js/utils.js'
+import utils from '../js/utils.js'
+import { CardView } from '../js/CardViews.js'
 
 export default {
   name: 'instractionsTables',
