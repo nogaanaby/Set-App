@@ -1,76 +1,46 @@
 <template>
   <div class="main">
     <div class="card">
-  <header class="card-header">
-    <p class="card-header-title">
-      This Is A Set
-    </p>
-    <a href="#" class="card-header-icon" aria-label="more options">
-      <span class="icon">
-        <i class="fas fa-angle-down" aria-hidden="true"></i>
-      </span>
-    </a>
-  </header>
-  <div class="card-content">
-    <div class="content">
-                if the first two cards are different in some attribute - the third must be also different from the first two in that attributes
-                <br>if the first two cards are same in some attribute - the third must have also the same attribute
-      <div class="mainCardTables">
-  <div class="cardTables">
-  <table class="table is-striped">
-      <thead class="cardText">
-          <th>atributes</th>
-          <th>card 1</th>
-          <th>card 2</th>
-          <th>card 3</th>
-      </thead>
-      <tr class="cardText">
-          <td style="font-weight: bold">shape</td>
-          <td>Sub <img class="vicon" src='@/assets/vicon.png'> </td>
-          <td>Sub <img class="vicon" src='@/assets/vicon.png'> </td>
-          <td>Sub <img class="vicon" src='@/assets/vicon.png'> </td>
-      </tr>
-      <tr class="cardText">
-          <td style="font-weight: bold">number</td>
-          <td>1 shape <img class="xicon" src='@/assets/xicon.png'> </td>
-          <td>2 shape <img class="xicon" src='@/assets/xicon.png'> </td>
-          <td>3 shape <img class="xicon" src='@/assets/xicon.png'> </td>
-      </tr>
-      <tr class="cardText">
-          <td style="font-weight: bold">color</td>
-          <td>green <img class="vicon" src='@/assets/vicon.png'> </td>
-          <td>green <img class="vicon" src='@/assets/vicon.png'> </td>
-          <td>green <img class="vicon" src='@/assets/vicon.png'> </td>
-      </tr>
-      <tr class="cardText">
-          <td style="font-weight: bold">fill</td>
-          <td>stripes <img class="xicon" src='@/assets/xicon.png'> </td>
-          <td>empty <img class="xicon" src='@/assets/xicon.png'> </td>
-          <td>full <img class="xicon" src='@/assets/xicon.png'> </td>
-      </tr>
-      </table>
-      <div class="exampleSet2">
-        <div class="setCard" v-for="(card, i) in firstSet" :key="card.index">
-        <canvas :ref="'shape'+i" width="150" height="66" v-show="false" ></canvas>
-        <canvas :ref="'card'+i" width="150" height="198"></canvas>
+      <header class="card-header">
+        <h1>
+          Try It Yourself
+        </h1>
+      </header>
+      <div class="card-content">
+        <div class="columns">
+          <div class="setCard column" v-for="(card, i) in sets[0]" :key="card.index">
+          <canvas :ref="'shape'+i" width="150" height="66" v-show="false" ></canvas>
+          <canvas :ref="'card'+i" width="150" height="198"></canvas>
+          </div>
         </div>
+
+        <div class="columns">
+          <div class="setCard column" v-for="(card, i) in sets[0]" :key="card.index">
+          <canvas :ref="'shape'+i" width="150" height="66" v-show="false" ></canvas>
+          <canvas :ref="'card'+i" width="150" height="198"></canvas>
+          </div>
+        </div>
+
+        <div class="columns">
+          <div class="setCard column" v-for="(card, i) in sets[0]" :key="card.index">
+          <canvas :ref="'shape'+i" width="150" height="66" v-show="false" ></canvas>
+          <canvas :ref="'card'+i" width="150" height="198"></canvas>
+          </div>
+        </div>                
       </div>
-  </div>
-</div>
-      <br>
+      <footer class="card-footer">
+        <a href="#" class="card-footer-item">Save</a>
+        <a href="#" class="card-footer-item">Edit</a>
+        <a href="#" class="card-footer-item">Delete</a>
+      </footer>
     </div>
-  </div>
-  <footer class="card-footer">
-    <a href="#" class="card-footer-item">Save</a>
-    <a href="#" class="card-footer-item">Edit</a>
-    <a href="#" class="card-footer-item">Delete</a>
-  </footer>
-</div>
   </div>
 </template>
 
 <script>
 import instractionsTables from '@/components/instractionsTables'
+import utils from '../js/utils.js'
+import { CardView } from '../js/CardViews.js'
 
 export default {
   name: 'design',
@@ -79,11 +49,41 @@ export default {
   },
   data () {
     return {
-
+      context: [],
+      sets: [
+        [
+          utils.cardObject('sub', 'green', 1, 'stripes'),
+          utils.cardObject('sub', 'green', 2, 'empty'),
+          utils.cardObject('sub', 'green', 3, 'full')
+        ],
+        [
+          utils.cardObject('tri', 'green', 2, 'stripes'),
+          utils.cardObject('sub', 'red', 2, 'stripes'),
+          utils.cardObject('rect', 'purple', 2, 'stripes')
+        ],
+        [
+          utils.cardObject('sub', 'green', 1, 'empty'),
+          utils.cardObject('tri', 'purple', 2, 'stripes'),
+          utils.cardObject('rect', 'red', 3, 'full')
+        ]
+      ]
     }
   },
   mounted () {
-
+    for (let i = 0; i < this.sets[0].length; i++) {
+      const cardView = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.sets[0][i])
+      this.context.push(cardView)
+      this.context[i].drawCard()
+    }
+    /*
+    this.sets
+      .forEach( function (set) {
+        set.forEach( function (card) {
+          const cardView = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.sets[0][i])
+          this.context.push(cardView)
+          this.context[i].drawCard()          
+        })
+      }) */
   },
   methods: {
 
@@ -92,5 +92,26 @@ export default {
 </script>
 
 <style scoped>
-
+.card{
+  flex-direction: row;
+}
+.card-content{
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+.setCard{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 10%;
+  height: 10%;
+  margin: 0 5%;
+}
+canvas{
+  transform: rotate(90deg);
+  margin: 0px;
+  width: 100%;
+  object-fit: contain;
+  height: 100%;
+}
 </style>

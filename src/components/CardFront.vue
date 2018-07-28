@@ -6,7 +6,8 @@
       {{this.collectedCards.length / 3}} sets
     </h1>
     <a class="button is-outlined" id="tellMe" @click = "findSetBotton()">Tell Me</a>
-    <a class="button is-outlined" id="add3" @click = "add3()">add3</a>
+    <a class="button is-outlined" id="add3" @click = "addThree()">add3</a>
+    <a class="button is-outlined" id="add3" @click = "test()">test</a>
     <a href="#" class="card-header-icon" aria-label="more options">
       <span class="icon">
         <i class="fas fa-angle-down" aria-hidden="true"></i>
@@ -14,9 +15,9 @@
     </a>
   </header>
    <div class="card-content">
-      <div class="cardsContainer">
+      <div v-bind:class = "{cardsContainer: contain12, cardsContainer15: contain15}">
       <!--{{JSON.stringify(cards)}}-->
-      <div class="cardDiv" v-for="(card, i) in cardsOnTheTable" :key="card.index" v-bind:class="{notSet: notSet}">
+      <div v-for="(card, i) in cardsOnTheTable" :key="card.index" v-bind:class = "{notSet: notSet, cardDiv: contain12, cardDiv15: contain15}">
         <canvas id="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
         <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" v-on:click = "clickedCard(card, i)" v-bind:class= "{clicked: card.isClicked, takeSet: card.isTaked, findSet: card.inSet}" ></canvas>
       </div>
@@ -34,6 +35,8 @@ export default{
   data () {
     return {
       id: 0,
+      contain12: true,
+      contain15: false,
       notSet: false,
       beginners: false,
       intemidiate: false,
@@ -62,12 +65,12 @@ export default{
       )
     // pull out random card from the card deck and puts it on the table
     for (let i = 0; i < 12; i++) {
-      this.cardsOnTheTable.push(this.cards.splice(utils.randomCardIndex(this.cards.length), 1)[0])
+      this.cardsOnTheTable.push(utils.takeNewCard(this.cards))
     }
   },
   mounted () {
     for (let i = 0; i < 12; i++) {
-      this.cardsViewsOnTheTable[i] = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.cardsOnTheTable[i].shape, this.cardsOnTheTable[i].color, this.cardsOnTheTable[i].fill, this.cardsOnTheTable[i].number)
+      this.cardsViewsOnTheTable[i] = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.cardsOnTheTable[i])
       this.cardsViewsOnTheTable[i].drawCard()
     }
   },
@@ -85,10 +88,6 @@ export default{
       }
     },
 
-    add3: function(){
-
-    },
-
     clickedCard: function (card) {
       if (card.isClicked) {
         card.isClicked = false
@@ -104,10 +103,8 @@ export default{
           if (this.isSet()) {
             for (let i = 0; i < this.cardsOnTheTable.length; i++) {
               if (this.cardsOnTheTable[i].isClicked === true) {
-                const newCard = this.cards.splice(utils.randomCardIndex(this.cards.length), 1)[0]
-
-                this.cardsOnTheTable[i] = newCard
-                this.cardsViewsOnTheTable[i].setNewCardAtrr(newCard.shape, newCard.color, newCard.fill, newCard.number)
+                this.cardsOnTheTable[i] = utils.takeNewCard(this.cards)
+                this.cardsViewsOnTheTable[i].setNewCardAtrr(this.cardsOnTheTable[i])
               }
             }
           }
@@ -119,7 +116,7 @@ export default{
     findSetBotton: function () {
       const setArray = []
       if (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) === 'no set here') {
-        console.log('no set here')
+        return (' ')
       } else {
         for (let i = 0; i < 3; i++) {
           setArray[i] = utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2)[i]
@@ -130,6 +127,21 @@ export default{
               card.inSet = true
             }
           })
+      }
+    },
+
+    addThree: function () {
+      this.cardsOnTheTable.push(utils.takeNewCard(this.cards), utils.takeNewCard(this.cards), utils.takeNewCard(this.cards))
+      this.contain12 = false
+      this.contain15 = true
+    },
+
+    test: function () {
+      debugger
+      for (let i = 12; i < 15; i++) {
+        this.cardsViewsOnTheTable[i] = new CardView(this.$refs[`shape${i}`][0],
+          this.$refs[`card${i}`][0], this.cardsOnTheTable[i])
+        this.cardsViewsOnTheTable[i].drawCard()
       }
     }
   }
@@ -168,6 +180,26 @@ export default{
  flex-wrap: wrap;
  justify-content: center;
 }
+.cardsContainer15 {
+ display: flex;
+ flex-direction: row;
+ width: 700px;
+ height: 480px;
+ margin: 0px auto 30px auto;
+ flex-wrap: wrap;
+ justify-content: center;
+}
+
+.cardDiv15{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  width: 14%;
+  height: 28%;
+  margin: 0 2%;
+}
 
 .cardDiv {
   display: -webkit-box;
@@ -182,7 +214,7 @@ export default{
 
 #cardCanvas{
   width: 100%;
-  object-fit: contain;
+ object-fit: contain;
   height: 100%;
 }
 

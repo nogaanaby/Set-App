@@ -1,12 +1,12 @@
 
 export class CardView {
-  constructor (shapeCanvas, cardCanvas, shape, color, fill, number) {
+  constructor (shapeCanvas, cardCanvas, card) {
     this.shapeCanvas = shapeCanvas
     this.cardCanvas = cardCanvas
-    this.shape = shape
-    this.color = color
-    this.number = number
-    this.fill = fill
+    this.shape = card.shape
+    this.color = card.color
+    this.number = card.number
+    this.fill = card.fill
   }
 
   copyCardView (card) {
@@ -28,13 +28,13 @@ export class CardView {
     return (this.cardContext)
   }
 
-  setNewCardAtrr (shape, color, fill, number) {
+  setNewCardAtrr (card) {
     this.getCardContext.clearRect(0, 0, 150, 198)
     this.getShapeContext.clearRect(0, 0, 150, 66)
-    this.shape = shape
-    this.color = color
-    this.fill = fill
-    this.number = number
+    this.shape = card.shape
+    this.color = card.color
+    this.fill = card.fill
+    this.number = card.number
     this.drawCard()
   }
 

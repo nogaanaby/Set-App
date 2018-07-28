@@ -55,6 +55,7 @@ export default {
 <style>
 @import './assets/w3.css';
 @import './assets/bulma.css';
+
 html{
   background-color: gainsboro;
   margin: 0px;

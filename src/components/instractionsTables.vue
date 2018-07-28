@@ -1,67 +1,59 @@
 <template>
   <div class="main">
     <div class="card">
-  <header class="card-header">
-    <h1>
-      {{title}}
-    </h1>
-    <a href="#" class="card-header-icon" aria-label="more options">
-      <span class="icon">
-        <i class="fas fa-angle-down" aria-hidden="true"></i>
-      </span>
-    </a>
-  </header>
-  <div class="card-content">
-    <div class="content">
-        {{setExplain}}
-    </div>
-      <div class="mainCardTables">
-  <div class="cardTables">
-  <table class="table is-striped">
-      <thead class="cardText">
-          <th class="grey"></th>
-          <th class="yellow">card 1</th>
-          <th class="yellow">card 2</th>
-          <th class="pink">card 3</th>
-      </thead>
-      <tr class="cardText">
-          <td class="grey" style="font-weight: bold; width: 10%">shape</td>
-          <td v-for="(shape, i) in someSet" :key="shape.index">
-              {{someSet[i].shape}}
-          </td>
-      </tr>
-      <tr class="cardText">
-          <td class="grey" style="font-weight: bold">number</td>
-          <td v-for="(number, i) in someSet" :key="number.index">
-              {{someSet[i].number}} shapes
-         </td>
-      </tr>
-      <tr class="cardText">
-          <td class="grey" style="font-weight: bold">color</td>
-          <td v-for="(color, i) in someSet" :key="color.index">
-              {{someSet[i].color}}
-         </td>
-      </tr>
-      <tr class="cardText">
-          <td class="grey" style="font-weight: bold">fill</td>
-          <td v-for="(fill, i) in someSet" :key="fill.index">
-              {{someSet[i].fill}}
-         </td>
-      </tr>
-      </table>
-  </div>
-</div>
-      <br>
-  </div>
-  <footer class="card-footer">
-<button @click="prevPage()" id="arrowBack"> <img id="arrowImg" src='@/assets/angle-left-solid.svg' width="25px" height="25px"></button>     
-        <div class="setCard" v-for="(card, i) in someSet" :key="card.index">
-        <canvas :ref="'shape'+i" width="150" height="66" v-show="false" ></canvas>
-        <canvas :ref="'card'+i" width="150" height="198" class="card-footer-item"></canvas>
+      <header class="card-header">
+        <h1>
+          {{pageData[contentIndex].title}}
+        </h1>
+      </header>
+      <div class="card-content">
+        <div class="content">
+            {{pageData[contentIndex].setExplain}}
         </div>
-    <button @click="nextPage()" id="arrowNext"> <img id="arrowImg" src='@/assets/angle-right-solid.svg' width="25px" height="25px"></button>        
-  </footer>
-</div>
+        <div class="cardTables">
+          <table class="table is-striped">
+            <thead class="cardText">
+              <th class="grey"></th>
+              <th class="yellow">card 1</th>
+              <th class="yellow">card 2</th>
+              <th class="pink">card 3</th>
+            </thead>
+            <tr class="cardText">
+              <td class="grey" style="font-weight: bold; width: 10%">shape</td>
+              <td v-for="(shape, i) in sets[contentIndex]" :key="shape.index">
+                  {{sets[contentIndex][i].shape}}
+              </td>
+            </tr>
+            <tr class="cardText">
+              <td class="grey" style="font-weight: bold">number</td>
+              <td v-for="(number, i) in sets[contentIndex]" :key="number.index">
+                  {{sets[contentIndex][i].number}} shapes
+              </td>
+            </tr>
+            <tr class="cardText">
+              <td class="grey" style="font-weight: bold">color</td>
+              <td v-for="(color, i) in sets[contentIndex]" :key="color.index">
+                  {{sets[contentIndex][i].color}}
+              </td>
+            </tr>
+            <tr class="cardText">
+              <td class="grey" style="font-weight: bold">fill</td>
+              <td v-for="(fill, i) in sets[contentIndex]" :key="fill.index">
+                {{sets[contentIndex][i].fill}}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <footer class="card-footer">
+        <button @click="prevPage()" id="arrowBack"> <img id="arrowImg" src='@/assets/angle-left-solid.svg' width="25px" height="25px"></button>     
+        <div class="setCard" v-for="(card, i) in sets[contentIndex]" :key="card.index">
+          <canvas :ref="'shape'+i" width="150" height="66" v-show="false" ></canvas>
+          <canvas :ref="'card'+i" width="150" height="198" class="card-footer-item"></canvas>
+        </div>
+        <button @click="nextPage()" id="arrowNext"> <img id="arrowImg" src='@/assets/angle-right-solid.svg' width="25px" height="25px"></button>        
+      </footer>
+    </div>
   </div>
 </template>
 
@@ -74,27 +66,25 @@ export default {
   name: 'instractionsTables',
   data () {
     return {
-      firstPage: true,
-      secondPage: false,
-      thirdPage: false,
-      title: '',
-      setExplain: '',
+      contentIndex: 0,
       context: [],
       someSet: [],
-      firstSet: [
-        utils.cardObject('example_for_set_in_the_table', 'sub', 'green', 1, 'stripes'),
-        utils.cardObject('example_for_set_in_the_table', 'sub', 'green', 2, 'empty'),
-        utils.cardObject('example_for_set_in_the_table', 'sub', 'green', 3, 'full')
-      ],
-      secondSet: [
-        utils.cardObject('example_for_set_in_the_table', 'sub', 'green', 2, 'stripes'),
-        utils.cardObject('example_for_set_in_the_table', 'tri', 'purple', 2, 'stripes'),
-        utils.cardObject('example_for_set_in_the_table', 'rect', 'red', 2, 'stripes')
-      ],
-      thirdSet: [
-        utils.cardObject('example_for_set_in_the_table', 'sub', 'green', 1, 'empty'),
-        utils.cardObject('example_for_set_in_the_table', 'tri', 'purple', 2, 'stripes'),
-        utils.cardObject('example_for_set_in_the_table', 'rect', 'red', 3, 'full')
+      sets: [
+        [
+          utils.cardObject('sub', 'green', 1, 'stripes'),
+          utils.cardObject('sub', 'green', 2, 'empty'),
+          utils.cardObject('sub', 'green', 3, 'full')
+        ],
+        [
+          utils.cardObject('tri', 'green', 2, 'stripes'),
+          utils.cardObject('sub', 'red', 2, 'stripes'),
+          utils.cardObject('rect', 'purple', 2, 'stripes')
+        ],
+        [
+          utils.cardObject('sub', 'green', 1, 'empty'),
+          utils.cardObject('tri', 'purple', 2, 'stripes'),
+          utils.cardObject('rect', 'red', 3, 'full')
+        ] 
       ],
       pageData: [
         {
@@ -114,53 +104,45 @@ export default {
     }
   },
   created () {
-    for (let i = 0; i < 3; i++) {
-      this.someSet.push(this.firstSet[i])
-    }
+
   },
   mounted () {
-    for (let i = 0; i < this.firstSet.length; i++) {
-      const cardView = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.someSet[i].shape, this.someSet[i].color, this.someSet[i].fill, this.someSet[i].number)
+    for (let i = 0; i < this.sets[0].length; i++) {
+      const cardView = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.sets[this.contentIndex][i])
       this.context.push(cardView)
       this.context[i].drawCard()
     }
-
-    this.title = this.pageData[0].title
-    this.setExplain = this.pageData[0].setExplain
+    /* check out how to write foretch with index capture
+    console.log(this.sets[this.contentIndex])
+    debugger
+    this.sets[this.contentIndex]
+      .forEach(function (card, i) {
+        const cardView = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], card)
+        this.context.push(cardView)
+        this.context[i].drawCard()
+      }) */
   },
   methods: {
     nextPage: function () {
-      if (this.firstPage) {
-        this.secondPage = true
-        this.firstPage = false
-        this.changeContent(this.secondSet, 1)
-      } else if (this.secondPage) {
-        this.secondPage = false
-        this.thirdPage = true
-        this.changeContent(this.thirdSet, 2)
-      }
+      this.contentIndex = Math.min(this.contentIndex + 1, this.sets.length - 1)
+      this.changeContent(this.sets, this.contentIndex)
     },
     prevPage: function () {
-      if (this.thirdPage) {
-        this.secondPage = true
-        this.thirdPage = false
-        this.changeContent(this.secondSet, 1)
-      } else if (this.secondPage) {
-        this.secondPage = false
-        this.firstPage = true
-        this.changeContent(this.firstSet, 0)
-      }
+      this.contentIndex = Math.max(this.contentIndex - 1, 0)
+      this.changeContent(this.sets, this.contentIndex)
     },
     changeContent: function (set, x) {
-      this.title = this.pageData[x].title
-      this.setExplain = this.pageData[x].setExplain
-      this.someSet.splice(0)
       for (let i = 0; i < 3; i++) {
-        this.someSet.push(set[i])
+        this.context[i].setNewCardAtrr(set[x][i])
       }
-      for (let i = 0; i < 3; i++) {
-        this.context[i].setNewCardAtrr(set[i].shape, set[i].color, set[i].fill, set[i].number)
-      }
+      /*
+      this.context.forEach(function (element, i) {
+        element.setNewCardAtrr(this.sets[this.contentIndex][i])
+      })
+
+      this.sets[this.contentIndex].forEach(function (element) {
+        this.context[this.contentIndex].setNewCardAtrr(element)
+      }) */
     }
   }
 }

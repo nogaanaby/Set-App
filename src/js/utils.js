@@ -1,11 +1,6 @@
 export default{
-  what: function (a) {
-    console.log(a)
-  },
-
-  cardObject (name, shape, color, number, filling) {
+  cardObject (shape, color, number, filling) {
     return ({
-      name: name,
       shape: shape,
       color: color,
       number: number,
@@ -13,16 +8,22 @@ export default{
     })
   },
 
-  randomCardIndex: function (length) {
-    return (Math.floor(Math.random() * length))
+  /**************************************
+  cardTable staff
+  *************************************/
+  takeNewCard: (array) => (array.splice((Math.floor(Math.random() * array.length)), 1)[0]),
+
+  addThree: function (mainArray, pushedArray) {
+    mainArray.push(this.takeNewCard(pushedArray), this.takeNewCard(pushedArray), this.takeNewCard(pushedArray))
   },
   /**************************************
-     GAME
+     set staff
   *************************************/
   sameOrDiff: (a, b, c) =>
     (a === b && b === c) || (a !== b && b !== c && c !== a),
 
   isSet: function (array, x, y, z) {
+    debugger
     return (this.sameOrDiff(array[x].shape, array[y].shape, array[z].shape) &&
     this.sameOrDiff(array[x].number, array[y].number, array[z].number) &&
     this.sameOrDiff(array[x].color, array[y].color, array[z].color) &&
