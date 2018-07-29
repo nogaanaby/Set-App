@@ -23,7 +23,6 @@ export default{
     (a === b && b === c) || (a !== b && b !== c && c !== a),
 
   isSet: function (array, x, y, z) {
-    debugger
     return (this.sameOrDiff(array[x].shape, array[y].shape, array[z].shape) &&
     this.sameOrDiff(array[x].number, array[y].number, array[z].number) &&
     this.sameOrDiff(array[x].color, array[y].color, array[z].color) &&

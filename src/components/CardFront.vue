@@ -7,19 +7,14 @@
     </h1>
     <a class="button is-outlined" id="tellMe" @click = "findSetBotton()">Tell Me</a>
     <a class="button is-outlined" id="add3" @click = "addThree()">add3</a>
-    <a class="button is-outlined" id="add3" @click = "test()">test</a>
-    <a href="#" class="card-header-icon" aria-label="more options">
-      <span class="icon">
-        <i class="fas fa-angle-down" aria-hidden="true"></i>
-      </span>
-    </a>
+    <a class="button is-outlined" id="add3" @click = "takeThree()">take3</a>
   </header>
    <div class="card-content">
-      <div v-bind:class = "{cardsContainer: contain12, cardsContainer15: contain15}">
+      <div :class = "{cardsContainer: (countCardsOnTheTable === 12), cardsContainer15: (countCardsOnTheTable === 15)}">
       <!--{{JSON.stringify(cards)}}-->
-      <div v-for="(card, i) in cardsOnTheTable" :key="card.index" v-bind:class = "{notSet: notSet, cardDiv: contain12, cardDiv15: contain15}">
+      <div v-for="(card, i) in numTest" :key="card.index" :class = "{notSet: notSet, cardDiv: (countCardsOnTheTable === 12), cardDiv15: (countCardsOnTheTable === 15)}">
         <canvas id="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
-        <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" v-on:click = "clickedCard(card, i)" v-bind:class= "{clicked: card.isClicked, takeSet: card.isTaked, findSet: card.inSet}" ></canvas>
+        <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{clicked: card.state === 'clicked', takeSet: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
       </div>
       <slot></slot>
     </div>
@@ -35,11 +30,8 @@ export default{
   data () {
     return {
       id: 0,
-      contain12: true,
-      contain15: false,
-      notSet: false,
-      beginners: false,
-      intemidiate: false,
+      countCardsOnTheTable: 12,
+      notSet: false, // bazzes the cards in a mistaken set
       cardsOnTheTable: [],
       cardsViewsOnTheTable: [],
       cards: [],
@@ -59,19 +51,24 @@ export default{
       .forEach(shape => this.cardProperties.numbers
         .forEach(number => this.cardProperties.colors
           .forEach(color => this.cardProperties.fills
-            .forEach((fill, id, isClicked, isTaked, inSet) => this.cards.push({id: this.id++, shape, number, color, fill, isClicked: false, isTaked: false, inSet: false}))
+            .forEach((fill, id, state) => this.cards.push({id: this.id++, shape, number, color, fill, state: 'unclicked'}))
           )
         )
       )
+
     // pull out random card from the card deck and puts it on the table
-    for (let i = 0; i < 12; i++) {
-      this.cardsOnTheTable.push(utils.takeNewCard(this.cards))
+    for (let i = 0; i < this.countCardsOnTheTable; i++) {
+      // this.cardsOnTheTable.push(utils.takeNewCard(this.cards))
+      this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards))
     }
   },
   mounted () {
     for (let i = 0; i < 12; i++) {
       this.cardsViewsOnTheTable[i] = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.cardsOnTheTable[i])
       this.cardsViewsOnTheTable[i].drawCard()
+    }
+    if (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) === 'no set here') {
+      this.addThree()
     }
   },
   methods: {
@@ -80,69 +77,86 @@ export default{
     *************************************/
     isSet: function () {
       if (utils.isSet(this.set, 0, 1, 2)) {
-        this.set.forEach((card) => { card.isTaked = true })
         this.collectedCards.push(...this.set)
         return true
       } else {
         this.notSet = true
+        return false
       }
     },
 
     clickedCard: function (card) {
-      if (card.isClicked) {
-        card.isClicked = false
+      if (card.state === 'clicked') {
+        card.state = 'unclicked'
         this.set.pop()
       } else {
         this.set.push(card)
-        card.isClicked = true
-        card.inSet = false
-        this.notSet = false
-        card.isTaked = false
-
+        card.state = 'clicked'
         if (this.set.length === 3) {
           if (this.isSet()) {
-            for (let i = 0; i < this.cardsOnTheTable.length; i++) {
-              if (this.cardsOnTheTable[i].isClicked === true) {
-                this.cardsOnTheTable[i] = utils.takeNewCard(this.cards)
-                this.cardsViewsOnTheTable[i].setNewCardAtrr(this.cardsOnTheTable[i])
-              }
-            }
+            this.setStuff()
           }
-          this.cardsOnTheTable.forEach(function (element) { element.isClicked = false })
-          this.set.splice(0)
+          card.state = 'unclicked'
+        }
+        if (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) === 'no set here') {
+          this.addThree()
         }
       }
     }, // end of click
     findSetBotton: function () {
-      const setArray = []
-      if (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) === 'no set here') {
-        return (' ')
+      if (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) !== 'no set here') {
+        const setArray = utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2)
+        this.cardsOnTheTable.forEach((card) => {
+          console.log(setArray)
+          if (setArray[0].equalTo(card) || setArray[1].equalTo(card) || setArray[2].equalTo(card)) {
+            card.state = 'toldMe'
+            console.log(card)
+          }
+        })
+        console.log('end of session')
       } else {
-        for (let i = 0; i < 3; i++) {
-          setArray[i] = utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2)[i]
-        }
-        this.cardsOnTheTable
-          .forEach(function (card) {
-            if (setArray[0].equalTo(card) || setArray[1].equalTo(card) || setArray[2].equalTo(card)) {
-              card.inSet = true
-            }
-          })
+        console.log('no set here')
       }
     },
 
     addThree: function () {
       this.cardsOnTheTable.push(utils.takeNewCard(this.cards), utils.takeNewCard(this.cards), utils.takeNewCard(this.cards))
-      this.contain12 = false
-      this.contain15 = true
+      this.countCardsOnTheTable = 15
+      setImmediate(() => {
+        for (let i = 12; i < 15; i++) {
+          this.cardsViewsOnTheTable[i] = new CardView(this.$refs[`shape${i}`][0],
+            this.$refs[`card${i}`][0], this.cardsOnTheTable[i])
+          this.cardsViewsOnTheTable[i].drawCard()
+        }
+        this.$forceUpdate()
+      })
     },
 
-    test: function () {
-      debugger
-      for (let i = 12; i < 15; i++) {
-        this.cardsViewsOnTheTable[i] = new CardView(this.$refs[`shape${i}`][0],
-          this.$refs[`card${i}`][0], this.cardsOnTheTable[i])
-        this.cardsViewsOnTheTable[i].drawCard()
+    takeThree: function (itsINDEX) {
+      this.countCardsOnTheTable = 12
+      for (let i = 0; i < 14; i++) {
+        if (i === itsINDEX) {
+          this.cardsOnTheTable[i + 1] = this.cardsOnTheTable[i]
+          this.cardsViewsOnTheTable[i + 1] = this.cardsViewsOnTheTable[i]
+        }
       }
+      this.cardsOnTheTable.splice(12, 3)
+      this.cardsViewsOnTheTable.splice(12, 3)
+    },
+
+    setStuff: function () {
+      this.cardsOnTheTable.forEach((element, i) => {
+        if (element.state === 'clicked') {
+          if (this.countCardsOnTheTable === 12) {
+            this.cardsOnTheTable[i] = utils.takeNewCard(this.cards)
+            this.cardsViewsOnTheTable[i].setNewCardAtrr(this.cardsOnTheTable[i])
+          } else {
+            this.takeThree(i)
+          }
+          this.cardsOnTheTable[i].state = 'isTaken'
+        }
+      })
+      this.set.splice(0)
     }
   }
 }

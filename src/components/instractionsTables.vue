@@ -46,12 +46,12 @@
         </div>
       </div>
       <footer class="card-footer">
-        <button @click="prevPage()" id="arrowBack"> <img id="arrowImg" src='@/assets/angle-left-solid.svg' width="25px" height="25px"></button>     
+        <button @click="prevPage()" id="arrowBack"> <img id="arrowImg" src='@/assets/angle-left-solid.svg' width="25px" height="25px"></button>
         <div class="setCard" v-for="(card, i) in sets[contentIndex]" :key="card.index">
           <canvas :ref="'shape'+i" width="150" height="66" v-show="false" ></canvas>
           <canvas :ref="'card'+i" width="150" height="198" class="card-footer-item"></canvas>
         </div>
-        <button @click="nextPage()" id="arrowNext"> <img id="arrowImg" src='@/assets/angle-right-solid.svg' width="25px" height="25px"></button>        
+        <button @click="nextPage()" id="arrowNext"> <img id="arrowImg" src='@/assets/angle-right-solid.svg' width="25px" height="25px"></button>
       </footer>
     </div>
   </div>
@@ -84,12 +84,12 @@ export default {
           utils.cardObject('sub', 'green', 1, 'empty'),
           utils.cardObject('tri', 'purple', 2, 'stripes'),
           utils.cardObject('rect', 'red', 3, 'full')
-        ] 
+        ]
       ],
       pageData: [
         {
           title: 'How To Play The Set Game',
-          setExplain: 'if the first two cards are *different* in some atributes - the third must be also different on that atributes. ' + 
+          setExplain: 'if the first two cards are *different* in some atributes - the third must be also different on that atributes. ' +
           'if the first two have *similar* attributes - the third must have those similarities'
         },
         {
@@ -107,20 +107,12 @@ export default {
 
   },
   mounted () {
-    for (let i = 0; i < this.sets[0].length; i++) {
-      const cardView = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.sets[this.contentIndex][i])
-      this.context.push(cardView)
-      this.context[i].drawCard()
-    }
-    /* check out how to write foretch with index capture
-    console.log(this.sets[this.contentIndex])
-    debugger
     this.sets[this.contentIndex]
-      .forEach(function (card, i) {
+      .forEach((card, i) => {
         const cardView = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], card)
         this.context.push(cardView)
         this.context[i].drawCard()
-      }) */
+      })
   },
   methods: {
     nextPage: function () {
@@ -132,17 +124,9 @@ export default {
       this.changeContent(this.sets, this.contentIndex)
     },
     changeContent: function (set, x) {
-      for (let i = 0; i < 3; i++) {
-        this.context[i].setNewCardAtrr(set[x][i])
-      }
-      /*
-      this.context.forEach(function (element, i) {
+      this.context.forEach((element, i) => {
         element.setNewCardAtrr(this.sets[this.contentIndex][i])
       })
-
-      this.sets[this.contentIndex].forEach(function (element) {
-        this.context[this.contentIndex].setNewCardAtrr(element)
-      }) */
     }
   }
 }
@@ -198,5 +182,5 @@ export default {
     }
     .yellow{
         background-color: yellow;
-    }    
+    }
 </style>

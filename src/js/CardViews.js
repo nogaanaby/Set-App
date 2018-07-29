@@ -1,12 +1,12 @@
 
 export class CardView {
-  constructor (shapeCanvas, cardCanvas, card) {
+  constructor (shapeCanvas, cardCanvas, {shape, color, number, fill}) {
     this.shapeCanvas = shapeCanvas
     this.cardCanvas = cardCanvas
-    this.shape = card.shape
-    this.color = card.color
-    this.number = card.number
-    this.fill = card.fill
+    this.shape = shape
+    this.color = color
+    this.number = number
+    this.fill = fill
   }
 
   copyCardView (card) {

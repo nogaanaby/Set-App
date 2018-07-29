@@ -2,7 +2,6 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import VAnimateCss from 'v-animate-css'
 import Router from 'vue-router'
 import SetInstractions from '@/components/Set_Instractions'
 import instractionsTables from '@/components/instractionsTables'
@@ -12,7 +11,6 @@ import design from '@/components/design'
 Vue.config.productionTip = false
 
 Vue.use(Router)
-Vue.use(VAnimateCss)
 
 const routes = [
   {

@@ -169,7 +169,7 @@ h1 {
     margin: 5px;
 }
 .card-header{
-  justify-content: center;        
+  justify-content: center;
 }
 .button:after{
   border: none;
