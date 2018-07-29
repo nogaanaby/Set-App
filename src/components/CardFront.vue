@@ -6,13 +6,11 @@
       {{this.collectedCards.length / 3}} sets
     </h1>
     <a class="button is-outlined" id="tellMe" @click = "findSetBotton()">Tell Me</a>
-    <a class="button is-outlined" id="add3" @click = "addThree()">add3</a>
-    <a class="button is-outlined" id="add3" @click = "takeThree()">take3</a>
   </header>
    <div class="card-content">
       <div :class = "{cardsContainer: (countCardsOnTheTable === 12), cardsContainer15: (countCardsOnTheTable === 15)}">
       <!--{{JSON.stringify(cards)}}-->
-      <div v-for="(card, i) in numTest" :key="card.index" :class = "{notSet: notSet, cardDiv: (countCardsOnTheTable === 12), cardDiv15: (countCardsOnTheTable === 15)}">
+      <div v-for="(card, i) in cardsViewsOnTheTable" :key="card.index" :class = "{notSet: notSet, cardDiv: (countCardsOnTheTable === 12), cardDiv15: (countCardsOnTheTable === 15)}">
         <canvas id="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
         <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{clicked: card.state === 'clicked', takeSet: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
       </div>
@@ -58,18 +56,19 @@ export default{
 
     // pull out random card from the card deck and puts it on the table
     for (let i = 0; i < this.countCardsOnTheTable; i++) {
-      // this.cardsOnTheTable.push(utils.takeNewCard(this.cards))
       this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards))
     }
   },
   mounted () {
-    for (let i = 0; i < 12; i++) {
-      this.cardsViewsOnTheTable[i] = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.cardsOnTheTable[i])
-      this.cardsViewsOnTheTable[i].drawCard()
-    }
+    this.cardsViewsOnTheTable.forEach((card, i) => {
+      card.shapeCanvas = this.$refs[`shape${i}`][0]
+      card.cardCanvas = this.$refs[`card${i}`][0]
+      card.drawCard()
+    })
     if (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) === 'no set here') {
       this.addThree()
     }
+    this.allwaysSetOnTheTable()
   },
   methods: {
     /**************************************
@@ -81,51 +80,66 @@ export default{
         return true
       } else {
         this.notSet = true
+        this.resetCardState()
         return false
       }
     },
 
-    clickedCard: function (card) {
+    clickedCard: function (card, i) {
+      this.notSet = false
       if (card.state === 'clicked') {
         card.state = 'unclicked'
         this.set.pop()
       } else {
         this.set.push(card)
         card.state = 'clicked'
+        this.$forceUpdate()
+
         if (this.set.length === 3) {
           if (this.isSet()) {
             this.setStuff()
           }
-          card.state = 'unclicked'
+          this.set.splice(0)
         }
         if (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) === 'no set here') {
           this.addThree()
         }
       }
     }, // end of click
+
+    resetCardState: function () {
+      this.cardsViewsOnTheTable.forEach((element) => { element.state = 'unclicked' })
+    },
+
     findSetBotton: function () {
       if (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) !== 'no set here') {
         const setArray = utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2)
-        this.cardsOnTheTable.forEach((card) => {
-          console.log(setArray)
-          if (setArray[0].equalTo(card) || setArray[1].equalTo(card) || setArray[2].equalTo(card)) {
-            card.state = 'toldMe'
-            console.log(card)
+        this.cardsViewsOnTheTable.forEach((card, i) => {
+          if (setArray[0] === card || setArray[1] === card || setArray[2] === card) {
+            this.cardsViewsOnTheTable[i].state = 'toldMe'
+            this.$forceUpdate()
           }
         })
-        console.log('end of session')
       } else {
         console.log('no set here')
       }
     },
 
+    allwaysSetOnTheTable: function () {
+      while (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) === 'no set here') {
+        this.cardsViewsOnTheTable[1].setNewCardAtrr(utils.takeNewCard(this.cards))
+      }
+    },
+
     addThree: function () {
-      this.cardsOnTheTable.push(utils.takeNewCard(this.cards), utils.takeNewCard(this.cards), utils.takeNewCard(this.cards))
+      for (let i = 12; i < 15; i++) {
+        this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards))
+      }
       this.countCardsOnTheTable = 15
       setImmediate(() => {
         for (let i = 12; i < 15; i++) {
-          this.cardsViewsOnTheTable[i] = new CardView(this.$refs[`shape${i}`][0],
-            this.$refs[`card${i}`][0], this.cardsOnTheTable[i])
+          this.cardsViewsOnTheTable[i].shapeCanvas = this.$refs[`shape${i}`][0]
+          this.cardsViewsOnTheTable[i].cardCanvas = this.$refs[`card${i}`][0]
           this.cardsViewsOnTheTable[i].drawCard()
         }
         this.$forceUpdate()
@@ -136,27 +150,24 @@ export default{
       this.countCardsOnTheTable = 12
       for (let i = 0; i < 14; i++) {
         if (i === itsINDEX) {
-          this.cardsOnTheTable[i + 1] = this.cardsOnTheTable[i]
           this.cardsViewsOnTheTable[i + 1] = this.cardsViewsOnTheTable[i]
         }
       }
-      this.cardsOnTheTable.splice(12, 3)
       this.cardsViewsOnTheTable.splice(12, 3)
     },
 
     setStuff: function () {
-      this.cardsOnTheTable.forEach((element, i) => {
+      this.cardsViewsOnTheTable.forEach((element, i) => {
         if (element.state === 'clicked') {
           if (this.countCardsOnTheTable === 12) {
-            this.cardsOnTheTable[i] = utils.takeNewCard(this.cards)
-            this.cardsViewsOnTheTable[i].setNewCardAtrr(this.cardsOnTheTable[i])
+            this.cardsViewsOnTheTable[i].setNewCardAtrr(utils.takeNewCard(this.cards))
           } else {
             this.takeThree(i)
           }
-          this.cardsOnTheTable[i].state = 'isTaken'
+          element.state = 'isTaken'
         }
       })
-      this.set.splice(0)
+      this.allwaysSetOnTheTable()
     }
   }
 }
@@ -170,14 +181,6 @@ export default{
 }
 #setGame{
   margin: 0px;
-}
-.fitures{
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  background-color: purple;
-  margin:0 auto 20px auto;
-  padding: 5px 10px;
 }
 #tellMe{
   margin: 10px 20px;

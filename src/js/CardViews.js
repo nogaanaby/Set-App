@@ -7,6 +7,7 @@ export class CardView {
     this.color = color
     this.number = number
     this.fill = fill
+    this.state = 'unclicked'
   }
 
   copyCardView (card) {
@@ -299,6 +300,10 @@ export class CardView {
       return true
     }
     return false
+  }
+
+  printCard () {
+    console.log(`card: ` + this.shape + ` ` + this.color + ` ` + this.number + ` ` + this.fill)
   }
 }
 
