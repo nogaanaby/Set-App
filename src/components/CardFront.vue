@@ -8,9 +8,9 @@
     <a class="button is-outlined" id="tellMe" @click = "findSetBotton()">Tell Me</a>
   </header>
    <div class="card-content">
-      <div :class = "{cardsContainer: (countCardsOnTheTable === 12), cardsContainer15: (countCardsOnTheTable === 15)}">
+      <div class = "cardsContainer">
       <!--{{JSON.stringify(cards)}}-->
-      <div v-for="(card, i) in cardsViewsOnTheTable" :key="card.index" :class = "{notSet: notSet, cardDiv: (countCardsOnTheTable === 12), cardDiv15: (countCardsOnTheTable === 15)}">
+      <div v-for="(card, i) in cardsViewsOnTheTable" :key="card.index" class = "cardDiv" :class = "{notSet: notSet}">
         <canvas id="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
         <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{clicked: card.state === 'clicked', takeSet: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
       </div>
@@ -28,7 +28,6 @@ export default{
   data () {
     return {
       id: 0,
-      countCardsOnTheTable: 12,
       notSet: false, // bazzes the cards in a mistaken set
       cardsOnTheTable: [],
       cardsViewsOnTheTable: [],
@@ -37,7 +36,7 @@ export default{
       cardProperties: {
         shapes: ['rect', 'sub', 'tri'],
         numbers: [1, 2, 3],
-        colors: ['red', 'purple', 'green'],
+        colors: ['#00B89C', 'purple', '#ff6600'],
         fills: ['empty', 'full', 'stripes']
       },
       set: []
@@ -55,7 +54,7 @@ export default{
       )
 
     // pull out random card from the card deck and puts it on the table
-    for (let i = 0; i < this.countCardsOnTheTable; i++) {
+    for (let i = 0; i < 12; i++) {
       this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards))
     }
   },
@@ -65,9 +64,6 @@ export default{
       card.cardCanvas = this.$refs[`card${i}`][0]
       card.drawCard()
     })
-    if (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) === 'no set here') {
-      this.addThree()
-    }
     this.allwaysSetOnTheTable()
   },
   methods: {
@@ -97,7 +93,7 @@ export default{
 
         if (this.set.length === 3) {
           if (this.isSet()) {
-            this.setStuff()
+            this.switchCards()
           }
           this.set.splice(0)
         }
@@ -106,6 +102,16 @@ export default{
         }
       }
     }, // end of click
+
+    switchCards: function () {
+      this.cardsViewsOnTheTable.forEach((element, i) => {
+        if (element.state === 'clicked') {
+          this.cardsViewsOnTheTable[i].setNewCardAtrr(utils.takeNewCard(this.cards))
+          element.state = 'isTaken'
+        }
+      })
+      this.allwaysSetOnTheTable()
+    },
 
     resetCardState: function () {
       this.cardsViewsOnTheTable.forEach((element) => { element.state = 'unclicked' })
@@ -129,45 +135,6 @@ export default{
       while (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) === 'no set here') {
         this.cardsViewsOnTheTable[1].setNewCardAtrr(utils.takeNewCard(this.cards))
       }
-    },
-
-    addThree: function () {
-      for (let i = 12; i < 15; i++) {
-        this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards))
-      }
-      this.countCardsOnTheTable = 15
-      setImmediate(() => {
-        for (let i = 12; i < 15; i++) {
-          this.cardsViewsOnTheTable[i].shapeCanvas = this.$refs[`shape${i}`][0]
-          this.cardsViewsOnTheTable[i].cardCanvas = this.$refs[`card${i}`][0]
-          this.cardsViewsOnTheTable[i].drawCard()
-        }
-        this.$forceUpdate()
-      })
-    },
-
-    takeThree: function (itsINDEX) {
-      this.countCardsOnTheTable = 12
-      for (let i = 0; i < 14; i++) {
-        if (i === itsINDEX) {
-          this.cardsViewsOnTheTable[i + 1] = this.cardsViewsOnTheTable[i]
-        }
-      }
-      this.cardsViewsOnTheTable.splice(12, 3)
-    },
-
-    setStuff: function () {
-      this.cardsViewsOnTheTable.forEach((element, i) => {
-        if (element.state === 'clicked') {
-          if (this.countCardsOnTheTable === 12) {
-            this.cardsViewsOnTheTable[i].setNewCardAtrr(utils.takeNewCard(this.cards))
-          } else {
-            this.takeThree(i)
-          }
-          element.state = 'isTaken'
-        }
-      })
-      this.allwaysSetOnTheTable()
     }
   }
 }
@@ -197,27 +164,6 @@ export default{
  flex-wrap: wrap;
  justify-content: center;
 }
-.cardsContainer15 {
- display: flex;
- flex-direction: row;
- width: 700px;
- height: 480px;
- margin: 0px auto 30px auto;
- flex-wrap: wrap;
- justify-content: center;
-}
-
-.cardDiv15{
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  width: 14%;
-  height: 28%;
-  margin: 0 2%;
-}
-
 .cardDiv {
   display: -webkit-box;
   display: -ms-flexbox;

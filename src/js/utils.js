@@ -1,4 +1,8 @@
 export default{
+  data: {
+    myGreen: '#00B89C',
+    myRed: '#ff6600'
+  },
   cardObject (shape, color, number, filling) {
     return ({
       shape: shape,

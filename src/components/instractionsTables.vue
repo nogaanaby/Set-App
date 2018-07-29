@@ -69,11 +69,13 @@ export default {
       contentIndex: 0,
       context: [],
       someSet: [],
+      green: utils.myGreen,
+      myRed: '#ff6600',
       sets: [
         [
-          utils.cardObject('sub', 'green', 1, 'stripes'),
-          utils.cardObject('sub', 'green', 2, 'empty'),
-          utils.cardObject('sub', 'green', 3, 'full')
+          utils.cardObject('sub', '#00B89C', 1, 'stripes'),
+          utils.cardObject('sub', utils.myGreen, 2, 'empty'),
+          utils.cardObject('sub', utils.myGreen, 3, 'full')
         ],
         [
           utils.cardObject('tri', 'green', 2, 'stripes'),
