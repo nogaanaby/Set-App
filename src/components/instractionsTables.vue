@@ -119,13 +119,13 @@ export default {
   methods: {
     nextPage: function () {
       this.contentIndex = Math.min(this.contentIndex + 1, this.sets.length - 1)
-      this.changeContent(this.sets, this.contentIndex)
+      this.changeContent()
     },
     prevPage: function () {
       this.contentIndex = Math.max(this.contentIndex - 1, 0)
-      this.changeContent(this.sets, this.contentIndex)
+      this.changeContent()
     },
-    changeContent: function (set, x) {
+    changeContent: function () {
       this.context.forEach((element, i) => {
         element.setNewCardAtrr(this.sets[this.contentIndex][i])
       })
