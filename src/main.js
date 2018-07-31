@@ -5,8 +5,9 @@ import App from './App'
 import Router from 'vue-router'
 import SetInstractions from '@/components/Set_Instractions'
 import instractionsTables from '@/components/instractionsTables'
-import cardFront from '@/components/cardFront'
+import game from '@/components/game'
 import design from '@/components/design'
+import start from '@/components/start'
 
 Vue.config.productionTip = false
 
@@ -19,9 +20,9 @@ const routes = [
     component: SetInstractions
   },
   {
-    path: '/CardFront',
-    name: 'cardFront',
-    component: cardFront
+    path: '/game',
+    name: 'game',
+    component: game
   },
   {
     path: '/design',
@@ -32,6 +33,11 @@ const routes = [
     path: '/instractionsTables',
     name: 'instractionsTables',
     component: instractionsTables
+  },
+  {
+    path: '/start',
+    name: 'start',
+    component: start
   }
 ]
 

@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <gameMenu></gameMenu>
     <div class="card">
       <header class="card-header">
         <h1>
@@ -8,50 +9,56 @@
       </header>
       <div class="card-content">
         <div class="content">
-            {{pageData[contentIndex].setExplain}}
+          {{pageData[contentIndex].setExplain}}
+        </div>
+        <div class="columns">
+          <div class="setCard column" v-for="(card, i) in sets[contentIndex]" :key="card.index">
+            <canvas :ref="'shape'+i" width="150" height="66" v-show="false" ></canvas>
+            <canvas :ref="'card'+i" width="150" height="198"></canvas>
+          </div>
         </div>
         <div class="cardTables">
           <table class="table is-striped">
-            <thead class="cardText">
-              <th class="grey"></th>
-              <th class="yellow">card 1</th>
-              <th class="yellow">card 2</th>
-              <th class="pink">card 3</th>
-            </thead>
+
             <tr class="cardText">
-              <td class="grey" style="font-weight: bold; width: 10%">shape</td>
               <td v-for="(shape, i) in sets[contentIndex]" :key="shape.index">
                   {{sets[contentIndex][i].shape}}
+                  <img v-show= '!setIcon[contentIndex][i].sameShape' class="xicon icon" src='@/assets/xicon.png'>
+                  <img v-show= 'setIcon[contentIndex][i].sameShape' class="vicon icon" src='@/assets/vicon.png'>
               </td>
             </tr>
             <tr class="cardText">
-              <td class="grey" style="font-weight: bold">number</td>
-              <td v-for="(number, i) in sets[contentIndex]" :key="number.index">
+              <td v-for="(card, i) in sets[contentIndex]" :key="card.index">
                   {{sets[contentIndex][i].number}} shapes
+                  <img v-show= '!setIcon[contentIndex][i].sameNumber' class="xicon icon" src='@/assets/xicon.png'>
+                  <img v-show= 'setIcon[contentIndex][i].sameNumber' class="vicon icon" src='@/assets/vicon.png'>
               </td>
             </tr>
             <tr class="cardText">
-              <td class="grey" style="font-weight: bold">color</td>
               <td v-for="(color, i) in sets[contentIndex]" :key="color.index">
                   {{sets[contentIndex][i].color}}
+                  <img v-show= '!setIcon[contentIndex][i].sameColor' class="xicon icon" src='@/assets/xicon.png'>
+                  <img v-show= 'setIcon[contentIndex][i].sameColor' class="vicon icon" src='@/assets/vicon.png'>
               </td>
             </tr>
             <tr class="cardText">
-              <td class="grey" style="font-weight: bold">fill</td>
               <td v-for="(fill, i) in sets[contentIndex]" :key="fill.index">
                 {{sets[contentIndex][i].fill}}
+                  <img v-show= '!setIcon[contentIndex][i].sameFill' class="xicon icon" src='@/assets/xicon.png'>
+                  <img v-show= 'setIcon[contentIndex][i].sameFill' class="vicon icon" src='@/assets/vicon.png'>                
               </td>
             </tr>
           </table>
         </div>
       </div>
       <footer class="card-footer">
-        <button @click="prevPage()" id="arrowBack"> <img id="arrowImg" src='@/assets/angle-left-solid.svg' width="25px" height="25px"></button>
-        <div class="setCard" v-for="(card, i) in sets[contentIndex]" :key="card.index">
-          <canvas :ref="'shape'+i" width="150" height="66" v-show="false" ></canvas>
-          <canvas :ref="'card'+i" width="150" height="198" class="card-footer-item"></canvas>
-        </div>
-        <button @click="nextPage()" id="arrowNext"> <img id="arrowImg" src='@/assets/angle-right-solid.svg' width="25px" height="25px"></button>
+        <nav class="pagination is-centered is-rounded" role="navigation" aria-label="pagination">
+          <a class="pagination-previous" @click="prevPage()"><img id="arrowImg" src='@/assets/angle-left-solid.svg' width="25px" height="25px"></a>
+          <a class="pagination-next" @click="nextPage()"><img id="arrowImg" src='@/assets/angle-right-solid.svg' width="25px" height="25px"></a>
+          <ul class="pagination-list">
+            <li><a class="pagination-link" aria-label="Page 46" aria-current="page">{{this.contentIndex + 1}}</a></li>
+          </ul>
+        </nav>
       </footer>
     </div>
   </div>
@@ -61,21 +68,23 @@
 
 import utils from '../js/utils.js'
 import { CardView } from '../js/CardViews.js'
+import gameMenu from '@/components/nav.vue'
 
 export default {
   name: 'instractionsTables',
+  components: {
+    gameMenu
+  },
   data () {
     return {
       contentIndex: 0,
       context: [],
-      someSet: [],
-      green: utils.myGreen,
-      myRed: '#ff6600',
+      icon: 'xicon',
       sets: [
         [
-          utils.cardObject('sub', '#00B89C', 1, 'stripes'),
-          utils.cardObject('sub', utils.myGreen, 2, 'empty'),
-          utils.cardObject('sub', utils.myGreen, 3, 'full')
+          utils.cardObject('sub', 'purple', 1, 'stripes'),
+          utils.cardObject('sub', 'purple', 2, 'stripes'),
+          utils.cardObject('sub', 'purple', 3, 'stripes')
         ],
         [
           utils.cardObject('tri', 'green', 2, 'stripes'),
@@ -83,30 +92,56 @@ export default {
           utils.cardObject('rect', 'purple', 2, 'stripes')
         ],
         [
+          utils.cardObject('tri', 'green', 2, 'stripes'),
+          utils.cardObject('sub', 'red', 2, 'stripes'),
+          utils.cardObject('rect', 'purple', 3, 'stripes')
+        ],
+        [
           utils.cardObject('sub', 'green', 1, 'empty'),
           utils.cardObject('tri', 'purple', 2, 'stripes'),
           utils.cardObject('rect', 'red', 3, 'full')
+        ],
+        [
+          utils.cardObject('sub', 'green', 1, 'empty'),
+          utils.cardObject('tri', 'purple', 2, 'stripes'),
+          utils.cardObject('rect', 'purple', 3, 'full')
         ]
       ],
+      setIcon: [[], [], [], [], []],
       pageData: [
         {
           title: 'How To Play The Set Game',
-          setExplain: 'if the first two cards are *different* in some atributes - the third must be also different on that atributes. ' +
-          'if the first two have *similar* attributes - the third must have those similarities'
+          setExplain:
+          'If the first two have the same attributes - the third must have those similarities. ' +
+          'If the first two cards are different in some atributes - the third must be also different on that atributes. '
         },
         {
-          title: 'This Is A Set Example',
-          setExplain: 'the first two cards are different in the numbers of shapes on the cards and in the fills - the third is cooperates. the first two has the same shape and color and that third also have them'
+          title: 'This Is Anther Set Example',
+          setExplain: 'The first two has the same fills and number of shapes - The third also have that. thay different in the colors and shapes - the third is also'
         },
         {
-          title: 'This Is Another Set Example',
-          setExplain: 'they all have the same numbers of shapes on the card and fill. they all different in the shapes and colors.'
+          title: `But If I Change 1 Little Thing... It Won't Be A Set Anymore`,
+          setExplain: 'Because the first two has 2 shapes on them and the third has 3'
+        },
+        {
+          title: 'This Is Also A Valid Set!',
+          setExplain: 'The first two are completly different in all the attributes - and the third is exactly different from both of them!'
+        },
+        {
+          title: `But This Isn't`,
+          setExplain: 'The second and the third card are purple while the first is green!'
         }
       ]
     }
   },
   created () {
-
+    for (let ci = 0; ci < this.sets.length; ci++) {
+      for (let i = 0; i < 2; i++) {
+        this.setIcon[ci].push(utils.compare(this.sets[ci][i], this.sets[ci][i + 1]))
+      }
+      this.setIcon[ci].push(utils.compare(this.sets[ci][0], this.sets[ci][2]))
+    }
+    console.log(this.sets.length)
   },
   mounted () {
     this.sets[this.contentIndex]
@@ -135,12 +170,20 @@ export default {
 </script>
 
 <style scoped>
+    .content{
+      font-size: 1.2em;
+      width: 70%;
+      margin: auto;
+      height: 100px;
+    }
+    .columns{
+      width: 60%;
+      margin: auto;
+    }
     .cardTables{
-        margin-left: 10px;
-        margin-right: 10px;
-        width: 100%;
+        margin: auto;
+        width: 60%;
         display: flex;
-        justify-content: center;
         border-radius: 7px;
         flex-direction: column;
         flex-wrap: wrap;
@@ -160,11 +203,6 @@ export default {
       object-fit: contain;
       height: 100%;
     }
-    .exampleSet2{
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
-    }
     .setCard{
         display: -webkit-box;
         display: -ms-flexbox;
@@ -174,15 +212,20 @@ export default {
         margin: 0 5%;
     }
     .card-footer{
-        justify-content: center;
+      justify-content: center;
     }
-    .grey{
-        background-color: lightgrey;
+    .icon{
+      width: 40px;
+      height: 27px;
     }
-    .pink{
-        background-color: pink;
+    .pagination{
+      width: 100%;
+      margin:20px;
     }
-    .yellow{
-        background-color: yellow;
+    a{
+      border: none;
+    }
+    a:active:before{
+      border: none;
     }
 </style>

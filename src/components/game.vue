@@ -1,5 +1,6 @@
 <template>
   <div class="intemidiate game">
+    <gameMenu></gameMenu>
   <div class="card">
   <header class="card-header">
     <h1 style="margin-left: 12%">
@@ -23,8 +24,12 @@
 <script>
 import utils from '../js/utils.js'
 import { CardView } from '../js/CardViews.js'
+import gameMenu from '@/components/nav.vue'
 export default{
-  name: 'cardFront',
+  name: 'game',
+  components: {
+    gameMenu
+  },
   data () {
     return {
       id: 0,
@@ -36,7 +41,7 @@ export default{
       cardProperties: {
         shapes: ['rect', 'sub', 'tri'],
         numbers: [1, 2, 3],
-        colors: ['#00B89C', 'purple', '#ff6600'],
+        colors: ['green', 'purple', 'red'],
         fills: ['empty', 'full', 'stripes']
       },
       set: []
@@ -141,80 +146,142 @@ export default{
 </script>
 
 <style scoped>
-.game {
- display: flex;
- justify-content: center;
- flex-direction: column;
-}
-#setGame{
-  margin: 0px;
-}
-#tellMe{
-  margin: 10px 20px;
-}
-#collected{
-  font-size: 2em;
-}
-.cardsContainer {
- display: flex;
- flex-direction: row;
- width: 550px;
- height: 480px;
- margin: 0px auto 30px auto;
- flex-wrap: wrap;
- justify-content: center;
-}
-.cardDiv {
-  display: -webkit-box;
-  display: -ms-flexbox;
+/*************************************
+All device
+***************************************/
+  .game {
   display: flex;
-  -ms-flex-wrap: wrap;
+  justify-content: center;
+  flex-direction: column;
+  }
+  #setGame{
+    margin: 0px;
+  }
+
+  #cardCanvas{
+    width: 100%;
+  object-fit: contain;
+    height: 100%;
+  }
+  #tellMe{
+    margin: 10px 20px;
+  }
+/*************************************
+desktop
+***************************************/
+@media only screen and (min-width: 769px) {
+  .game {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  }
+  #setGame{
+    margin: 0px;
+  }
+
+  #collected{
+    font-size: 2em;
+  }
+  .cardsContainer {
+  display: flex;
+  flex-direction: row;
+  width: 550px;
+  height: 480px;
+  margin: 0px auto 30px auto;
   flex-wrap: wrap;
-  width: 19%;
-  height: 28%;
-  margin: 0 2%;
-}
-
-#cardCanvas{
-  width: 100%;
- object-fit: contain;
-  height: 100%;
-}
-
-.clicked {
- border: solid 3px grey;
-}
-.takeSet {
-    opacity: 1;
-    animation: fade 2s linear;
-}
-@keyframes fade {
-  0% { opacity: 0 }
-  0%, 100% { opacity: 1 }
-}
-.notSet{
-  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-@keyframes shake {
-  10%, 90% {
-    transform: translate3d(-1px, 0, 0);
+  justify-content: center;
   }
-  20%, 80% {
-    transform: translate3d(2px, 0, 0);
+  .cardDiv {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    width: 19%;
+    height: 28%;
+    margin: 0 2%;
   }
 
-  30%, 50%, 70% {
-    transform: translate3d(-4px, 0, 0);
+  #cardCanvas{
+    width: 100%;
+  object-fit: contain;
+    height: 100%;
   }
 
-  40%, 60% {
-    transform: translate3d(4px, 0, 0);
+  .clicked {
+  border: solid 3px grey;
+  }
+  .takeSet {
+      opacity: 1;
+      animation: fade 2s linear;
+  }
+  @keyframes fade {
+    0% { opacity: 0 }
+    0%, 100% { opacity: 1 }
+  }
+  .notSet{
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  @keyframes shake {
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+    20%, 80% {
+      transform: translate3d(2px, 0, 0);
+    }
+
+    30%, 50%, 70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+
+    40%, 60% {
+      transform: translate3d(4px, 0, 0);
+    }
+  }
+  .findSet {
+  border: solid 3px lightgreen;
   }
 }
-.findSet {
- border: solid 3px lightgreen;
+
+/*************************************
+mobile
+***************************************/
+@media only screen and (max-width: 768px) {
+    body {
+        background-color: lightblue;
+    }
+
+    .cardDiv {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    width: 20%;
+    height: 30%;
+    margin: 0 1%;
+  }
+
+  .cardsContainer {
+    display: flex;
+    flex-direction: row;
+    width: 260px;
+    height: 270px;
+    margin: 30px auto 30px auto;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .card-content{
+    padding:0;
+  }
+
+  .button{
+    width: 20%;
+    font-size: 0.75em;
+  }
 }
 </style>

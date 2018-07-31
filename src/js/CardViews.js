@@ -4,10 +4,16 @@ export class CardView {
     this.shapeCanvas = shapeCanvas
     this.cardCanvas = cardCanvas
     this.shape = shape
-    this.color = color
     this.number = number
     this.fill = fill
     this.state = 'unclicked'
+    if (color === 'green') {
+      this.color = '#00B89C'
+    } else if (color === 'red') {
+      this.color = '#ff6600'
+    } else {
+      this.color = color
+    }
   }
 
   copyCardView (card) {
@@ -33,9 +39,15 @@ export class CardView {
     this.getCardContext.clearRect(0, 0, 150, 198)
     this.getShapeContext.clearRect(0, 0, 150, 66)
     this.shape = card.shape
-    this.color = card.color
     this.fill = card.fill
     this.number = card.number
+    if (card.color === 'green') {
+      this.color = '#00B89C'
+    } else if (card.color === 'red') {
+      this.color = '#ff6600'
+    } else {
+      this.color = card.color
+    }
     this.drawCard()
   }
 

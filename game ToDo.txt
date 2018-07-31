@@ -1,7 +1,9 @@
 to add the game
-add3 on automatic
+
 fade animation to the cards
 dont repit yourself on code
+MOBILE!!!
+end of game + clock
 
 move the utils and the card class to different files - ddone
-
+allways set on the table - donee

@@ -1,13 +1,7 @@
 <template>
   <div id="app">
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-  <span aria-hidden="true"></span>
-  <span aria-hidden="true"></span>
-  <span aria-hidden="true"></span>
-  </a>
-<gameMenu></gameMenu>
     <div v-bind:class="{blur: blur}" class="main">
-      <router-link to="/CardFront" class="link"></router-link>
+      <router-link to="/game" class="link"></router-link>
       <router-view></router-view>
     </div>
   </div>
@@ -15,17 +9,21 @@
 
 <script>
 import SetInstractions from '@/components/Set_Instractions'
-import CardFront from '@/components/CardFront.vue'
+import instractionsTables from '@/components/instractionsTables'
+import game from '@/components/game.vue'
 import design from '@/components/design.vue'
 import gameMenu from '@/components/nav.vue'
+import start from '@/components/start.vue'
 
 export default {
   name: 'app',
   components: {
     SetInstractions,
-    CardFront,
+    game,
     gameMenu,
-    design
+    design,
+    start,
+    instractionsTables
   },
   data () {
     return {
@@ -158,10 +156,6 @@ ul{
     font: inherit;
     cursor: pointer;
     outline: inherit;
-}
-#arrowImg:hover{
-    width:50px;
-    height:50px;
 }
 h1 {
     font-size: 1.5em;

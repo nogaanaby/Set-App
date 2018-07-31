@@ -26,7 +26,7 @@
           <canvas :ref="'shape'+i" width="150" height="66" v-show="false" ></canvas>
           <canvas :ref="'card'+i" width="150" height="198"></canvas>
           </div>
-        </div>                
+        </div>
       </div>
       <footer class="card-footer">
         <a href="#" class="card-footer-item">Save</a>
@@ -75,15 +75,13 @@ export default {
       this.context.push(cardView)
       this.context[i].drawCard()
     }
-    /*
-    this.sets
-      .forEach( function (set) {
-        set.forEach( function (card) {
-          const cardView = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.sets[0][i])
-          this.context.push(cardView)
-          this.context[i].drawCard()          
-        })
-      }) */
+/*
+    this.sets[i]
+      .forEach( function (card) {
+        const cardView = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.sets[0][i])
+        this.context.push(cardView)
+        this.context[i].drawCard() 
+      })*/
   },
   methods: {
 

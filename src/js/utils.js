@@ -1,14 +1,21 @@
 export default{
-  data: {
-    myGreen: '#00B89C',
-    myRed: '#ff6600'
-  },
-  cardObject (shape, color, number, filling) {
+  cardObject (shape, color, number, fill) {
     return ({
       shape: shape,
       color: color,
       number: number,
-      fill: filling
+      fill: fill
+    })
+  },
+
+  compare (card1, card2) {
+    return ({
+      card1: card1,
+      card2: card2,
+      sameShape: (card1.shape === card2.shape),
+      sameColor: (card1.color === card2.color),
+      sameNumber: (card1.number === card2.number),
+      sameFill: (card1.fill === card2.fill)
     })
   },
 
