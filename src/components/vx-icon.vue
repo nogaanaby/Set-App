@@ -13,6 +13,9 @@ export default {
   props: ['setIcon'],
   data () {
     return {}
+  },
+  mounted () {
+    console.log(this.setIcon)
   }
 }
 </script>

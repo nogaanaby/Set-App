@@ -1,3 +1,4 @@
+import { CardView } from '../js/CardViews.js'
 export default{
   cardObject (shape, color, number, fill) {
     return ({
@@ -15,6 +16,11 @@ export default{
       sameNumber: (card1.number === card2.number || card1.number === card3.number),
       sameFill: (card1.fill === card2.fill || card1.fill === card3.fill)
     })
+  },
+
+  drawCards (shapeCanvas, cardCanvas, card) {
+    const cardView = new CardView(shapeCanvas, cardCanvas, card)
+    cardView.drawCard()
   },
 
   /**************************************

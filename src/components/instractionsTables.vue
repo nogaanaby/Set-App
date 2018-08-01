@@ -47,15 +47,8 @@
           </table>
         </div>
       </div>
-      <footer class="card-footer">
-        <nav class="pagination is-centered is-rounded" role="navigation" aria-label="pagination">
-          <a class="pagination-previous" @click="prevPage()"><img id="arrowImg" src='@/assets/angle-left-solid.svg' width="25px" height="25px"></a>
-          <a class="pagination-next" @click="nextPage()"><img id="arrowImg" src='@/assets/angle-right-solid.svg' width="25px" height="25px"></a>
-          <ul class="pagination-list">
-            <li><a class="pagination-link" aria-label="Page 46" aria-current="page">{{this.contentIndex + 1}}</a></li>
-          </ul>
-        </nav>
-      </footer>
+      <!--<footer class="card-footer"> <footerNextPage class="footer" v-bind:sets = "sets" @indexUpdate= "newIndex => contentIndex = newIndex" v-bind:context = "context"></footerNextPage></footer>-->
+      <footer class="card-footer"> <footerNextPage class="footer" v-bind:next = "nextPage" v-bind:prev = "prevPage" v-bind:pageCount = "sets.length"></footerNextPage></footer>
     </div>
   </div>
 </template>
@@ -66,12 +59,14 @@ import utils from '../js/utils.js'
 import { CardView } from '../js/CardViews.js'
 import gameMenu from '@/components/nav.vue'
 import vxIcon from '@/components/vx-icon'
+import footerNextPage from '@/components/footer'
 
 export default {
   name: 'instractionsTables',
   components: {
     gameMenu,
-    vxIcon
+    vxIcon,
+    footerNextPage
   },
   data () {
     return {
@@ -132,15 +127,6 @@ export default {
     }
   },
   created () {
-    /*
-    for (let ci = 0; ci < this.sets.length; ci++) {
-      for (let i = 0; i < 2; i++) {
-        this.setIcon[ci].push(utils.compare(this.sets[ci][i], this.sets[ci][i + 1]))
-      }
-      this.setIcon[ci].push(utils.compare(this.sets[ci][0], this.sets[ci][2]))
-    }
-    console.log(this.setIcon) */
-
     for (let ci = 0; ci < this.sets.length; ci++) {
       this.setIcon[ci].push(utils.compare(this.sets[ci][0], this.sets[ci][1], this.sets[ci][2]))
       this.setIcon[ci].push(utils.compare(this.sets[ci][1], this.sets[ci][2], this.sets[ci][0]))
@@ -216,17 +202,10 @@ export default {
         height: 10%;
         margin: 0 5%;
     }
-    .card-footer{
-      justify-content: center;
-    }
-    .pagination{
-      width: 100%;
-      margin:20px;
-    }
-    a{
-      border: none;
-    }
-    a:active:before{
-      border: none;
-    }
+.card-footer, .footer{
+  width: 100%;
+  height: 50px;
+  margin: 0;
+  padding: 0;
+}
 </style>

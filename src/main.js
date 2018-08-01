@@ -9,6 +9,7 @@ import game from '@/components/game'
 import design from '@/components/design'
 import start from '@/components/start'
 import practice from '@/components/practice'
+import footerNextPage from '@/components/footer'
 
 Vue.config.productionTip = false
 
@@ -44,6 +45,11 @@ const routes = [
     path: '/practice',
     name: 'practice',
     component: practice
+  },
+  {
+    path: '/footer',
+    name: 'footerNextPage',
+    component: footerNextPage
   }
 ]
 
