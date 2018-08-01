@@ -14,6 +14,7 @@ import game from '@/components/game.vue'
 import design from '@/components/design.vue'
 import gameMenu from '@/components/nav.vue'
 import start from '@/components/start.vue'
+import practice from '@/components/practice'
 
 export default {
   name: 'app',
@@ -23,7 +24,8 @@ export default {
     gameMenu,
     design,
     start,
-    instractionsTables
+    instractionsTables,
+    practice
   },
   data () {
     return {

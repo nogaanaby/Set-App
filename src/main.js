@@ -8,6 +8,7 @@ import instractionsTables from '@/components/instractionsTables'
 import game from '@/components/game'
 import design from '@/components/design'
 import start from '@/components/start'
+import practice from '@/components/practice'
 
 Vue.config.productionTip = false
 
@@ -38,6 +39,11 @@ const routes = [
     path: '/start',
     name: 'start',
     component: start
+  },
+  {
+    path: '/practice',
+    name: 'practice',
+    component: practice
   }
 ]
 

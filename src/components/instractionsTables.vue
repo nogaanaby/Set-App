@@ -22,30 +22,26 @@
 
             <tr class="cardText">
               <td v-for="(shape, i) in sets[contentIndex]" :key="shape.index">
-                  {{sets[contentIndex][i].shape}}
-                  <img v-show= '!setIcon[contentIndex][i].sameShape' class="xicon icon" src='@/assets/xicon.png'>
-                  <img v-show= 'setIcon[contentIndex][i].sameShape' class="vicon icon" src='@/assets/vicon.png'>
+                <vx-icon v-bind:setIcon = "setIcon[contentIndex][i].sameShape"></vx-icon>
+                {{sets[contentIndex][i].shape}}
               </td>
             </tr>
             <tr class="cardText">
               <td v-for="(card, i) in sets[contentIndex]" :key="card.index">
+                  <vx-icon v-bind:setIcon = "setIcon[contentIndex][i].sameNumber"></vx-icon>
                   {{sets[contentIndex][i].number}} shapes
-                  <img v-show= '!setIcon[contentIndex][i].sameNumber' class="xicon icon" src='@/assets/xicon.png'>
-                  <img v-show= 'setIcon[contentIndex][i].sameNumber' class="vicon icon" src='@/assets/vicon.png'>
               </td>
             </tr>
             <tr class="cardText">
               <td v-for="(color, i) in sets[contentIndex]" :key="color.index">
+                  <vx-icon v-bind:setIcon = "setIcon[contentIndex][i].sameColor"></vx-icon>
                   {{sets[contentIndex][i].color}}
-                  <img v-show= '!setIcon[contentIndex][i].sameColor' class="xicon icon" src='@/assets/xicon.png'>
-                  <img v-show= 'setIcon[contentIndex][i].sameColor' class="vicon icon" src='@/assets/vicon.png'>
               </td>
             </tr>
             <tr class="cardText">
               <td v-for="(fill, i) in sets[contentIndex]" :key="fill.index">
+                <vx-icon v-bind:setIcon = "setIcon[contentIndex][i].sameFill"></vx-icon>
                 {{sets[contentIndex][i].fill}}
-                  <img v-show= '!setIcon[contentIndex][i].sameFill' class="xicon icon" src='@/assets/xicon.png'>
-                  <img v-show= 'setIcon[contentIndex][i].sameFill' class="vicon icon" src='@/assets/vicon.png'>                
               </td>
             </tr>
           </table>
@@ -69,17 +65,18 @@
 import utils from '../js/utils.js'
 import { CardView } from '../js/CardViews.js'
 import gameMenu from '@/components/nav.vue'
+import vxIcon from '@/components/vx-icon'
 
 export default {
   name: 'instractionsTables',
   components: {
-    gameMenu
+    gameMenu,
+    vxIcon
   },
   data () {
     return {
       contentIndex: 0,
       context: [],
-      icon: 'xicon',
       sets: [
         [
           utils.cardObject('sub', 'purple', 1, 'stripes'),
@@ -135,13 +132,21 @@ export default {
     }
   },
   created () {
+    /*
     for (let ci = 0; ci < this.sets.length; ci++) {
       for (let i = 0; i < 2; i++) {
         this.setIcon[ci].push(utils.compare(this.sets[ci][i], this.sets[ci][i + 1]))
       }
       this.setIcon[ci].push(utils.compare(this.sets[ci][0], this.sets[ci][2]))
     }
-    console.log(this.sets.length)
+    console.log(this.setIcon) */
+
+    for (let ci = 0; ci < this.sets.length; ci++) {
+      this.setIcon[ci].push(utils.compare(this.sets[ci][0], this.sets[ci][1], this.sets[ci][2]))
+      this.setIcon[ci].push(utils.compare(this.sets[ci][1], this.sets[ci][2], this.sets[ci][0]))
+      this.setIcon[ci].push(utils.compare(this.sets[ci][2], this.sets[ci][1], this.sets[ci][0]))
+    }
+    console.log(this.setIcon)
   },
   mounted () {
     this.sets[this.contentIndex]
@@ -171,13 +176,13 @@ export default {
 
 <style scoped>
     .content{
-      font-size: 1.2em;
+      font-size: 1em;
       width: 70%;
       margin: auto;
-      height: 100px;
+      height: 60px;
     }
     .columns{
-      width: 60%;
+      width: 50%;
       margin: auto;
     }
     .cardTables{
@@ -213,10 +218,6 @@ export default {
     }
     .card-footer{
       justify-content: center;
-    }
-    .icon{
-      width: 40px;
-      height: 27px;
     }
     .pagination{
       width: 100%;

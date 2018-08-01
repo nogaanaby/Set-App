@@ -11,6 +11,7 @@
         <a class="button is-medium is-fullwidth"><router-link to="/game">Play Beaginners</router-link></a>
         <a class="button is-medium is-fullwidth"><router-link to="/game">Play Intemidiate</router-link></a>
         <a class="button is-medium is-fullwidth"><router-link to="/instractionsTables">How To Play</router-link></a>
+        <a class="button is-medium is-fullwidth"><router-link to="/Practice">Practice!</router-link></a>
       </div>
     </div>
   </div>

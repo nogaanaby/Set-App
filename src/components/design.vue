@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+  <gameMenu></gameMenu>
     <div class="card">
       <header class="card-header">
         <h1>
@@ -15,14 +16,14 @@
         </div>
 
         <div class="columns">
-          <div class="setCard column" v-for="(card, i) in sets[0]" :key="card.index">
+          <div class="setCard column" v-for="(card, i) in sets[1]" :key="card.index">
           <canvas :ref="'shape'+i" width="150" height="66" v-show="false" ></canvas>
           <canvas :ref="'card'+i" width="150" height="198"></canvas>
           </div>
         </div>
 
         <div class="columns">
-          <div class="setCard column" v-for="(card, i) in sets[0]" :key="card.index">
+          <div class="setCard column" v-for="(card, i) in sets[2]" :key="card.index">
           <canvas :ref="'shape'+i" width="150" height="66" v-show="false" ></canvas>
           <canvas :ref="'card'+i" width="150" height="198"></canvas>
           </div>
@@ -41,11 +42,13 @@
 import instractionsTables from '@/components/instractionsTables'
 import utils from '../js/utils.js'
 import { CardView } from '../js/CardViews.js'
+import gameMenu from '@/components/nav.vue'
 
 export default {
   name: 'design',
   components: {
-    'setExampleTable': instractionsTables
+    'setExampleTable': instractionsTables,
+    gameMenu
   },
   data () {
     return {
@@ -75,13 +78,6 @@ export default {
       this.context.push(cardView)
       this.context[i].drawCard()
     }
-/*
-    this.sets[i]
-      .forEach( function (card) {
-        const cardView = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.sets[0][i])
-        this.context.push(cardView)
-        this.context[i].drawCard() 
-      })*/
   },
   methods: {
 

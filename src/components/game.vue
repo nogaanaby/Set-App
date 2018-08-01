@@ -53,7 +53,7 @@ export default{
       .forEach(shape => this.cardProperties.numbers
         .forEach(number => this.cardProperties.colors
           .forEach(color => this.cardProperties.fills
-            .forEach((fill, id, state) => this.cards.push({id: this.id++, shape, number, color, fill, state: 'unclicked'}))
+            .forEach((fill, id) => this.cards.push({id: this.id++, shape, number, color, fill}))
           )
         )
       )
