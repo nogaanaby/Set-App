@@ -47,7 +47,7 @@
         </div><!-- columns -->
       </div><!-- card-content -->
       <footer class="card-footer">
-        <footerNextPage class="footer" v-bind:next = "nextPage" v-bind:prev = "prevPage" v-bind:pageCount = "sets.length">
+        <footerNextPage class="footer" v-bind:pageCount = "sets.length" v-bind:changeContent = "changeContent" @indexUpdate= "newIndex => contentIndex = newIndex">
         </footerNextPage>
       </footer>
     </div><!-- card -->
@@ -194,14 +194,6 @@ export default {
           }
         }
       })
-    },
-    nextPage: function () {
-      this.contentIndex = Math.min(this.contentIndex + 1, this.sets.length - 1)
-      this.changeContent()
-    },
-    prevPage: function () {
-      this.contentIndex = Math.max(this.contentIndex - 1, 0)
-      this.changeContent()
     },
     changeContent: function () {
       this.sets[this.contentIndex].first2cards.forEach((card, i) => {

@@ -1,9 +1,12 @@
 <template>
   <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-        <a class="logo">
+        <a class="desktopLogo">
          <img id="myLogo" src='@/assets/logo-white-align-left.png'>
         </a>
+        <a class="mobileLogo">
+         <img id="myLogo" src='@/assets/logoMiddle.png'>
+        </a>        
     </div>
     <div class="navbar-menu">
       <div class="navbar-end" @click="openMenu()">
@@ -55,6 +58,9 @@ desktop
   #arrowMain{
     margin: 15px;
   }
+  .mobileLogo{
+    display: none;
+  }
 }
 /*************************************
 mobile
@@ -62,8 +68,10 @@ mobile
 @media only screen and (max-width: 768px) {
   #myLogo{
     width: 70%;
-    float: left;
-    margin: 10px;
+    margin: auto;
+  }
+  .desktopLogo{
+    display: none;
   }
 }
 </style>

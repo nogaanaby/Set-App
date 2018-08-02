@@ -1,9 +1,13 @@
 to add the game
 
-fade animation to the cards
-dont repit yourself on code
-MOBILE!!!
-end of game + clock
+animations- library or my one css animations file
 
-move the utils and the card class to different files - ddone
-allways set on the table - donee
+MOBILE!!! - make sure the game and start page is ok and arrange the practice and instractions page
+game : end of game + clock
+
+design - there are staff I can improv, dorn will be the guy dont spend time on it
+
+dont repit yourself on code:
+
+almost every page has the coontext and computed\mounted methods, witch turning complicated every time,
+make sure theres a different component for the canvasses and the drowings

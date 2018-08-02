@@ -47,8 +47,8 @@
           </table>
         </div>
       </div>
-      <!--<footer class="card-footer"> <footerNextPage class="footer" v-bind:sets = "sets" @indexUpdate= "newIndex => contentIndex = newIndex" v-bind:context = "context"></footerNextPage></footer>-->
-      <footer class="card-footer"> <footerNextPage class="footer" v-bind:next = "nextPage" v-bind:prev = "prevPage" v-bind:pageCount = "sets.length"></footerNextPage></footer>
+      <footer class="card-footer"> <footerNextPage class="footer" v-bind:pageCount = "sets.length" v-bind:changeContent = "changeContent" @indexUpdate= "newIndex => contentIndex = newIndex"></footerNextPage></footer>
+      <!--<footer class="card-footer"> <footerNextPage class="footer" v-bind:next = "nextPage" v-bind:prev = "prevPage" v-bind:pageCount = "sets.length"></footerNextPage></footer>-->
     </div>
   </div>
 </template>
@@ -143,14 +143,6 @@ export default {
       })
   },
   methods: {
-    nextPage: function () {
-      this.contentIndex = Math.min(this.contentIndex + 1, this.sets.length - 1)
-      this.changeContent()
-    },
-    prevPage: function () {
-      this.contentIndex = Math.max(this.contentIndex - 1, 0)
-      this.changeContent()
-    },
     changeContent: function () {
       this.context.forEach((element, i) => {
         element.setNewCardAtrr(this.sets[this.contentIndex][i])

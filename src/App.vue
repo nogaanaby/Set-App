@@ -56,6 +56,23 @@ export default {
 @import './assets/w3.css';
 @import './assets/bulma.css';
 
+/*************************************
+Mobile
+***************************************/
+
+
+/*************************************
+Desktop
+***************************************/
+@media only screen and (min-width: 769px) {
+  #app {
+    width: 70%;
+  }
+}
+/*************************************
+All Devices
+***************************************/
+
 html{
   background-color: gainsboro;
   margin: 0px;
@@ -69,7 +86,6 @@ html{
   color: #2c3e50;
   margin-top: 0px;
   margin: auto;
-  width: 70%;
 }
 *{
   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -97,18 +113,6 @@ html{
   z-index: 1;
   position: absolute;
   animation: fade 1s linear;
-}
-@keyframes fade {
-  0%{ opacity: 0 }
-  50% { opacity: 1 }
-}
-#menuTitle{
-  color: white;
-}
-.menuButtons{
-  margin: 10px auto;
-  padding: 10px;
-  width: 10%;
 }
 #gameButton{
   padding: 10px 32px;
