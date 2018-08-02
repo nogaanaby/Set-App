@@ -27,7 +27,7 @@
                 <div class="dropdown-content">
                   <div class="dropdown-item" v-for="(card, i) in sets[contentIndex].optionsForTheThird" :key="card.index">
                     <canvas :ref="'shape1'+i" width="150" height="66" v-show="false" ></canvas>
-                    <canvas :ref="'card1'+i" width="150" height="198" @click = "clickCard(card, i)" :class= "{clicked: card.state === 'picked'}" v-show = "card.state !== 'hide'"></canvas>
+                    <canvas :ref="'card1'+i" width="150" height="198" @click = "clickCard(card, i)" :class= "{clicked: card.state === 'clicked'}" v-show = "card.state !== 'hide'"></canvas>
                   </div><!-- dropdown-item -->
                 </div><!-- dropdown-content -->
               </div><!-- dropdown-menu -->
@@ -41,7 +41,7 @@
           <div class="column is-one-fifth">
               <div class="well-done" v-show="comment === 'right'"><img class="vicon icon" src='@/assets/vicon.png'>
               <h3>Well Done!</h3></div>
-              <div class="try-again" v-show="comment === 'wrong'"><img class="xicon icon" src='@/assets/xicon.png'>
+              <div class="try-again wrong" v-show="comment === 'wrong'"><img class="xicon icon" src='@/assets/xicon.png'>
               <h3>Try Again</h3></div>
           </div><!-- column -->
         </div><!-- columns -->
@@ -127,7 +127,7 @@ export default {
             utils.cardObject('sub', 'red', 1, 'full'),
             utils.cardObject('sub', 'red', 1, 'full')
           ]
-        }        
+        }
       ]
     }
   },
@@ -137,33 +137,32 @@ export default {
 
     this.sets[this.contentIndex].first2cards
       .forEach((card, i) => {
-        const cardView = new CardView(this.$refs[`shape0${i}`][0], this.$refs[`card0${i}`][0], card)
-        this.context[ctxI] = cardView
+        this.context[ctxI] = new CardView(this.$refs[`shape0${i}`][0], this.$refs[`card0${i}`][0], card)
         this.context[ctxI].drawCard()
         ctxI++
       })
 
     this.sets[this.contentIndex].optionsForTheThird
       .forEach((card, i) => {
-        const cardView = new CardView(this.$refs[`shape1${i}`][0], this.$refs[`card1${i}`][0], card)
-        this.context[ctxI] = cardView
+        this.context[ctxI] = new CardView(this.$refs[`shape1${i}`][0], this.$refs[`card1${i}`][0], card)
         this.context[ctxI].drawCard()
         ctxI++
       })
   },
   methods: {
     clickCard: function (card, i) {
-      if (card.state === 'picked') {
+      if (card.state === 'clicked') {
+        this.comment = 'nothing'
         this.sets[this.contentIndex].optionsForTheThird.forEach((card) => {
           card.state = 'unclicked'
         })
         this.$forceUpdate()
       } else {
-        card.state = 'picked'
+        card.state = 'clicked'
         this.$forceUpdate()
 
         this.sets[this.contentIndex].optionsForTheThird.forEach((card) => {
-          if (card.state !== 'picked') {
+          if (card.state !== 'clicked') {
             card.state = 'hide'
           }
         })
@@ -179,6 +178,22 @@ export default {
       } else {
         this.pickCard = 'close'
       }
+    },
+    check: function () {
+      const setArray = []
+      setArray.push(this.sets[this.contentIndex].first2cards[0])
+      setArray.push(this.sets[this.contentIndex].first2cards[1])
+
+      this.sets[this.contentIndex].optionsForTheThird.forEach((card, i) => {
+        if (card.state === 'clicked') {
+          setArray.push(card)
+          if (utils.isSet(setArray, 0, 1, 2)) {
+            this.comment = 'right'
+          } else {
+            this.comment = 'wrong'
+          }
+        }
+      })
     },
     nextPage: function () {
       this.contentIndex = Math.min(this.contentIndex + 1, this.sets.length - 1)
@@ -197,22 +212,6 @@ export default {
       })
       this.pickCard = 'close'
       this.comment = 'nothing'
-    },
-    check: function () {
-      const setArray = []
-      setArray.push(this.sets[this.contentIndex].first2cards[0])
-      setArray.push(this.sets[this.contentIndex].first2cards[1])
-
-      this.sets[this.contentIndex].optionsForTheThird.forEach((card, i) => {
-        if (card.state === 'picked') {
-          setArray.push(card)
-          if (utils.isSet(setArray, 0, 1, 2)) {
-            this.comment = 'right'
-          } else {
-            this.comment = 'wrong'
-          }
-        }
-      })
     }
   }
 }
@@ -225,7 +224,7 @@ export default {
 .card-content{
   flex-wrap: wrap;
   flex-direction: row;
-  height: 400px;
+  height: 440px;
 }
 .setCard{
   display: -webkit-box;
@@ -276,7 +275,7 @@ border: solid 3px grey;
   height: 30%;
 }
 .is-one-fifth{
-  margin-top: 7%;
+  margin-top: 11%;
 }
 .card-footer, .footer{
   width: 100%;
@@ -284,4 +283,26 @@ border: solid 3px grey;
   margin: 0;
   padding: 0;
 }
+  .wrong{
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  @keyframes shake {
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+    20%, 80% {
+      transform: translate3d(2px, 0, 0);
+    }
+
+    30%, 50%, 70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+
+    40%, 60% {
+      transform: translate3d(4px, 0, 0);
+    }
+  }
 </style>
