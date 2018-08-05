@@ -5,7 +5,8 @@ yarn.lock
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.jsons
+package-lock.json
+backend/package-lock.json
 /test/unit/coverage/
 /test/e2e/reports/
 selenium-debug.log
