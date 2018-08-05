@@ -9,7 +9,7 @@
         </a>        
     </div>
     <div class="navbar-menu">
-      <div class="navbar-end" @click="openMenu()">
+      <div class="navbar-end">
         <a id="arrowMain"> <router-link to="/start"><img id="arrowImg" src='@/assets/arrowRightWhite.png' width="50px" height="50px"></router-link></a>
       </div>
     </div>
@@ -30,16 +30,6 @@ export default {
 
   },
   methods: {
-    openMenu: function () {
-      if (this.menu === false) {
-        this.menu = true
-      } else {
-        this.menu = false
-      }
-    },
-    closeMenu: function () {
-      this.menu = false
-    }
   }
 }
 </script>

@@ -7,7 +7,7 @@
           Try It Yourself
         </h1>
       </header>
-      <div class="card-content">
+      <div class="card-content" :class= "{slideInRight: flipNext, fadeInLeft: flipBack}">
         <div class="columns">
           <div class="setCard column" v-for="(card, i) in sets[contentIndex].first2cards" :key="card.index">
           <canvas :ref="'shape0'+i" width="150" height="66" v-show="false" ></canvas>
@@ -39,7 +39,7 @@
             </a>
           </div><!-- column -->
           <div class="column is-one-fifth">
-              <div class="well-done" v-show="comment === 'right'"><img class="vicon icon" src='@/assets/vicon.png'>
+              <div class="well-done bounceIn" v-show="comment === 'right'"><img class="vicon icon" src='@/assets/vicon.png'>
               <h3>Well Done!</h3></div>
               <div class="try-again wrong" v-show="comment === 'wrong'"><img class="xicon icon" src='@/assets/xicon.png'>
               <h3>Try Again</h3></div>
@@ -47,7 +47,9 @@
         </div><!-- columns -->
       </div><!-- card-content -->
       <footer class="card-footer">
-        <footerNextPage class="footer" v-bind:pageCount = "sets.length" v-bind:changeContent = "changeContent" @indexUpdate= "newIndex => contentIndex = newIndex">
+        <footerNextPage class="footer"
+        v-bind:pageCount = "sets.length"
+        @indexUpdateEvent= "onIndexUpdate">
         </footerNextPage>
       </footer>
     </div><!-- card -->
@@ -68,6 +70,8 @@ export default {
   },
   data () {
     return {
+      flipNext: false,
+      flipBack: false,
       contentIndex: 0,
       context: [],
       pickCard: 'close',
@@ -115,17 +119,6 @@ export default {
             utils.cardObject('rect', 'red', 2, 'full'),
             utils.cardObject('tri', 'red', 1, 'stripes'),
             utils.cardObject('tri', 'red', 1, 'full')
-          ]
-        },
-        {
-          first2cards: [
-            utils.cardObject('sub', 'red', 3, 'full'),
-            utils.cardObject('sub', 'red', 2, 'full')
-          ],
-          optionsForTheThird: [
-            utils.cardObject('sub', 'red', 2, 'full'),
-            utils.cardObject('sub', 'red', 1, 'full'),
-            utils.cardObject('sub', 'red', 1, 'full')
           ]
         }
       ]
@@ -195,7 +188,8 @@ export default {
         }
       })
     },
-    changeContent: function () {
+    onIndexUpdate: function (index, direction) {
+      this.contentIndex = index
       this.sets[this.contentIndex].first2cards.forEach((card, i) => {
         this.context[i].setNewCardAtrr(card)
       })
@@ -204,6 +198,17 @@ export default {
       })
       this.pickCard = 'close'
       this.comment = 'nothing'
+      if (direction === 'next') {
+        this.flipNext = true
+        setTimeout(() => {
+          this.flipNext = false
+        }, 800)
+      } else if (direction === 'back') {
+        this.flipBack = true
+        setTimeout(() => {
+          this.flipBack = false
+        }, 800)
+      }
     }
   }
 }

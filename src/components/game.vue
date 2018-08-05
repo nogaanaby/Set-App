@@ -1,24 +1,41 @@
 <template>
   <div class="intemidiate game">
     <gameMenu></gameMenu>
-  <div class="card">
-  <header class="card-header">
-    <h1 style="margin-left: 12%">
-      {{this.collectedCards.length / 3}} sets
-    </h1>
-    <a class="button is-outlined" id="tellMe" @click = "findSetBotton()">Tell Me</a>
-  </header>
-   <div class="card-content">
-      <div class = "cardsContainer">
-      <!--{{JSON.stringify(cards)}}-->
-      <div v-for="(card, i) in cardsViewsOnTheTable" :key="card.index" class = "cardDiv" :class = "{notSet: notSet}">
-        <canvas id="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
-        <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{clicked: card.state === 'clicked', takeSet: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
+      <div class="card" v-if="pageState === 'game'">
+        <header class="card-header">
+          <h1 style="margin-left: 12%">
+            {{this.collectedCards.length / 3}} sets
+          </h1>
+          <a class="button is-outlined" id="tellMe" @click = "findSetBotton()">Tell Me</a>
+          <p>{{formatTime(timeLeft)}}</p>
+        </header>
+        <div class="card-content">
+            <div class = "cardsContainer">
+              <!--{{JSON.stringify(cards)}}-->
+                <div v-for="(card, i) in cardsViewsOnTheTable" :key="card.index" class = "cardDiv" :class = "{notSet: notSet}">
+                  <canvas id="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
+                  <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{clicked: card.state === 'clicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
+                </div>
+              <slot></slot>
+          </div>
+        </div>
       </div>
-      <slot></slot>
-    </div>
-  </div>
-  </div>
+      <div class="card" v-if="pageState === 'over'">
+        <header class="card-header fadeInDown">
+          <h1 style="font-size: 2em">Game Over</h1>
+        </header>
+        <div class="card-content">
+          <a class="button is-medium is-success" @click = "PlayAgain()">Play Again</a>
+          <div class="columns">
+            <p class="column">
+              You Collected : <br> {{this.collectedCards.length / 3}} Sets
+            </p>
+            <p class="column">
+              Your Best Is : <br> 40 Sets
+            </p>
+          </div>
+        </div>
+      </div>
   </div>
 </template>
 <script>
@@ -34,7 +51,7 @@ export default{
     return {
       id: 0,
       notSet: false, // bazzes the cards in a mistaken set
-      cardsOnTheTable: [],
+      pageState: 'game',
       cardsViewsOnTheTable: [],
       cards: [],
       collectedCards: [],
@@ -44,7 +61,10 @@ export default{
         colors: ['green', 'purple', 'red'],
         fills: ['empty', 'full', 'stripes']
       },
-      set: []
+      set: [],
+      startTime: 0,
+      timeToPlay: 3 * 60 * 1000,
+      timeLeft: 3 * 60 * 1000
     }
   },
   created () {
@@ -62,6 +82,8 @@ export default{
     for (let i = 0; i < 12; i++) {
       this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards))
     }
+    this.startTime = Date.now()
+    setInterval(this.countDown, 100)
   },
   mounted () {
     this.cardsViewsOnTheTable.forEach((card, i) => {
@@ -136,10 +158,27 @@ export default{
       }
     },
 
-    allwaysSetOnTheTable: function () {
+    allwaysSetOnTheTable () {
       while (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) === 'no set here') {
         this.cardsViewsOnTheTable[1].setNewCardAtrr(utils.takeNewCard(this.cards))
       }
+    },
+    countDown () {
+      const timeFromLoad = Date.now() - this.startTime
+      this.timeLeft = this.timeToPlay - timeFromLoad
+
+      if (this.timeLeft <= 0) {
+        this.pageState = 'over'
+        this.$forceUpdate()
+      }
+    },
+    formatTime (ms) {
+      const seconds = '' + Math.floor((ms / 1000) % 60)
+      const minutes = '' + Math.floor((ms / 1000 / 60) % 60)
+      return minutes + ' : ' + seconds
+    },
+    PlayAgain: function () {
+      location.reload()
     }
   }
 }
@@ -173,31 +212,11 @@ All device
       opacity: 1;
       animation: fade 0.5s linear;
   }
-  @keyframes fade {
-    0% { opacity: 0 }
-    100% { opacity: 1 }
-  }
   .notSet{
     animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
     perspective: 1000px;
-  }
-  @keyframes shake {
-    10%, 90% {
-      transform: translate3d(-1px, 0, 0);
-    }
-    20%, 80% {
-      transform: translate3d(2px, 0, 0);
-    }
-
-    30%, 50%, 70% {
-      transform: translate3d(-4px, 0, 0);
-    }
-
-    40%, 60% {
-      transform: translate3d(4px, 0, 0);
-    }
   }
   .findSet {
   border: solid 3px lightgreen;
@@ -236,6 +255,9 @@ desktop
     width: 19%;
     height: 28%;
     margin: 0 2%;
+  }
+  .columns{
+    margin: 30px;
   }
 }
 

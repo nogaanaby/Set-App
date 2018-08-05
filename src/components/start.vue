@@ -1,19 +1,18 @@
 <template>
   <div class="main">
     <gameMenu class="onDesktopOnly"></gameMenu>
-    <div class="card">
-      <header class="card-header onMobileOnly">
-        <a class="logo">
-          <img id="myLogo" src='@/assets/logoMiddle.png'>
-        </a>
-      </header>
-      <div class="card-content">
-        <a class="button is-medium is-fullwidth"><router-link to="/game">Play Beaginners</router-link></a>
-        <a class="button is-medium is-fullwidth"><router-link to="/game">Play Intemidiate</router-link></a>
-        <a class="button is-medium is-fullwidth"><router-link to="/instractionsTables">How To Play</router-link></a>
-        <a class="button is-medium is-fullwidth"><router-link to="/Practice">Practice!</router-link></a>
+      <div class="card">
+        <header class="card-header onMobileOnly">
+          <a class="logo">
+            <img id="myLogo" src='@/assets/logoMiddle.png'>
+          </a>
+        </header>
+        <div class="card-content fadeInDown">
+          <a class="button is-medium is-fullwidth"><router-link to="/game">Play</router-link></a>
+          <a class="button is-medium is-fullwidth"><router-link to="/instractionsTables">How To Play</router-link></a>
+          <a class="button is-medium is-fullwidth"><router-link to="/Practice">Practice!</router-link></a>
+        </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -67,7 +66,7 @@ mobile
     background-color: #00D1B1;
   }
   .onDesktopOnly{
-    display: none; 
+    display: none;
   }
 }
 

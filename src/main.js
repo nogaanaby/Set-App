@@ -6,10 +6,11 @@ import Router from 'vue-router'
 import SetInstractions from '@/components/Set_Instractions'
 import instractionsTables from '@/components/instractionsTables'
 import game from '@/components/game'
-import design from '@/components/design'
 import start from '@/components/start'
 import practice from '@/components/practice'
 import footerNextPage from '@/components/footer'
+import parent from '@/components/parent'
+import child from '@/components/child'
 
 Vue.config.productionTip = false
 
@@ -25,11 +26,6 @@ const routes = [
     path: '/game',
     name: 'game',
     component: game
-  },
-  {
-    path: '/design',
-    name: 'design',
-    component: design
   },
   {
     path: '/instractionsTables',
@@ -50,6 +46,16 @@ const routes = [
     path: '/footer',
     name: 'footerNextPage',
     component: footerNextPage
+  },
+  {
+    path: '/parent',
+    name: 'parent',
+    component: parent
+  },
+  {
+    path: '/child',
+    name: 'child',
+    component: child
   }
 ]
 

@@ -11,7 +11,6 @@
 import SetInstractions from '@/components/Set_Instractions'
 import instractionsTables from '@/components/instractionsTables'
 import game from '@/components/game.vue'
-import design from '@/components/design.vue'
 import gameMenu from '@/components/nav.vue'
 import start from '@/components/start.vue'
 import practice from '@/components/practice'
@@ -22,7 +21,6 @@ export default {
     SetInstractions,
     game,
     gameMenu,
-    design,
     start,
     instractionsTables,
     practice
@@ -55,11 +53,12 @@ export default {
 <style>
 @import './assets/w3.css';
 @import './assets/bulma.css';
+@import './assets/animations.css';
+@import 'vue2-animate/dist/vue2-animate.min.css';
 
 /*************************************
 Mobile
 ***************************************/
-
 
 /*************************************
 Desktop

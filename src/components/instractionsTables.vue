@@ -7,7 +7,7 @@
           {{pageData[contentIndex].title}}
         </h1>
       </header>
-      <div class="card-content">
+      <div class="card-content" :class= "{slideInRight: flipNext, fadeInLeft: flipBack}" >
         <div class="content">
           {{pageData[contentIndex].setExplain}}
         </div>
@@ -47,8 +47,13 @@
           </table>
         </div>
       </div>
-      <footer class="card-footer"> <footerNextPage class="footer" v-bind:pageCount = "sets.length" v-bind:changeContent = "changeContent" @indexUpdate= "newIndex => contentIndex = newIndex"></footerNextPage></footer>
-      <!--<footer class="card-footer"> <footerNextPage class="footer" v-bind:next = "nextPage" v-bind:prev = "prevPage" v-bind:pageCount = "sets.length"></footerNextPage></footer>-->
+      <footer class="card-footer">
+        <footerNextPage
+          class="footer"
+          v-bind:pageCount = "sets.length"
+          @indexUpdateEvent= "onIndexUpdate">
+        </footerNextPage>
+      </footer>
     </div>
   </div>
 </template>
@@ -70,6 +75,8 @@ export default {
   },
   data () {
     return {
+      flipNext: false,
+      flipBack: false,
       contentIndex: 0,
       context: [],
       sets: [
@@ -132,7 +139,6 @@ export default {
       this.setIcon[ci].push(utils.compare(this.sets[ci][1], this.sets[ci][2], this.sets[ci][0]))
       this.setIcon[ci].push(utils.compare(this.sets[ci][2], this.sets[ci][1], this.sets[ci][0]))
     }
-    console.log(this.setIcon)
   },
   mounted () {
     this.sets[this.contentIndex]
@@ -143,10 +149,22 @@ export default {
       })
   },
   methods: {
-    changeContent: function () {
+    onIndexUpdate: function (index, direction) {
+      this.contentIndex = index
       this.context.forEach((element, i) => {
         element.setNewCardAtrr(this.sets[this.contentIndex][i])
       })
+      if (direction === 'next') {
+        this.flipNext = true
+        setTimeout(() => {
+          this.flipNext = false
+        }, 1000)
+      } else {
+        this.flipBack = true
+        setTimeout(() => {
+          this.flipBack = false
+        }, 1000)
+      }
     }
   }
 }
