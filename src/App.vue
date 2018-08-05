@@ -54,7 +54,7 @@ export default {
 @import './assets/w3.css';
 @import './assets/bulma.css';
 @import './assets/animations.css';
-@import 'vue2-animate/dist/vue2-animate.min.css';
+@import '.././node_modules/vue2-animate/dist/vue2-animate.min.css';
 
 /*************************************
 Mobile
