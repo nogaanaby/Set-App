@@ -8,9 +8,10 @@
           </a>
         </header>
         <div class="card-content fadeInDown">
-          <a class="button is-medium is-fullwidth"><router-link to="/game">Play</router-link></a>
-          <a class="button is-medium is-fullwidth"><router-link to="/instractionsTables">How To Play</router-link></a>
-          <a class="button is-medium is-fullwidth"><router-link to="/Practice">Practice!</router-link></a>
+          <div class="buttonAndIcon"><img class="icon" src='@/assets/single.png'><a class="button is-medium"><router-link to="/game">Single-Player</router-link></a></div>
+          <div class="buttonAndIcon"><img class="icon" src='@/assets/multiplayer.png'><a class="button is-medium"><router-link to="/game">Multi-Player</router-link></a></div>
+          <div class="buttonAndIcon"><img class="icon" src='@/assets/HowToIcon.png'><a class="button is-medium"><router-link to="/instractionsTables">How To Play</router-link></a></div>
+          <div class="buttonAndIcon"><img class="icon" src='@/assets/pencil.png'><a class="button is-medium"><router-link to="/Practice">Practice!</router-link></a></div>
         </div>
       </div>
   </div>
@@ -47,11 +48,20 @@ desktop
 ***************************************/
 @media only screen and (min-width: 769px) {
   .button{
-    margin: 30px auto;
-    width: 70%;
+    width: 30%;
   }
   .onMobileOnly{
     display: none;
+  }
+  .icon{
+    width: 5%;
+    height: 5%;
+  }
+
+  .buttonAndIcon{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
   }
 }
 /*************************************
@@ -60,7 +70,7 @@ mobile
 @media only screen and (max-width: 768px) {
   .button{
     margin: 15px auto;
-    width: 80%;
+    width: 60%;
   }
   .card{
     background-color: #00D1B1;

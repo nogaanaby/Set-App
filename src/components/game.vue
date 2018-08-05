@@ -19,6 +19,11 @@
               <slot></slot>
           </div>
         </div>
+        <footer class="card-footer">
+          <a href="#" class="card-footer-item">Save</a>
+          <a href="#" class="card-footer-item">Edit</a>
+          <a href="#" class="card-footer-item">Delete</a>
+        </footer>
       </div>
       <div class="card" v-if="pageState === 'over'">
         <header class="card-header fadeInDown">
@@ -83,7 +88,7 @@ export default{
       this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards))
     }
     this.startTime = Date.now()
-    setInterval(this.countDown, 100)
+    // setInterval(this.countDown, 100)
   },
   mounted () {
     this.cardsViewsOnTheTable.forEach((card, i) => {
@@ -241,7 +246,7 @@ desktop
   display: flex;
   flex-direction: row;
   width: 550px;
-  height: 480px;
+  height: 420px;
   margin: 0px auto 30px auto;
   flex-wrap: wrap;
   justify-content: center;

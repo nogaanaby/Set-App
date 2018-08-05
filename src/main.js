@@ -3,25 +3,17 @@
 import Vue from 'vue'
 import App from './App'
 import Router from 'vue-router'
-import SetInstractions from '@/components/Set_Instractions'
 import instractionsTables from '@/components/instractionsTables'
 import game from '@/components/game'
 import start from '@/components/start'
 import practice from '@/components/practice'
 import footerNextPage from '@/components/footer'
-import parent from '@/components/parent'
-import child from '@/components/child'
 
 Vue.config.productionTip = false
 
 Vue.use(Router)
 
 const routes = [
-  {
-    path: '/SetInstractions',
-    name: 'SetInstractions',
-    component: SetInstractions
-  },
   {
     path: '/game',
     name: 'game',
@@ -46,16 +38,6 @@ const routes = [
     path: '/footer',
     name: 'footerNextPage',
     component: footerNextPage
-  },
-  {
-    path: '/parent',
-    name: 'parent',
-    component: parent
-  },
-  {
-    path: '/child',
-    name: 'child',
-    component: child
   }
 ]
 

@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import SetInstractions from '@/components/Set_Instractions'
 import instractionsTables from '@/components/instractionsTables'
 import game from '@/components/game.vue'
 import gameMenu from '@/components/nav.vue'
@@ -18,7 +17,6 @@ import practice from '@/components/practice'
 export default {
   name: 'app',
   components: {
-    SetInstractions,
     game,
     gameMenu,
     start,
@@ -59,13 +57,23 @@ export default {
 /*************************************
 Mobile
 ***************************************/
-
+@media only screen and (max-width: 768px) {
+  html, #app, .card {
+    height: 640px;
+  }
+}
 /*************************************
 Desktop
 ***************************************/
 @media only screen and (min-width: 769px) {
   #app {
     width: 70%;
+  }
+  .card{
+    height: 500px;
+  }
+  .card-content{
+    padding-bottom: 0;
   }
 }
 /*************************************
