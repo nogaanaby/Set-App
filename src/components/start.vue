@@ -12,6 +12,10 @@
           <div class="buttonAndIcon"><img class="icon" src='@/assets/multiplayer.png'><a class="button is-medium"><router-link to="/game">Multi-Player</router-link></a></div>
           <div class="buttonAndIcon"><img class="icon" src='@/assets/HowToIcon.png'><a class="button is-medium"><router-link to="/instractionsTables">How To Play</router-link></a></div>
           <div class="buttonAndIcon"><img class="icon" src='@/assets/pencil.png'><a class="button is-medium"><router-link to="/Practice">Practice!</router-link></a></div>
+          <div class="nickname">
+            <h3>Choose A Nickname</h3>
+            <input type="text" class="nicknameInput input" placeholder="The IceCream Men" @keyup.enter="addTodo">
+          </div>
         </div>
       </div>
   </div>
@@ -62,6 +66,17 @@ desktop
     display: flex;
     flex-direction: row;
     justify-content: center;
+    margin-top: 20px;
+  }
+  .nickname{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 20px;
+  }
+  .nicknameInput{
+    width: 45%;
+    margin: auto;
   }
 }
 /*************************************

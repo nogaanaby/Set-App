@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div v-bind:class="{blur: blur}" class="main">
+    <div class="main">
       <router-link to="/game" class="link"></router-link>
       <router-view></router-view>
     </div>
@@ -25,24 +25,11 @@ export default {
   },
   data () {
     return {
-      menu: false,
-      blur: false
+
     }
   },
   methods: {
-    openMenu: function () {
-      if (this.menu === false) {
-        this.menu = true
-        this.blur = true
-      } else {
-        this.menu = false
-        this.blur = false
-      }
-    },
-    closeMenu: function () {
-      this.menu = false
-      this.blur = false
-    }
+
   }
 }
 
