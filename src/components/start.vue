@@ -17,12 +17,12 @@
           <div class="nickname column">
             <h4>Choose A Nickname</h4>
             <div class="columns register">
-              <div class="column inputC"><input type="text" class="nicknameInput input" placeholder="The IceCream Men" v-model="nickname" @keyup.enter="pvpRegister"></div>
-              <div class="column is-one-third registerC"><button class="button is-success is-small registerButton" @click="pvpRegister">Register</button></div>
+              <div class="column inputC"><input type="text" class="nicknameInput input" placeholder="The IceCream Men" v-model="nickname" @keyup.enter="chackAvailble"></div>
+              <div class="column is-one-third registerC"><button class="button is-success is-small registerButton" @click="chackAvailble">Register</button></div>
             </div>
+            <p v-show = "nicknameAvailble === 'no'" class="notAvailble wrong">The Name Is Alredy Use By Another Member</p>
             <h4 class="OnlineUsers">Online Users</h4>
             <ul>
-              <li v-show="register">{{nickname}}</li>
               <li v-for="user in onlineUsers" v-bind="user.index">
                 <span>{{user.nickname}}</span>
               </li>
@@ -45,19 +45,30 @@ export default {
     return {
       nickname: '',
       onlineUsers: [],
-      register: false
+      nicknameAvailble: ''
     }
   },
   mounted () {
-    this.pvpGetOnlinePlayers()
+    // setInterval(this.pvpGetOnlinePlayers(), 2000)
+    console.log(this.onlineUsers)
   },
   methods: {
+    chackAvailble () {
+      this.nicknameAvailble = 'ok'
+      this.onlineUsers.forEach((user) => {
+        if (user.nickname === this.nickname) {
+          this.nicknameAvailble = 'no'
+        }
+      })
+      if (this.nicknameAvailble !== 'no') {
+        this.pvpRegister()
+      }
+    },
     async pvpRegister () {
       await this.$axios.post('pvp/register', {
         nickname: this.nickname,
         socketId: this.$socket.id
       })
-      this.register = true
     },
     async pvpGetOnlinePlayers () {
       const response = await this.$axios.get('pvp/onlineUsers')
@@ -68,6 +79,11 @@ export default {
 </script>
 
 <style scoped>
+.notAvailble{
+  color: red;
+  font-size: 0.7em;
+  text-align: left;
+}
 /*************************************
 desktop
 ***************************************/

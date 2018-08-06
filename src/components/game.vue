@@ -4,7 +4,7 @@
       <div class="card" v-if="pageState === 'game'">
         <header class="card-header">
           <a class="button is-outlined" id="tellMe" @click = "findSetBotton()">Tell Me</a>
-          <h1 style="margin-left: 12%">
+          <h1 id="collected">
             {{this.collectedCards.length / 3}} sets
           </h1>
           <div class="clock"><img class="icon" src='@/assets/clock-icon.png'><p id="time">{{formatTime(timeLeft)}}</p></div>
@@ -25,12 +25,12 @@
           <h1 style="font-size: 2em">Game Over</h1>
         </header>
         <div class="card-content">
-          <a class="button is-medium is-success" @click = "PlayAgain()">Play Again</a>
-          <div class="columns">
-            <p class="column">
+          <a class="button is-medium is-success playAgain" @click = "PlayAgain()">Play Again</a>
+          <div class="columns gameOver">
+            <p class="column collectedOver">
               You Collected : <br> {{this.collectedCards.length / 3}} Sets
             </p>
-            <p class="column">
+            <p class="column bestScore">
               Your Best Is : <br> 40 Sets
             </p>
           </div>
@@ -202,9 +202,6 @@ All device
   object-fit: contain;
     height: 100%;
   }
-  #tellMe{
-    margin: 10px 20px;
-  }
   .clicked {
   border: solid 3px grey;
   }
@@ -264,6 +261,13 @@ desktop
     margin: 30px;
   }
   .clock{
+    margin-left: 30%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  #tellMe{
+    margin-top: 18px;
+    margin-right: 25%;
   }
 }
 
@@ -304,5 +308,21 @@ mobile
     width: 20%;
     font-size: 0.75em;
   }
+
+  #tellMe{
+    margin: 10px 20px;
+  }
+.collectedOver{
+  float: left;
+}
+.gameOver{
+  margin: 20px;
+}
+.playAgain{
+  margin-top: 40px;
+  margin-bottom: 20px;
+  width: 40%;
+  font-size: 1em;
+}
 }
 </style>
