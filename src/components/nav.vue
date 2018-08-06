@@ -6,7 +6,7 @@
         </a>
         <a class="mobileLogo">
          <img id="myLogo" src='@/assets/logoMiddle.png'>
-        </a>        
+        </a>
     </div>
     <div class="navbar-menu">
       <div class="navbar-end">
