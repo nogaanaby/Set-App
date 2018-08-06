@@ -8,8 +8,14 @@ import game from '@/components/game'
 import start from '@/components/start'
 import practice from '@/components/practice'
 import footerNextPage from '@/components/footer'
+import socketio from 'socket.io-client'
+import VueSocketIO from 'vue-socket.io'
 
 Vue.config.productionTip = false
+
+const socketURL = 'http://localhost:8050/'
+export const SocketInstance = socketio(socketURL)
+Vue.use(VueSocketIO, SocketInstance)
 
 Vue.use(Router)
 

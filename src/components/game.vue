@@ -17,13 +17,8 @@
                   <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{clicked: card.state === 'clicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
                 </div>
               <slot></slot>
-          </div>
+          </div>          
         </div>
-        <footer class="card-footer">
-          <a href="#" class="card-footer-item">Save</a>
-          <a href="#" class="card-footer-item">Edit</a>
-          <a href="#" class="card-footer-item">Delete</a>
-        </footer>
       </div>
       <div class="card" v-if="pageState === 'over'">
         <header class="card-header fadeInDown">
@@ -245,7 +240,7 @@ desktop
   .cardsContainer {
   display: flex;
   flex-direction: row;
-  width: 550px;
+  width: 520px;
   height: 420px;
   margin: 0px auto 30px auto;
   flex-wrap: wrap;
@@ -257,7 +252,7 @@ desktop
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    width: 19%;
+    width: 17%;
     height: 28%;
     margin: 0 2%;
   }

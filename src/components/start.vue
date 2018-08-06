@@ -47,6 +47,9 @@ export default {
 desktop
 ***************************************/
 @media only screen and (min-width: 769px) {
+  body{
+    height: 600px;
+  }
   .button{
     width: 30%;
   }

@@ -70,7 +70,7 @@ Desktop
     width: 70%;
   }
   .card{
-    height: 500px;
+    height: 100%;
   }
   .card-content{
     padding-bottom: 0;
