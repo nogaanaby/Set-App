@@ -17,9 +17,6 @@
 </template>
 
 <script>
-import instractionsTables from '@/components/instractionsTables'
-import utils from '../js/utils.js'
-import { CardView } from '../js/CardViews.js'
 import gameMenu from '@/components/nav.vue'
 
 export default {

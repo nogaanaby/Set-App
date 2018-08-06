@@ -12,8 +12,6 @@
 
 <script>
 
-import utils from '../js/utils.js'
-import { CardView } from '../js/CardViews.js'
 import gameMenu from '@/components/nav.vue'
 import vxIcon from '@/components/vx-icon'
 
