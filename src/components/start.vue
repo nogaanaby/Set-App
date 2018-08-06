@@ -10,11 +10,12 @@
         <div class="card-content fadeInDown columns">
           <div class="column buttonsAndIcons">
             <div class="buttonAndIcon"><a class="button is-medium"><img class="icon" src='@/assets/single.png'><router-link to="/game">Single-Player</router-link></a></div>
-            <div class="buttonAndIcon"><a class="button is-medium"><img class="icon" src='@/assets/multiplayer.png'><router-link to="/game">Multi-Player</router-link></a></div>
+            <div class="buttonAndIcon"><a class="button is-medium" @click="openSigningOffline"><img class="icon" src='@/assets/multiplayer.png'><router-link to="/start">Multy-Play Offline</router-link></a></div>
+            <div class="buttonAndIcon"><a class="button is-medium"><img class="icon" src='@/assets/multiplayer.png'><router-link to="/game">Mulyi-Play Online</router-link></a></div>
             <div class="buttonAndIcon"><a class="button is-medium"><img class="icon" src='@/assets/HowToIcon.png'><router-link to="/instractionsTables">How To Play</router-link></a></div>
             <div class="buttonAndIcon"><a class="button is-medium"><img class="icon" src='@/assets/pencil.png'><router-link to="/Practice">Practice!</router-link></a></div>
           </div>
-          <div class="nickname column">
+          <div v-if="howMutchPlayers === 'single'" class="nickname column">
             <h4>Choose A Nickname</h4>
             <div class="columns register">
               <div class="column inputC"><input type="text" class="nicknameInput input" placeholder="The IceCream Men" v-model="nickname" @keyup.enter="chackAvailble"></div>
@@ -27,6 +28,22 @@
                 <span>{{user.nickname}}</span>
               </li>
             </ul>
+          </div>
+          <div v-if="howMutchPlayers === 'copple'" class="nickname column fadeInDown">
+            <h4>First Player Nickname</h4>
+            <div class="columns register">
+              <div class="column inputC"><input type="text" class="nicknameInput input" placeholder="The IceCream Men" v-model="player1" @keyup.enter="offlineRegister"></div>
+              <div class="column is-one-third registerC"><button class="button is-success is-small registerButton" @click="offlineRegister">Register</button></div>
+            </div>
+            <h4>Second Player Nickname</h4>
+            <div class="columns register">
+              <div class="column inputC"><input type="text" class="nicknameInput input" placeholder="The banana Men" v-model="player2" @keyup.enter="offlineRegister"></div>
+              <div class="column is-one-third registerC"><button class="button is-success is-small registerButton" @click="offlineRegister">Register</button></div>
+            </div>
+            <div class="competitors">
+              <h4 id="compNames">{{competitors}}</h4>
+              <button class="button is-success letsPlay" v-show="letsPlay"><router-link to="/offline2Players">Let's Play!</router-link></button>
+            </div>
           </div>
         </div>
       </div>
@@ -45,7 +62,12 @@ export default {
     return {
       nickname: '',
       onlineUsers: [],
-      nicknameAvailble: ''
+      nicknameAvailble: '',
+      howMutchPlayers: 'single',
+      player1: '',
+      player2: '',
+      competitors: '',
+      letsPlay: false
     }
   },
   mounted () {
@@ -73,6 +95,15 @@ export default {
     async pvpGetOnlinePlayers () {
       const response = await this.$axios.get('pvp/onlineUsers')
       this.onlineUsers = response.data
+    },
+    openSigningOffline () {
+      this.howMutchPlayers = 'copple'
+    },
+    offlineRegister () {
+      this.competitors = this.player1 + ' vs ' + this.player2
+      if (this.player2.length > 1) {
+        this.letsPlay = true
+      }
     }
   }
 }
@@ -82,6 +113,11 @@ export default {
 .notAvailble{
   color: red;
   font-size: 0.7em;
+  text-align: left;
+}
+#compNames{
+  font-size: 1.2em;
+  font-weight: normal;
   text-align: left;
 }
 /*************************************
@@ -155,6 +191,9 @@ desktop
   }
   .registerC{
     padding-left:5px;
+  }
+  .letsPlay{
+    width: 30%;
   }
 }
 /*************************************

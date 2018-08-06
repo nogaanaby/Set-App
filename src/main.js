@@ -9,6 +9,7 @@ import game from '@/components/game'
 import start from '@/components/start'
 import practice from '@/components/practice'
 import footerNextPage from '@/components/footer'
+import offline2Players from '@/components/offline2Players'
 import nissim from '@/components/nissim'
 import socketio from 'socket.io-client'
 import VueSocketIO from 'vue-socket.io'
@@ -56,6 +57,11 @@ const routes = [
     path: '/nissim',
     name: 'nissim',
     component: nissim
+  },
+  {
+    path: '/offline2Players',
+    name: 'offline2Players',
+    component: offline2Players
   }
 ]
 

@@ -13,6 +13,7 @@ import game from '@/components/game.vue'
 import gameMenu from '@/components/nav.vue'
 import start from '@/components/start.vue'
 import practice from '@/components/practice'
+import offline2Players from '@/components/offline2Players'
 
 export default {
   name: 'app',
@@ -21,7 +22,8 @@ export default {
     gameMenu,
     start,
     instractionsTables,
-    practice
+    practice,
+    offline2Players
   },
   data () {
     return {
