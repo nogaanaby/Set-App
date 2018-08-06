@@ -46,7 +46,7 @@ Mobile
 ***************************************/
 @media only screen and (max-width: 768px) {
   html, #app, .card {
-    height: 640px;
+    height: 600px;
   }
 }
 /*************************************

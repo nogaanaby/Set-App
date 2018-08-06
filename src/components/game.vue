@@ -3,11 +3,11 @@
     <gameMenu></gameMenu>
       <div class="card" v-if="pageState === 'game'">
         <header class="card-header">
+          <a class="button is-outlined" id="tellMe" @click = "findSetBotton()">Tell Me</a>
           <h1 style="margin-left: 12%">
             {{this.collectedCards.length / 3}} sets
           </h1>
-          <a class="button is-outlined" id="tellMe" @click = "findSetBotton()">Tell Me</a>
-          <p>{{formatTime(timeLeft)}}</p>
+          <div class="clock"><img class="icon" src='@/assets/clock-icon.png'><p id="time">{{formatTime(timeLeft)}}</p></div>
         </header>
         <div class="card-content">
             <div class = "cardsContainer">
@@ -83,7 +83,7 @@ export default{
       this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards))
     }
     this.startTime = Date.now()
-    // setInterval(this.countDown, 100)
+    setInterval(this.countDown, 100)
   },
   mounted () {
     this.cardsViewsOnTheTable.forEach((card, i) => {
@@ -221,6 +221,10 @@ All device
   .findSet {
   border: solid 3px lightgreen;
   }
+  #time{
+    font-family:cursive;
+    font-size: 1.1em;
+  }
 /*************************************
 desktop
 ***************************************/
@@ -258,6 +262,8 @@ desktop
   }
   .columns{
     margin: 30px;
+  }
+  .clock{
   }
 }
 

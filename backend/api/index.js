@@ -1,7 +1,7 @@
 const apiSubRouter = require('express').Router()
 
 const edges = [
-  'test'
+  'pvp'
 ]
 
 function registerApi (apiRouter) {

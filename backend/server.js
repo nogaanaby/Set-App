@@ -10,7 +10,7 @@ const config = require('./serverConfig')
 const expressSession = require('express-session')
 const FileStore = require('session-file-store')(expressSession)
 const passport = require('passport')
-
+const pvp = require('./services/pvp')
 const app = express()
 app.use(bodyParser.json({limit: '500mb'}))
 
@@ -106,6 +106,7 @@ class Server {
       console.log('socket connected', `client id ${socket.client.id}`)
       socket.on('disconnect', () => {
         console.log(`socket ${socket.client.id} disconnected`)
+        pvp.dismissPlayer(socket.client.id)
         socket.disconnect()
       })
     })

@@ -7,14 +7,26 @@
             <img id="myLogo" src='@/assets/logoMiddle.png'>
           </a>
         </header>
-        <div class="card-content fadeInDown">
-          <div class="buttonAndIcon"><img class="icon" src='@/assets/single.png'><a class="button is-medium"><router-link to="/game">Single-Player</router-link></a></div>
-          <div class="buttonAndIcon"><img class="icon" src='@/assets/multiplayer.png'><a class="button is-medium"><router-link to="/game">Multi-Player</router-link></a></div>
-          <div class="buttonAndIcon"><img class="icon" src='@/assets/HowToIcon.png'><a class="button is-medium"><router-link to="/instractionsTables">How To Play</router-link></a></div>
-          <div class="buttonAndIcon"><img class="icon" src='@/assets/pencil.png'><a class="button is-medium"><router-link to="/Practice">Practice!</router-link></a></div>
-          <div class="nickname">
-            <h3>Choose A Nickname</h3>
-            <input type="text" class="nicknameInput input" placeholder="The IceCream Men" @keyup.enter="addTodo">
+        <div class="card-content fadeInDown columns">
+          <div class="column buttonsAndIcons">
+            <div class="buttonAndIcon"><a class="button is-medium"><img class="icon" src='@/assets/single.png'><router-link to="/game">Single-Player</router-link></a></div>
+            <div class="buttonAndIcon"><a class="button is-medium"><img class="icon" src='@/assets/multiplayer.png'><router-link to="/game">Multi-Player</router-link></a></div>
+            <div class="buttonAndIcon"><a class="button is-medium"><img class="icon" src='@/assets/HowToIcon.png'><router-link to="/instractionsTables">How To Play</router-link></a></div>
+            <div class="buttonAndIcon"><a class="button is-medium"><img class="icon" src='@/assets/pencil.png'><router-link to="/Practice">Practice!</router-link></a></div>
+          </div>
+          <div class="nickname column">
+            <h4>Choose A Nickname</h4>
+            <div class="columns register">
+              <div class="column inputC"><input type="text" class="nicknameInput input" placeholder="The IceCream Men" v-model="nickname" @keyup.enter="pvpRegister"></div>
+              <div class="column is-one-third registerC"><button class="button is-success is-small registerButton" @click="pvpRegister">Register</button></div>
+            </div>
+            <h4 class="OnlineUsers">Online Users</h4>
+            <ul>
+              <li v-show="register">{{nickname}}</li>
+              <li v-for="user in onlineUsers" v-bind="user.index">
+                <span>{{user.nickname}}</span>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -31,14 +43,26 @@ export default {
   },
   data () {
     return {
-
+      nickname: '',
+      onlineUsers: [],
+      register: false
     }
   },
   mounted () {
-
+    this.pvpGetOnlinePlayers()
   },
   methods: {
-
+    async pvpRegister () {
+      await this.$axios.post('pvp/register', {
+        nickname: this.nickname,
+        socketId: this.$socket.id
+      })
+      this.register = true
+    },
+    async pvpGetOnlinePlayers () {
+      const response = await this.$axios.get('pvp/onlineUsers')
+      this.onlineUsers = response.data
+    }
   }
 }
 </script>
@@ -52,31 +76,69 @@ desktop
     height: 600px;
   }
   .button{
-    width: 30%;
+    width: 70%;
+    display: flex;
+    justify-content: left;
   }
   .onMobileOnly{
     display: none;
   }
   .icon{
-    width: 5%;
-    height: 5%;
+    width: 10%;
+    height: 70%;
+    margin-right: 10%;
   }
 
   .buttonAndIcon{
     display: flex;
     flex-direction: row;
     justify-content: center;
+    margin-bottom: 20px;
     margin-top: 20px;
+  }
+
+  .buttonsAndIcons{
+    margin-bottom: 30px;
+  }
+
+  a{
+    margin-left: 5%;
   }
   .nickname{
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    margin: 20px;
+    justify-content: left;
+    margin: 10px;
+    padding-left: 20px;
+    align-self: flex-start;
+  }
+  h4{
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: left;
+  }
+  li{
+    font-size: 0.9em;
+    text-align: left;
+  }
+  ul{
+    margin: 10px;
+  }
+  .OnlineUsers{
+    margin-top: 40px;
+  }
+  .register{
+    width: 80%;
+    margin-top: 10px;
   }
   .nicknameInput{
-    width: 45%;
-    margin: auto;
+    width: 100%;
+  }
+  .inputC{
+    padding-right:5px;
+  }
+  .registerC{
+    padding-left:5px;
   }
 }
 /*************************************

@@ -8,12 +8,12 @@
         </h1>
       </header>
       <div class="card-content" :class= "{slideInRight: flipNext, fadeInLeft: flipBack}">
-        <div class="columns">
+        <div class="columns is-desktop">
           <div class="setCard column" v-for="(card, i) in sets[contentIndex].first2cards" :key="card.index">
           <canvas :ref="'shape0'+i" width="150" height="66" v-show="false" ></canvas>
           <canvas :ref="'card0'+i" width="150" height="198"></canvas>
           </div>
-          <div class ="column is-one-quarter">
+          <div class ="column is-one-quarter cards-in-mobile">
             <div class="dropdown is-active">
               <div class="dropdown-trigger">
                 <button class="button is-outlined" aria-haspopup="true" aria-controls="dropdown-menu" @click = "openNcloseMenu()">
@@ -23,6 +23,13 @@
                   </span>
                 </button>
               </div> <!-- dropdown-trigger -->
+              <div class="dropdown-menu" id="dropdown-menu2" role="menu" v-show = "pickCard === 'close'">
+                <div class="dropdown-content" @click = "openNcloseMenu()">
+                  <div class="dropdown-item" @click = "openNcloseMenu()">
+                    <canvas width="150" height="198" @click = "openNcloseMenu()"></canvas>
+                  </div><!-- dropdown-item -->
+                </div><!-- dropdown-content -->
+              </div><!-- dropdown-menu -->
               <div class="dropdown-menu" id="dropdown-menu2" role="menu" v-show = "pickCard === 'open'">
                 <div class="dropdown-content">
                   <div class="dropdown-item" v-for="(card, i) in sets[contentIndex].optionsForTheThird" :key="card.index">
@@ -46,13 +53,13 @@
           </div><!-- column -->
         </div><!-- columns -->
       </div><!-- card-content -->
+    </div><!-- card -->
       <footer class="card-footer">
         <footerNextPage class="footer"
         v-bind:pageCount = "sets.length"
         @indexUpdateEvent= "onIndexUpdate">
         </footerNextPage>
-      </footer>
-    </div><!-- card -->
+      </footer>    
   </div><!-- main -->
 </template>
 
@@ -215,71 +222,19 @@ export default {
 </script>
 
 <style scoped>
-.card{
-  flex-direction: row;
-}
-.card-content{
-  flex-wrap: wrap;
-  flex-direction: row;
-  height: 440px;
-}
-.setCard{
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  margin: 0 2%;
-  margin-top: 7%;
-}
-canvas{
-  transform: rotate(90deg);
-  margin: 0px;
-  width: 100%;
-  object-fit: contain;
-  height: 100%;
-}
-.columns{
-  width: 100%;
-}
-.clicked {
-border: solid 3px grey;
-}
-.dropdown-item{
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  margin: auto;
-  width: 56%;
-  padding: 0;
-}
-.dropdown-content{
-  width: 85%;
-  padding: 0;
-}
-.icon{
-  width: 28px;
-  height: 18px;
-}
-.dropdown-menu, .dropdown{
-  object-fit: contain;
-}
-.is-one-quarter{
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  justify-content: left;
-}
-.dropdown-trigger, .dropdown {
-  height: 30%;
-}
-.is-one-fifth{
-  margin-top: 11%;
-}
-.card-footer, .footer{
-  width: 100%;
-  height: 50px;
-  margin: 0;
-  padding: 0;
-}
+/*************************************
+all devices
+***************************************/
+  .clicked {
+    border: solid 3px grey;
+  }
+  canvas{
+    transform: rotate(90deg);
+    margin: 0px;
+    width: 100%;
+    object-fit: contain;
+    height: 100%;
+  }
   .wrong{
     animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
     transform: translate3d(0, 0, 0);
@@ -302,4 +257,106 @@ border: solid 3px grey;
       transform: translate3d(4px, 0, 0);
     }
   }
+
+  /*************************************
+desktop
+***************************************/
+@media only screen and (min-width: 769px) {
+  .card{
+    flex-direction: row;
+  }
+  .card-content{
+    flex-wrap: wrap;
+    flex-direction: row;
+    height: 440px;
+  }
+  .setCard{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin: 0 2%;
+    margin-top: 7%;
+  }
+  .columns{
+    width: 100%;
+  }
+
+  .dropdown-item{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin: auto;
+    width: 56%;
+    padding: 0;
+  }
+  .dropdown-content{
+    width: 85%;
+    padding: 0;
+  }
+  .icon{
+    width: 28px;
+    height: 18px;
+  }
+  .dropdown-menu, .dropdown{
+    object-fit: contain;
+  }
+  .is-one-quarter{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: left;
+  }
+  .dropdown-trigger, .dropdown {
+    height: 30%;
+  }
+  .is-one-fifth{
+    margin-top: 11%;
+  }
+  .card-footer, .footer{
+    width: 100%;
+    height: 50px;
+    margin: 0;
+    padding: 0;
+  }
+}
+/*************************************
+mobile
+***************************************/
+@media only screen and (max-width: 768px) {
+  .dropdown-item{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin: auto;
+    width: 56%;
+    padding: 0;
+  }
+
+  .setCard{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    width: 25%;
+    margin: 10px;
+    float: left;
+  }
+  .card-footer, .footer{
+    width: 100%;
+    height: 50px;
+    margin: 0;
+    padding: 0;
+  }
+  .dropdown-content{
+    width: 60%;
+    padding: 0;
+  }
+  .cards-in-mobile{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+  }
+  .is-one-fifth{
+    margin-top: 30%;
+  }
+}
 </style>

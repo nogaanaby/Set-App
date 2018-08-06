@@ -2,10 +2,10 @@
   <div class="footerNextPage">
         <nav class="pagination is-centered is-rounded" role="navigation" aria-label="pagination">
           <a class="pagination-previous" @click="prevPageIndex"><img id="arrowImg" src='@/assets/angle-left-solid.svg' width="25px" height="25px"></a>
-          <a class="pagination-next" @click="nextPageIndex"><img id="arrowImg" src='@/assets/angle-right-solid.svg' width="25px" height="25px"></a>
           <ul class="pagination-list">
             <li><a class="pagination-link" aria-label="Page 46" aria-current="page">{{contentIndex + 1}}</a></li>
           </ul>
+          <a class="pagination-next" @click="nextPageIndex"><img id="arrowImg next" src='@/assets/angle-right-solid.svg' width="25px" height="25px"></a>
         </nav>
     </div>
 </template>
@@ -41,14 +41,47 @@ export default {
 </script>
 
 <style scoped>
-    .pagination{
-      width: 100%;
-      margin:auto;
-    }
+
+/*************************************
+all devices
+***************************************/
     a{
       border: none;
     }
     a:active:before{
       border: none;
     }
+
+/*************************************
+mobile
+***************************************/
+@media only screen and (max-width: 768px) {
+  nav{
+    display: flex;
+    flex-direction: row;
+  }
+  .pagination-previous{
+    float: left;
+    display: flex;
+    justify-content: left;
+  }
+  .pagination-next{
+    float: right;
+    display: flex;
+    justify-content: right;
+  }
+  #next{
+
+  }
+}
+
+/*************************************
+desktop
+***************************************/
+@media only screen and (min-width: 769px) {
+    .pagination{
+      width: 100%;
+      margin:auto;
+    }
+}
 </style>

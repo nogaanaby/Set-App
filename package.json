@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@fortawesome/vue-fontawesome": "^0.1.1",
+    "axios": "^0.18.0",
     "socket.io-client": "^2.1.1",
     "vue": "^2.5.2",
     "vue-awesome": "^3.0.5",
