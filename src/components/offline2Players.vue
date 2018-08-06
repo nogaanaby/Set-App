@@ -1,23 +1,32 @@
 <template>
-  <div class="intemidiate game">
+  <div class="game">
     <gameMenu></gameMenu>
       <div class="card" v-if="pageState === 'game'">
         <header class="card-header">
           <a class="button is-outlined" id="tellMe" @click = "findSetBotton()">Tell Me</a>
-          <h1 id="collected">
-            {{this.collectedCards.length / 3}} sets
-          </h1>
+          <div class="collect player1Collected">
+            <h1 style="color: #6FC6FF">{{player1}}</h1>
+            <h4>{{this.player1Collect.length / 3}} sets </h4>
+          </div>
+          <div class="collect player2Collected">
+            <h1 style="color: #2ecc71">{{player2}}</h1>
+            <h4>{{this.player2Collect.length / 3}} sets </h4>
+          </div>
           <div class="clock"><img class="icon" src='@/assets/clock-icon.png'><p id="time">{{formatTime(timeLeft)}}</p></div>
         </header>
-        <div class="card-content">
-            <div class = "cardsContainer">
+        <div class="card-content columns">
+          <div class="colum"><a class="btn blue">noga</a></div>
+            <div class="column">
+              <div class = "cardsContainer">
               <!--{{JSON.stringify(cards)}}-->
                 <div v-for="(card, i) in cardsViewsOnTheTable" :key="card.index" class = "cardDiv" :class = "{notSet: notSet}">
                   <canvas id="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
                   <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{clicked: card.state === 'clicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
                 </div>
               <slot></slot>
-          </div>          
+              </div><!--end of cardsContainer-->
+            </div><!--end of column-->
+          <div class="colum"><a class="btn green">bamasxssma</a></div>
         </div>
       </div>
       <div class="card" v-if="pageState === 'over'">
@@ -49,12 +58,16 @@ export default{
   },
   data () {
     return {
+      player1: 'noga',
+      player2: 'banana',
       id: 0,
       notSet: false, // bazzes the cards in a mistaken set
       pageState: 'game',
       cardsViewsOnTheTable: [],
       cards: [],
       collectedCards: [],
+      player1Collect: [],
+      player2Collect: [],
       cardProperties: {
         shapes: ['rect', 'sub', 'tri'],
         numbers: [1, 2, 3],
@@ -83,7 +96,7 @@ export default{
       this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards))
     }
     this.startTime = Date.now()
-    setInterval(this.countDown, 100)
+    // setInterval(this.countDown, 100)
   },
   mounted () {
     this.cardsViewsOnTheTable.forEach((card, i) => {
@@ -222,6 +235,41 @@ All device
     font-family:cursive;
     font-size: 1.1em;
   }
+  .btn {
+  border-radius: 5px;
+  padding: 15px 25px;
+  font-size: 1em;
+  text-decoration: none;
+  margin: 20px;
+  color: #fff;
+  position: relative;
+  display: inline-block;
+  max-width: 100px;
+}
+
+.btn:active {
+  transform: translate(0px, 5px);
+  -webkit-transform: translate(0px, 5px);
+  box-shadow: 0px 1px 0px 0px;
+}
+
+.blue {
+  background-color: #55acee;
+  box-shadow: 0px 5px 0px 0px #3C93D5;
+}
+
+.blue:hover {
+  background-color: #6FC6FF;
+}
+
+.green {
+  background-color: #2ecc71;
+  box-shadow: 0px 5px 0px 0px #15B358;
+}
+
+.green:hover {
+  background-color: #48E68B;
+}
 /*************************************
 desktop
 ***************************************/
@@ -237,6 +285,9 @@ desktop
 
   #collected{
     font-size: 2em;
+  }
+  .collect{
+    margin: 0 35px;
   }
   .cardsContainer {
   display: flex;
@@ -261,13 +312,13 @@ desktop
     margin: 30px;
   }
   .clock{
-    margin-left: 30%;
+    margin-left: 20%;
     margin-top: 10px;
     margin-bottom: 10px;
   }
   #tellMe{
     margin-top: 18px;
-    margin-right: 25%;
+    margin-right: 15%;
   }
 }
 
