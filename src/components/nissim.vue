@@ -7,7 +7,7 @@
     <p>Click here to get all online users:</p>
     <button @click="pvpGetOnlinePlayers">Get onlineUsers</button>
     <ul>
-      <li v-for="user in onlineUsers">
+      <li v-for="user in onlineUsers" v-bind:key="user.index">
         <span>{{user}}</span>
       </li>
     </ul>

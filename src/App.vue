@@ -14,6 +14,7 @@ import gameMenu from '@/components/nav.vue'
 import start from '@/components/start.vue'
 import practice from '@/components/practice'
 import offline2Players from '@/components/offline2Players'
+import { bus } from './main'
 
 export default {
   name: 'app',
@@ -29,6 +30,12 @@ export default {
     return {
 
     }
+  },
+  mounted () {
+    bus.$on('player1Nickname', (nickname) => {
+      this.player1 = nickname
+    })
+    console.log(this.player1)
   },
   methods: {
 

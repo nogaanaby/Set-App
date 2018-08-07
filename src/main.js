@@ -27,6 +27,8 @@ Vue.prototype.$axios = axios.create({
   baseURL: Vue.prototype.$baseURL + '/api'
 })
 
+export const bus = new Vue()
+
 const routes = [
   {
     path: '/game',

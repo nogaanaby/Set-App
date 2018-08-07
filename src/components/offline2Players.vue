@@ -5,42 +5,42 @@
         <header class="card-header">
           <a class="button is-outlined" id="tellMe" @click = "findSetBotton()">Tell Me</a>
           <div class="collect player1Collected">
-            <h1 style="color: #6FC6FF">{{player1}}</h1>
+            <h1 style="color: #6FC6FF">{{players.player1}}</h1>
             <h4>{{this.player1Collect.length / 3}} sets </h4>
           </div>
           <div class="collect player2Collected">
-            <h1 style="color: #2ecc71">{{player2}}</h1>
+            <h1 style="color: #2ecc71">{{players.player2}}</h1>
             <h4>{{this.player2Collect.length / 3}} sets </h4>
           </div>
           <div class="clock"><img class="icon" src='@/assets/clock-icon.png'><p id="time">{{formatTime(timeLeft)}}</p></div>
         </header>
         <div class="card-content columns">
-          <div class="colum"><a class="btn blue">noga</a></div>
+          <div class="colum"><a class="btn" @click="bluePress" :class="{blue:whoPressed ==='non' || whoPressed ==='green', bluePressed:whoPressed ==='blue'}">{{player1}}</a></div>
             <div class="column">
               <div class = "cardsContainer">
               <!--{{JSON.stringify(cards)}}-->
                 <div v-for="(card, i) in cardsViewsOnTheTable" :key="card.index" class = "cardDiv" :class = "{notSet: notSet}">
                   <canvas id="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
-                  <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{clicked: card.state === 'clicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
+                  <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{blueClicked: card.state === 'blueClicked', greenClicked: card.state === 'greenClicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
                 </div>
               <slot></slot>
               </div><!--end of cardsContainer-->
             </div><!--end of column-->
-          <div class="colum"><a class="btn green">bamasxssma</a></div>
+          <div class="colum"><a class="btn" @click="greenPress" :class="{green:whoPressed ==='non' || whoPressed ==='blue', greenPressed:whoPressed ==='green'}">{{player2}}</a></div>
         </div>
       </div>
       <div class="card" v-if="pageState === 'over'">
         <header class="card-header fadeInDown">
-          <h1 style="font-size: 2em">Game Over</h1>
+          <h1 style="font-size: 2em">Congradulations, {{returnTheWinner()}}</h1>
         </header>
         <div class="card-content">
           <a class="button is-medium is-success playAgain" @click = "PlayAgain()">Play Again</a>
           <div class="columns gameOver">
             <p class="column collectedOver">
-              You Collected : <br> {{this.collectedCards.length / 3}} Sets
+              {{player1}} Collected : <br> {{player1Collect.length / 3}} Sets
             </p>
             <p class="column bestScore">
-              Your Best Is : <br> 40 Sets
+              {{player2}} Collected : <br> {{player2Collect.length / 3}} Sets
             </p>
           </div>
         </div>
@@ -49,7 +49,9 @@
 </template>
 <script>
 import utils from '../js/utils.js'
+import store from '../js/store.js'
 import { CardView } from '../js/CardViews.js'
+import { bus } from '../main'
 import gameMenu from '@/components/nav.vue'
 export default{
   name: 'offline2Players',
@@ -58,8 +60,8 @@ export default{
   },
   data () {
     return {
-      player1: 'noga',
-      player2: 'banana',
+      players: store.multplayerOffline,
+      whoPressed: 'non',
       id: 0,
       notSet: false, // bazzes the cards in a mistaken set
       pageState: 'game',
@@ -91,6 +93,11 @@ export default{
         )
       )
 
+    bus.$on('getPlayer1Nickname', (nickname) => {
+      this.player1 = nickname
+    })
+    console.log(this.player1)
+
     // pull out random card from the card deck and puts it on the table
     for (let i = 0; i < 12; i++) {
       this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards))
@@ -108,11 +115,40 @@ export default{
   },
   methods: {
     /**************************************
+     2 pleyers staf
+    *************************************/
+    bluePress () {
+      this.whoPressed = 'blue'
+    },
+    greenPress () {
+      this.whoPressed = 'green'
+    },
+    collectByPlayer (card) {
+      if (this.whoPressed === 'green') {
+        card.state = 'greenClicked'
+      } else if (this.whoPressed === 'blue') {
+        card.state = 'blueClicked'
+      }
+    },
+    returnTheWinner () {
+      if (this.player1Collect > this.player2Collect) {
+        return this.Player1 + ' Is The Winner!'
+      } else if (this.player1Collect < this.player2Collect) {
+        return this.Player2 + ' Is The Winner!'
+      } else {
+        return 'This Is A Tie!'
+      }
+    },
+    /**************************************
      game
     *************************************/
     isSet: function () {
       if (utils.isSet(this.set, 0, 1, 2)) {
-        this.collectedCards.push(...this.set)
+        if (this.whoPressed === 'green') {
+          this.player2Collect.push(...this.set)
+        } else if (this.whoPressed === 'blue') {
+          this.player1Collect.push(...this.set)
+        }
         return true
       } else {
         this.notSet = true
@@ -123,12 +159,12 @@ export default{
 
     clickedCard: function (card, i) {
       this.notSet = false
-      if (card.state === 'clicked') {
+      if (card.state === 'blueClicked' || card.state === 'greenClicked') {
         card.state = 'unclicked'
         this.set.pop()
       } else {
         this.set.push(card)
-        card.state = 'clicked'
+        this.collectByPlayer(card)
         this.$forceUpdate()
 
         if (this.set.length === 3) {
@@ -137,15 +173,12 @@ export default{
           }
           this.set.splice(0)
         }
-        if (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) === 'no set here') {
-          this.addThree()
-        }
       }
     }, // end of click
 
     switchCards: function () {
       this.cardsViewsOnTheTable.forEach((element, i) => {
-        if (element.state === 'clicked') {
+        if (element.state === 'blueClicked' || element.state === 'greenClicked') {
           this.cardsViewsOnTheTable[i].setNewCardAtrr(utils.takeNewCard(this.cards))
           element.state = 'isTaken'
         }
@@ -199,6 +232,73 @@ export default{
 
 <style scoped>
 /*************************************
+2players game
+***************************************/
+  .btn {
+  border-radius: 5px;
+  padding: 15px 25px;
+  font-size: 1em;
+  text-decoration: none;
+  margin: 20px;
+  color: #fff;
+  position: relative;
+  display: inline-block;
+  max-width: 100px;
+}
+
+.btn:active {
+  transform: translate(0px, 5px);
+  -webkit-transform: translate(0px, 5px);
+  box-shadow: 0px 0px 0px 0px;
+}
+
+.blue {
+  background-color: #55acee;
+  box-shadow:0 10px 0px 0px #3C93D5;
+}
+
+.bluePressed {
+  margin-top: 27px;
+  background-color: #6FC6FF;
+}
+
+.greenPressed {
+  background-color: #48E68B;
+}
+
+.blue:hover {
+  background-color: #6FC6FF;
+}
+
+.green {
+  background-color: #2ecc71;
+  box-shadow: 0px 10px 0px 0px #15B358;
+}
+
+.green:hover {
+  background-color: #48E68B;
+}
+.collect{
+  margin: 0 35px;
+}
+
+.columns{
+  margin: 30px;
+}
+
+#tellMe{
+  margin-top: 18px;
+  margin-right: 15%;
+}
+
+.greenClicked{
+  border: solid 3px #48E68B;
+}
+
+.blueClicked{
+  border: solid 3px #6FC6FF;
+}
+/*************************************
 All device
 ***************************************/
   .game {
@@ -215,9 +315,6 @@ All device
   object-fit: contain;
     height: 100%;
   }
-  .clicked {
-  border: solid 3px grey;
-  }
   .takeSet {
       opacity: 1;
       animation: fade 0.5s linear;
@@ -229,47 +326,12 @@ All device
     perspective: 1000px;
   }
   .findSet {
-  border: solid 3px lightgreen;
+  border: solid 3px yellow;
   }
   #time{
     font-family:cursive;
     font-size: 1.1em;
   }
-  .btn {
-  border-radius: 5px;
-  padding: 15px 25px;
-  font-size: 1em;
-  text-decoration: none;
-  margin: 20px;
-  color: #fff;
-  position: relative;
-  display: inline-block;
-  max-width: 100px;
-}
-
-.btn:active {
-  transform: translate(0px, 5px);
-  -webkit-transform: translate(0px, 5px);
-  box-shadow: 0px 1px 0px 0px;
-}
-
-.blue {
-  background-color: #55acee;
-  box-shadow: 0px 5px 0px 0px #3C93D5;
-}
-
-.blue:hover {
-  background-color: #6FC6FF;
-}
-
-.green {
-  background-color: #2ecc71;
-  box-shadow: 0px 5px 0px 0px #15B358;
-}
-
-.green:hover {
-  background-color: #48E68B;
-}
 /*************************************
 desktop
 ***************************************/
@@ -285,9 +347,6 @@ desktop
 
   #collected{
     font-size: 2em;
-  }
-  .collect{
-    margin: 0 35px;
   }
   .cardsContainer {
   display: flex;
@@ -308,18 +367,13 @@ desktop
     height: 28%;
     margin: 0 2%;
   }
-  .columns{
-    margin: 30px;
-  }
+
   .clock{
     margin-left: 20%;
     margin-top: 10px;
     margin-bottom: 10px;
   }
-  #tellMe{
-    margin-top: 18px;
-    margin-right: 15%;
-  }
+
 }
 
 /*************************************

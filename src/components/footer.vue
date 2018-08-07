@@ -66,12 +66,9 @@ mobile
     justify-content: left;
   }
   .pagination-next{
-    float: right;
+    float: left;
     display: flex;
-    justify-content: right;
-  }
-  #next{
-
+    justify-content: left;
   }
 }
 

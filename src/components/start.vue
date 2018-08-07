@@ -18,13 +18,13 @@
           <div v-if="howMutchPlayers === 'single'" class="nickname column">
             <h4>Choose A Nickname</h4>
             <div class="columns register">
-              <div class="column inputC"><input type="text" class="nicknameInput input" placeholder="The IceCream Men" v-model="nickname" @keyup.enter="chackAvailble"></div>
-              <div class="column is-one-third registerC"><button class="button is-success is-small registerButton" @click="chackAvailble">Register</button></div>
+              <div class="column inputC"><input type="text" class="nicknameInput input" placeholder="The IceCream Men" v-model="nickname" @keyup.enter="pvpRegister"></div>
+              <div class="column is-one-third registerC"><button class="button is-success is-small registerButton" @click="pvpRegister">Register</button></div>
             </div>
             <p v-show = "nicknameAvailble === 'no'" class="notAvailble wrong">The Name Is Alredy Use By Another Member</p>
             <h4 class="OnlineUsers">Online Users</h4>
             <ul>
-              <li v-for="user in onlineUsers" v-bind="user.index">
+              <li v-for="user in onlineUsers" v-bind:key="user.index">
                 <span>{{user.nickname}}</span>
               </li>
             </ul>
@@ -32,17 +32,17 @@
           <div v-if="howMutchPlayers === 'copple'" class="nickname column fadeInDown">
             <h4>First Player Nickname</h4>
             <div class="columns register">
-              <div class="column inputC"><input type="text" class="nicknameInput input" placeholder="The IceCream Men" v-model="player1" @keyup.enter="offlineRegister"></div>
+              <div class="column inputC"><input type="text" class="nicknameInput input" placeholder="The IceCream Men" v-model="players.player1" @keyup.enter="offlineRegister"></div>
               <div class="column is-one-third registerC"><button class="button is-success is-small registerButton" @click="offlineRegister">Register</button></div>
             </div>
             <h4>Second Player Nickname</h4>
             <div class="columns register">
-              <div class="column inputC"><input type="text" class="nicknameInput input" placeholder="The banana Men" v-model="player2" @keyup.enter="offlineRegister"></div>
+              <div class="column inputC"><input type="text" class="nicknameInput input" placeholder="The banana Men" v-model="players.player2" @keyup.enter="offlineRegister"></div>
               <div class="column is-one-third registerC"><button class="button is-success is-small registerButton" @click="offlineRegister">Register</button></div>
             </div>
             <div class="competitors">
               <h4 id="compNames">{{competitors}}</h4>
-              <button class="button is-success letsPlay" v-show="letsPlay"><router-link to="/offline2Players">Let's Play!</router-link></button>
+              <button class="button is-success letsPlay" @click="getPlayer1Nickname" v-show="letsPlay"><router-link to="/offline2Players">Let's Play!</router-link></button>
             </div>
           </div>
         </div>
@@ -52,6 +52,8 @@
 
 <script>
 import gameMenu from '@/components/nav.vue'
+import { bus } from '../main'
+import store from '../js/store.js'
 
 export default {
   name: 'start',
@@ -64,14 +66,13 @@ export default {
       onlineUsers: [],
       nicknameAvailble: '',
       howMutchPlayers: 'single',
-      player1: '',
-      player2: '',
+      players: store.multplayerOffline,
       competitors: '',
       letsPlay: false
     }
   },
   mounted () {
-    // setInterval(this.pvpGetOnlinePlayers(), 2000)
+    setInterval(this.pvpGetOnlinePlayers, 2000)
     console.log(this.onlineUsers)
   },
   methods: {
@@ -100,10 +101,13 @@ export default {
       this.howMutchPlayers = 'copple'
     },
     offlineRegister () {
-      this.competitors = this.player1 + ' vs ' + this.player2
-      if (this.player2.length > 1) {
+      this.competitors = this.players.player1 + ' vs ' + this.players.player2
+      if (this.players.player2.length > 1) {
         this.letsPlay = true
       }
+    },
+    getPlayer1Nickname () {
+      bus.$emit('getPlayer1Nickname', this.player1)
     }
   }
 }
