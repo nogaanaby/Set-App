@@ -27,9 +27,8 @@ export default{
   cardTable staff
   *************************************/
   takeNewCard: (array) => (array.splice((Math.floor(Math.random() * array.length)), 1)[0]),
-
-  addThree: function (mainArray, pushedArray) {
-    mainArray.push(this.takeNewCard(pushedArray), this.takeNewCard(pushedArray), this.takeNewCard(pushedArray))
+  resetCardState (cardViewsArray) {
+    cardViewsArray.forEach((element) => { element.state = 'unclicked' })
   },
   /**************************************
      set staff
@@ -56,5 +55,37 @@ export default{
             : (z === array.length - 1)
               ? this.findSet(array, x, y + 1, y + 2)
               : this.findSet(array, x, y, z + 1))
+  },
+
+  allwaysSetOnTheTable (cardsViewsArray, cardsDeck) {
+    while (this.findSet(cardsViewsArray, 0, 1, 2) === 'no set here') {
+      cardsViewsArray[1].setNewCardAtrr(this.takeNewCard(cardsDeck))
+    }
+  },
+
+  /**************************************
+     fitures
+  *************************************/
+
+  findSetButton: function (cardsViewsArray) {
+    const setArray = this.findSet(cardsViewsArray, 0, 1, 2)
+    cardsViewsArray.forEach((card, i) => {
+      if (setArray[0] === card || setArray[1] === card || setArray[2] === card) {
+        cardsViewsArray[i].state = 'toldMe'
+      }
+    })
+  },
+  countDown (startTime, timeToPlay) {
+    const timeFromLoad = Date.now() - startTime
+    if (timeToPlay - timeFromLoad > 0) {
+      return timeToPlay - timeFromLoad
+    } else {
+      return 0
+    }
+  },
+  formatTime (ms) {
+    const seconds = '' + Math.floor((ms / 1000) % 60)
+    const minutes = '' + Math.floor((ms / 1000 / 60) % 60)
+    return minutes + ' : ' + seconds
   }
 }

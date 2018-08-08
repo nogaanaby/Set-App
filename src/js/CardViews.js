@@ -8,9 +8,9 @@ export class CardView {
     this.fill = fill
     this.state = 'unclicked'
     if (color === 'green') {
-      this.color = '#00B89C'
+      this.color = '#00B89C' // this is the nice green in the header
     } else if (color === 'red') {
-      this.color = '#ff6600'
+      this.color = '#ff6600' // this is orenge
     } else {
       this.color = color
     }

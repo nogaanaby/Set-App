@@ -3,49 +3,51 @@
     <gameMenu></gameMenu>
       <div class="card" v-if="pageState === 'game'">
         <header class="card-header">
-          <a class="button is-outlined" id="tellMe" @click = "findSetBotton()">Tell Me</a>
-          <h1 id="collected">
-            {{this.collectedCards.length / 3}} sets
-          </h1>
-          <div class="clock"><img class="icon" src='@/assets/clock-icon.png'><p id="time">{{formatTime(timeLeft)}}</p></div>
+          <a class="button is-warning is-outlined roundedButton" id="tellMe" @click = "findSet">
+            <img class="tellMeIcon" src='@/assets/tellMe.png'>
+          </a>
+          <a class="button is-success is-outlined roundedButton" >
+            <div class="setCollect">
+              <h1 id="collected">
+              {{this.collectedCards.length / 3}}
+              </h1>
+              <p>Sets</p>
+            </div>
+          </a>
+          <div class="clock">
+            <a class="button is-orange is-outlined roundedButton" >
+              <p id="time">{{formatTime()}}</p>
+            </a>
+          </div>
         </header>
         <div class="card-content">
-            <div class = "cardsContainer">
-              <!--{{JSON.stringify(cards)}}-->
-                <div v-for="(card, i) in cardsViewsOnTheTable" :key="card.index" class = "cardDiv" :class = "{notSet: notSet}">
-                  <canvas id="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
-                  <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{clicked: card.state === 'clicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
-                </div>
-              <slot></slot>
-          </div>          
-        </div>
-      </div>
-      <div class="card" v-if="pageState === 'over'">
-        <header class="card-header fadeInDown">
-          <h1 style="font-size: 2em">Game Over</h1>
-        </header>
-        <div class="card-content">
-          <a class="button is-medium is-success playAgain" @click = "PlayAgain()">Play Again</a>
-          <div class="columns gameOver">
-            <p class="column collectedOver">
-              You Collected : <br> {{this.collectedCards.length / 3}} Sets
-            </p>
-            <p class="column bestScore">
-              Your Best Is : <br> 40 Sets
-            </p>
+          <div class = "cardsContainer">
+            <div v-for="(card, i) in cardsViewsOnTheTable" :key="card.index" class = "cardDiv" :class = "{notSet: notSet}">
+              <canvas id="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
+              <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{clicked: card.state === 'clicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
+            </div>
           </div>
         </div>
       </div>
+    <game-over v-if="pageState === 'over'"
+     v-bind:collectedCardsLength="collectedCards.length"
+     v-bind:fathersTitle="'Game Over'"
+     v-bind:fathersColumn1="'you collected ' + collectedCards.length / 3 + ' sets'"
+     v-bind:fathersColumn2="'you collected ' + collectedCards.length + ' cards'"></game-over>
   </div>
 </template>
 <script>
 import utils from '../js/utils.js'
 import { CardView } from '../js/CardViews.js'
+import { CardsDeck } from '../js/CardsDeck.js'
 import gameMenu from '@/components/nav.vue'
+import gameOver from '@/components/gameOver.vue'
+
 export default{
   name: 'game',
   components: {
-    gameMenu
+    gameMenu,
+    gameOver
   },
   data () {
     return {
@@ -53,37 +55,21 @@ export default{
       notSet: false, // bazzes the cards in a mistaken set
       pageState: 'game',
       cardsViewsOnTheTable: [],
-      cards: [],
+      cards: new CardsDeck(),
       collectedCards: [],
-      cardProperties: {
-        shapes: ['rect', 'sub', 'tri'],
-        numbers: [1, 2, 3],
-        colors: ['green', 'purple', 'red'],
-        fills: ['empty', 'full', 'stripes']
-      },
       set: [],
       startTime: 0,
-      timeToPlay: 3 * 60 * 1000,
-      timeLeft: 3 * 60 * 1000
+      timeToPlay: 1 * 20 * 1000,
+      timeLeft: 1 * 20 * 1000
     }
   },
   created () {
-    // init cards deck (3^4 combintaions)
-    this.cardProperties.shapes
-      .forEach(shape => this.cardProperties.numbers
-        .forEach(number => this.cardProperties.colors
-          .forEach(color => this.cardProperties.fills
-            .forEach((fill, id) => this.cards.push({id: this.id++, shape, number, color, fill}))
-          )
-        )
-      )
-
     // pull out random card from the card deck and puts it on the table
     for (let i = 0; i < 12; i++) {
-      this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards))
+      this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards.cardsDeckArray))
     }
     this.startTime = Date.now()
-    setInterval(this.countDown, 100)
+    // setInterval(this.countDown, 100)
   },
   mounted () {
     this.cardsViewsOnTheTable.forEach((card, i) => {
@@ -91,7 +77,7 @@ export default{
       card.cardCanvas = this.$refs[`card${i}`][0]
       card.drawCard()
     })
-    this.allwaysSetOnTheTable()
+    utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable)
   },
   methods: {
     /**************************************
@@ -124,58 +110,38 @@ export default{
           }
           this.set.splice(0)
         }
-        if (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) === 'no set here') {
-          this.addThree()
-        }
       }
     }, // end of click
 
     switchCards: function () {
       this.cardsViewsOnTheTable.forEach((element, i) => {
         if (element.state === 'clicked') {
-          this.cardsViewsOnTheTable[i].setNewCardAtrr(utils.takeNewCard(this.cards))
+          this.cardsViewsOnTheTable[i].setNewCardAtrr(utils.takeNewCard(this.cards.cardsDeckArray))
           element.state = 'isTaken'
         }
       })
-      this.allwaysSetOnTheTable()
+      utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable)
     },
 
     resetCardState: function () {
       this.cardsViewsOnTheTable.forEach((element) => { element.state = 'unclicked' })
     },
-
-    findSetBotton: function () {
-      if (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) !== 'no set here') {
-        const setArray = utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2)
-        this.cardsViewsOnTheTable.forEach((card, i) => {
-          if (setArray[0] === card || setArray[1] === card || setArray[2] === card) {
-            this.cardsViewsOnTheTable[i].state = 'toldMe'
-            this.$forceUpdate()
-          }
-        })
-      } else {
-        console.log('no set here')
-      }
-    },
-
-    allwaysSetOnTheTable () {
-      while (utils.findSet(this.cardsViewsOnTheTable, 0, 1, 2) === 'no set here') {
-        this.cardsViewsOnTheTable[1].setNewCardAtrr(utils.takeNewCard(this.cards))
-      }
+    /*****************************
+     * fitures
+     *************************/
+    findSet () {
+      utils.findSetButton(this.cardsViewsOnTheTable)
+      this.$forceUpdate()
     },
     countDown () {
-      const timeFromLoad = Date.now() - this.startTime
-      this.timeLeft = this.timeToPlay - timeFromLoad
-
-      if (this.timeLeft <= 0) {
+      this.timeLeft = utils.countDown(this.startTime, this.timeToPlay)
+      if (this.timeLeft === 0) {
         this.pageState = 'over'
         this.$forceUpdate()
       }
     },
-    formatTime (ms) {
-      const seconds = '' + Math.floor((ms / 1000) % 60)
-      const minutes = '' + Math.floor((ms / 1000 / 60) % 60)
-      return minutes + ' : ' + seconds
+    formatTime () {
+      return utils.formatTime(this.timeLeft)
     },
     PlayAgain: function () {
       location.reload()
@@ -185,144 +151,5 @@ export default{
 </script>
 
 <style scoped>
-/*************************************
-All device
-***************************************/
-  .game {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  }
-  #setGame{
-    margin: 0px;
-  }
 
-  #cardCanvas{
-    width: 100%;
-  object-fit: contain;
-    height: 100%;
-  }
-  .clicked {
-  border: solid 3px grey;
-  }
-  .takeSet {
-      opacity: 1;
-      animation: fade 0.5s linear;
-  }
-  .notSet{
-    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
-    transform: translate3d(0, 0, 0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-  }
-  .findSet {
-  border: solid 3px lightgreen;
-  }
-  #time{
-    font-family:cursive;
-    font-size: 1.1em;
-  }
-/*************************************
-desktop
-***************************************/
-@media only screen and (min-width: 769px) {
-  .game {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  }
-  #setGame{
-    margin: 0px;
-  }
-
-  #collected{
-    font-size: 2em;
-  }
-  .cardsContainer {
-  display: flex;
-  flex-direction: row;
-  width: 520px;
-  height: 420px;
-  margin: 0px auto 30px auto;
-  flex-wrap: wrap;
-  justify-content: center;
-  }
-  .cardDiv {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    width: 17%;
-    height: 28%;
-    margin: 0 2%;
-  }
-  .columns{
-    margin: 30px;
-  }
-  .clock{
-    margin-left: 30%;
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-  #tellMe{
-    margin-top: 18px;
-    margin-right: 25%;
-  }
-}
-
-/*************************************
-mobile
-***************************************/
-@media only screen and (max-width: 768px) {
-    body {
-        background-color: lightblue;
-    }
-
-    .cardDiv {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    width: 20%;
-    height: 30%;
-    margin: 0 1%;
-  }
-
-  .cardsContainer {
-    display: flex;
-    flex-direction: row;
-    width: 260px;
-    height: 270px;
-    margin: 30px auto 30px auto;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .card-content{
-    padding:0;
-  }
-
-  .button{
-    width: 20%;
-    font-size: 0.75em;
-  }
-
-  #tellMe{
-    margin: 10px 20px;
-  }
-.collectedOver{
-  float: left;
-}
-.gameOver{
-  margin: 20px;
-}
-.playAgain{
-  margin-top: 40px;
-  margin-bottom: 20px;
-  width: 40%;
-  font-size: 1em;
-}
-}
 </style>

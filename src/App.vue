@@ -14,7 +14,6 @@ import gameMenu from '@/components/nav.vue'
 import start from '@/components/start.vue'
 import practice from '@/components/practice'
 import offline2Players from '@/components/offline2Players'
-import { bus } from './main'
 
 export default {
   name: 'app',
@@ -32,10 +31,6 @@ export default {
     }
   },
   mounted () {
-    bus.$on('player1Nickname', (nickname) => {
-      this.player1 = nickname
-    })
-    console.log(this.player1)
   },
   methods: {
 
@@ -93,33 +88,7 @@ html{
 *{
   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
-.openMenu{
-  background: none;
-  border: none;
-  float: right;
-}
-.blur{
-  -webkit-filter: blur(3px);
-  -moz-filter: blur(3px);
-  -o-filter: blur(3px);
-  -ms-filter: blur(3px);
-  filter: blur(3px);
-}
-.menu{
-  display: flex;
-  flex-direction: column;
-  border: solid 1px lightgrey;
-  background-color: rgba(0,0, 0, 0.2);
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  position: absolute;
-  animation: fade 1s linear;
-}
-#gameButton{
-  padding: 10px 32px;
-}
+
 .link{
   text-decoration: none;
 }
@@ -140,31 +109,6 @@ canvas{
 }
 ul{
   list-style-type: none;
-}
-.instractionText{
-  width: 50%;
-}
-#arrowNext, #openMenu{
-    float: right;
-    background: none;
-    color: inherit;
-    border: none;
-    padding: 0;
-    margin-left:10%;
-    font: inherit;
-    cursor: pointer;
-    outline: inherit;
-}
-#arrowBack{
-    float: left;
-    background: none;
-    color: inherit;
-    border: none;
-    padding: 0;
-    margin-right:10%;
-    font: inherit;
-    cursor: pointer;
-    outline: inherit;
 }
 h1 {
     font-size: 1.5em;
@@ -203,4 +147,157 @@ animations
       transform: translate3d(4px, 0, 0);
     }
   }
+
+  /**************************************
+  GAME BOARD
+  ***************************************/
+  
+/*******************
+All devices
+********************/
+
+/**********
+main game
+***********/
+  .game {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  }
+  #cardCanvas{
+    width: 100%;
+    object-fit: contain;
+    height: 100%;
+  }
+  .cardDiv {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+  .clicked {
+    border: solid 3px grey;
+  }
+  .takeSet {
+      opacity: 1;
+      animation: fade 0.5s linear;
+  }
+  .notSet{
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+/**********
+fitures
+***********/
+  .findSet {
+    border: solid 3px #ffdd57;
+  }
+  #time{
+    font-family:cursive;
+    font-size: 1.1em;
+  }
+  .button.is-orange:hover{
+    background-color: #ff6500;
+    border: solid 1px #f28b4b;
+  }
+  .button.is-orange{
+    border: solid 1px #ff6500;
+  }
+    .button.is-purple:hover{
+    background-color: plum;
+    border: solid 1px purple;
+  }
+  .button.is-purple{
+    border: solid 1px purple;
+  }
+  .roundedButton{
+    margin: 15px;
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+  }
+  #collected{
+    font-size: 2em;
+    margin: 0;
+    color: black;
+  }
+  p{
+    font-size: 0.7em;
+    color: black;
+  }
+  .clock{
+    margin-left: 5%;
+  }
+  #tellMe{
+    margin-right: 6%;
+  }
+/*************************************
+desktop
+***************************************/
+@media only screen and (min-width: 769px) {
+/**********
+main game
+***********/
+  .cardsContainer {
+  display: flex;
+  flex-direction: row;
+  width: 60%;
+  height: 400px;
+  margin: 0px auto 30px auto;
+  flex-wrap: wrap;
+  justify-content: center;
+  }
+  .cardDiv {
+    width: 17%;
+    height: 28%;
+    margin: 0 2%;
+  }
+}
+
+/*************************************
+mobile
+***************************************/
+@media only screen and (max-width: 768px) {
+    body {
+        background-color: lightblue;
+    }
+    .cardDiv {
+    width: 20%;
+    height: 30%;
+    margin: 0 1%;
+  }
+
+  .cardsContainer {
+    display: flex;
+    flex-direction: row;
+    width: 260px;
+    height: 270px;
+    margin: 30px auto 30px auto;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .card-content{
+    padding:0;
+  }
+
+  .button{
+    width: 20%;
+    font-size: 0.75em;
+  }
+
+  #tellMe{
+    margin: 10px 20px;
+  }
+.playAgain{
+  margin-top: 40px;
+  margin-bottom: 20px;
+  width: 40%;
+  font-size: 1em;
+}
+}
 </style>

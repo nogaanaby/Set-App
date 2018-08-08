@@ -10,6 +10,7 @@ import start from '@/components/start'
 import practice from '@/components/practice'
 import footerNextPage from '@/components/footer'
 import offline2Players from '@/components/offline2Players'
+import together from '@/components/together'
 import nissim from '@/components/nissim'
 import socketio from 'socket.io-client'
 import VueSocketIO from 'vue-socket.io'
@@ -64,6 +65,11 @@ const routes = [
     path: '/offline2Players',
     name: 'offline2Players',
     component: offline2Players
+  },
+  {
+    path: '/together',
+    name: 'together',
+    component: together
   }
 ]
 

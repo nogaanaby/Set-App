@@ -5,7 +5,7 @@
           <ul class="pagination-list">
             <li><a class="pagination-link" aria-label="Page 46" aria-current="page">{{contentIndex + 1}}</a></li>
           </ul>
-          <a class="pagination-next" @click="nextPageIndex"><img id="arrowImg next" src='@/assets/angle-right-solid.svg' width="25px" height="25px"></a>
+          <a class="pagination-next" v-show="goTo === 'in'" @click="nextPageIndex"><img id="arrowImg next" src='@/assets/angle-right-solid.svg' width="25px" height="25px"></a>
         </nav>
     </div>
 </template>
@@ -24,7 +24,8 @@ export default {
   props: ['pageCount'],
   data () {
     return {
-      contentIndex: 0
+      contentIndex: 0,
+      goTo: 'in'
     }
   },
   methods: {
@@ -35,6 +36,11 @@ export default {
     prevPageIndex: function () {
       this.contentIndex = Math.max(this.contentIndex - 1, 0)
       this.$emit('indexUpdateEvent', this.contentIndex, 'back')
+    },
+    letsPractice () {
+      if (this.pageCount - 1 === this.contentIndex) {
+        this.goTo = 'practice'
+      }
     }
   }
 }
