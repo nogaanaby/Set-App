@@ -9,17 +9,17 @@
           </a>
           <div class="player1Score">
             <a class="button is-success is-outlined roundedButton">
-              <div class="collect player1Collected">
-                <h1 id="collected">{{this.player1Collect.length / 3}}</h1>
-                <h4 class="playerName">{{players.player1}}</h4>
+              <div class="collect player2Collected">
+                <h1 id="collected">{{this.player2Collect.length / 3}}</h1>
+                <h4 class="playerName">{{players.player2}}</h4>
               </div>
             </a>
           </div>
           <div class="player2Score">
             <a class="button is-purple is-outlined roundedButton">
-              <div class="collect player2Collected">
-                <h1 id="collected">{{this.player2Collect.length / 3}}</h1>
-                <h4 class="playerName">{{players.player2}}</h4>
+              <div class="collect player1Collected">
+                <h1 id="collected">{{this.player1Collect.length / 3}}</h1>
+                <h4 class="playerName">{{players.player1}}</h4>
               </div>
             </a>
           </div>
@@ -72,8 +72,8 @@ export default{
       player2Collect: [],
       set: [],
       startTime: 0,
-      timeToPlay: 1 * 10 * 1000,
-      timeLeft: 1 * 10 * 1000
+      timeToPlay: 4 * 60 * 1000,
+      timeLeft: 4 * 60 * 1000
     }
   },
   created () {
@@ -82,7 +82,7 @@ export default{
       this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards.cardsDeckArray))
     }
     this.startTime = Date.now()
-   // setInterval(this.countDown, 100)
+    setInterval(this.countDown, 100)
   },
   mounted () {
     this.cardsViewsOnTheTable.forEach((card, i) => {
@@ -144,9 +144,21 @@ export default{
     *************************************/
     bluePress () {
       this.whoPressed = 'blue'
+      setTimeout(() => {
+        this.whoPressed = 'non'
+        console.log(this.whoPressed)
+      }, 4000)
+      this.$forceUpdate()
+      console.log(this.whoPressed)
     },
     greenPress () {
       this.whoPressed = 'green'
+      setTimeout(() => {
+        this.whoPressed = 'non'
+        console.log(this.whoPressed)
+      }, 4000)
+      this.$forceUpdate()
+      console.log(this.whoPressed)
     },
     collectByPlayer (card) {
       if (this.whoPressed === 'green') {
@@ -178,6 +190,7 @@ export default{
      *************************/
     findSet () {
       utils.findSetButton(this.cardsViewsOnTheTable)
+      this.$forceUpdate()
     },
     countDown () {
       this.timeLeft = utils.countDown(this.startTime, this.timeToPlay)

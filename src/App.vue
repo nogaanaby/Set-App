@@ -14,6 +14,8 @@ import gameMenu from '@/components/nav.vue'
 import start from '@/components/start.vue'
 import practice from '@/components/practice'
 import offline2Players from '@/components/offline2Players'
+import onlineSignUp from '@/components/onlineSignUp'
+import offlineSignUp from '@/components/offlineSignUp'
 
 export default {
   name: 'app',
@@ -23,7 +25,9 @@ export default {
     start,
     instractionsTables,
     practice,
-    offline2Players
+    offline2Players,
+    onlineSignUp,
+    offlineSignUp
   },
   data () {
     return {
@@ -38,39 +42,38 @@ export default {
 }
 
 </script>
-
 <style>
 @import './assets/w3.css';
 @import './assets/bulma.css';
 @import './assets/animations.css';
 @import '.././node_modules/vue2-animate/dist/vue2-animate.min.css';
 
-/*************************************
-Mobile
-***************************************/
-@media only screen and (max-width: 768px) {
-  html, #app, .card {
-    height: 600px;
-  }
-}
-/*************************************
-Desktop
-***************************************/
-@media only screen and (min-width: 769px) {
+/* only for desktop */
+@media only screen and (min-width: 768px) {
   #app {
     width: 70%;
   }
-  .card{
+}
+
+/* big tablet & mobile */
+@media only screen and (max-width: 560px) {
+  .cardsContainer {
+    width: 500px;
     height: 100%;
   }
-  .card-content{
-    padding-bottom: 0;
+}
+
+/* tablet & mobile */
+@media only screen and (max-width: 560px) {
+  .cardsContainer {
+    max-width: 70%;
+    height: 400px;
+  }
+
+  .menu-links{
+    font-size: 0.7em;
   }
 }
-/*************************************
-All Devices
-***************************************/
-
 html{
   background-color: gainsboro;
   margin: 0px;
@@ -95,33 +98,107 @@ html{
 canvas{
   border: 1px solid gray;
   border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  width: 150px;
-  justify-content: center;
   background-color: #f5f5f0;
-  font: inherit;
-  outline: inherit;
 }
-.vicon, .xicon{
-    width: 20px;
-    height: 20px;
+.vertical-gap-medium{
+  margin-left: 10px;
+  margin-right: 10px;
 }
-ul{
-  list-style-type: none;
-}
-h1 {
-    font-size: 1.5em;
-    text-align: center;
-    margin: 5px;
-}
-.card-header{
-  justify-content: center;
-}
-.button:after{
-  border: none;
+.vertical-gap-small{
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
+.horizontal-seperator{
+  margin-top: 10%;
+}
+
+  /**************************************
+  GAME BOARD
+  ***************************************/
+  .cardsContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: auto;
+  }
+/*******************
+All devices
+********************/
+
+  #cardCanvas{
+    width: 100%;
+    object-fit: contain;
+    height: 100%;
+  }
+  .cardDiv {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    width: 17%;
+    height: 28%;
+    margin: 0 2%;
+  }
+  .clicked {
+    border: solid 3px grey;
+  }
+  .takeSet {
+      opacity: 1;
+      animation: fade 0.5s linear;
+  }
+  .notSet{
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+/**********
+fitures
+***********/
+  .findSet {
+    border: solid 4px #23D160;
+  }
+  .button.is-orange:hover{
+    background-color: #ff6500;
+    border: solid 1px #f28b4b;
+  }
+  .button.is-orange{
+    border: solid 1px #ff6500;
+  }
+    .button.is-purple:hover{
+    background-color: plum;
+    border: solid 1px purple;
+  }
+  .button.is-purple{
+    border: solid 1px purple;
+  }
+  .is-green{
+    color: #15B358;
+  }
+  .roundedButton{
+    margin: 15px;
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+  }
+
+  .input-button{
+    height: inherit;
+  }
+  .is-grouped{
+    display: flex;
+    justify-content: space-between;
+  }
+  .is-narrow{
+    width: 40%;
+    margin: auto;
+    min-width: 200px;
+  }
+  
 /**************************************
 animations
 ***************************************/
@@ -147,157 +224,4 @@ animations
       transform: translate3d(4px, 0, 0);
     }
   }
-
-  /**************************************
-  GAME BOARD
-  ***************************************/
-  
-/*******************
-All devices
-********************/
-
-/**********
-main game
-***********/
-  .game {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  }
-  #cardCanvas{
-    width: 100%;
-    object-fit: contain;
-    height: 100%;
-  }
-  .cardDiv {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-  }
-  .clicked {
-    border: solid 3px grey;
-  }
-  .takeSet {
-      opacity: 1;
-      animation: fade 0.5s linear;
-  }
-  .notSet{
-    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
-    transform: translate3d(0, 0, 0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-  }
-
-/**********
-fitures
-***********/
-  .findSet {
-    border: solid 3px #ffdd57;
-  }
-  #time{
-    font-family:cursive;
-    font-size: 1.1em;
-  }
-  .button.is-orange:hover{
-    background-color: #ff6500;
-    border: solid 1px #f28b4b;
-  }
-  .button.is-orange{
-    border: solid 1px #ff6500;
-  }
-    .button.is-purple:hover{
-    background-color: plum;
-    border: solid 1px purple;
-  }
-  .button.is-purple{
-    border: solid 1px purple;
-  }
-  .roundedButton{
-    margin: 15px;
-    height: 70px;
-    width: 70px;
-    border-radius: 50%;
-  }
-  #collected{
-    font-size: 2em;
-    margin: 0;
-    color: black;
-  }
-  p{
-    font-size: 0.7em;
-    color: black;
-  }
-  .clock{
-    margin-left: 5%;
-  }
-  #tellMe{
-    margin-right: 6%;
-  }
-/*************************************
-desktop
-***************************************/
-@media only screen and (min-width: 769px) {
-/**********
-main game
-***********/
-  .cardsContainer {
-  display: flex;
-  flex-direction: row;
-  width: 60%;
-  height: 400px;
-  margin: 0px auto 30px auto;
-  flex-wrap: wrap;
-  justify-content: center;
-  }
-  .cardDiv {
-    width: 17%;
-    height: 28%;
-    margin: 0 2%;
-  }
-}
-
-/*************************************
-mobile
-***************************************/
-@media only screen and (max-width: 768px) {
-    body {
-        background-color: lightblue;
-    }
-    .cardDiv {
-    width: 20%;
-    height: 30%;
-    margin: 0 1%;
-  }
-
-  .cardsContainer {
-    display: flex;
-    flex-direction: row;
-    width: 260px;
-    height: 270px;
-    margin: 30px auto 30px auto;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .card-content{
-    padding:0;
-  }
-
-  .button{
-    width: 20%;
-    font-size: 0.75em;
-  }
-
-  #tellMe{
-    margin: 10px 20px;
-  }
-.playAgain{
-  margin-top: 40px;
-  margin-bottom: 20px;
-  width: 40%;
-  font-size: 1em;
-}
-}
 </style>

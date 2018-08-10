@@ -1,7 +1,7 @@
 
 export default{
   multplayerOffline: {
-    player1: 'bogi',
-    player2: 'tusik'
+    player1: 'noga',
+    player2: 'shira'
   }
 }

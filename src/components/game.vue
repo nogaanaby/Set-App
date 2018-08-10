@@ -14,11 +14,9 @@
               <p>Sets</p>
             </div>
           </a>
-          <div class="clock">
-            <a class="button is-orange is-outlined roundedButton" >
+            <a class="button is-orange is-outlined roundedButton clock" >
               <p id="time">{{formatTime()}}</p>
             </a>
-          </div>
         </header>
         <div class="card-content">
           <div class = "cardsContainer">
@@ -59,8 +57,8 @@ export default{
       collectedCards: [],
       set: [],
       startTime: 0,
-      timeToPlay: 1 * 20 * 1000,
-      timeLeft: 1 * 20 * 1000
+      timeToPlay: 2 * 60 * 1000,
+      timeLeft: 2 * 60 * 1000
     }
   },
   created () {
@@ -69,7 +67,7 @@ export default{
       this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards.cardsDeckArray))
     }
     this.startTime = Date.now()
-    // setInterval(this.countDown, 100)
+    setInterval(this.countDown, 100)
   },
   mounted () {
     this.cardsViewsOnTheTable.forEach((card, i) => {
