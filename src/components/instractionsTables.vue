@@ -3,15 +3,15 @@
     <gameMenu></gameMenu>
     <div class="card">
       <header class="card-header">
-        <h1>
+        <h1 class="noga-title">
           {{pageData[contentIndex].title}}
         </h1>
       </header>
       <div class="card-content" :class= "{slideInRight: flipNext, fadeInLeft: flipBack}" >
         <div class="content">
-          {{pageData[contentIndex].setExplain}}
+          <p class="cardText">{{pageData[contentIndex].setExplain}}</p>
         </div>
-        <div class="columns">
+        <div class="columns is-mobile">
           <div class="setCard column" v-for="(card, i) in sets[contentIndex]" :key="card.index">
             <canvas :ref="'shape'+i" width="150" height="66" v-show="false" ></canvas>
             <canvas :ref="'card'+i" width="150" height="198"></canvas>
@@ -47,14 +47,12 @@
           </table>
         </div>
       </div>
-      <footer class="card-footer">
-        <footerNextPage
-          class="footer"
-          v-bind:pageCount = "sets.length"
-          @indexUpdateEvent= "onIndexUpdate">
-        </footerNextPage>
-      </footer>
     </div>
+    <footerNextPage
+      class="footer"
+      v-bind:pageCount = "sets.length"
+      @indexUpdateEvent= "onIndexUpdate">
+    </footerNextPage>
   </div>
 </template>
 
@@ -171,23 +169,55 @@ export default {
 </script>
 
 <style scoped>
-    .content{
-      font-size: 1em;
+/* tablet & mobile **/
+@media only screen and (max-width: 560px) {
+  .cardText{
+    font-size: 0.7em;
+  }
+  .columns.is-mobile{
+    width: 80%;
+    margin: auto;
+  }  
+}
+/**tablets**/
+@media only screen and (min-width: 561px) and (max-width: 1019px) {
+    .columns.is-mobile{
       width: 70%;
       margin: auto;
-      height: 60px;
     }
+}
+
+/**desktop only**/
+@media only screen and (min-width: 1020px) {
     .columns{
       width: 50%;
       margin: auto;
     }
+}
+/*************************************
+all devices
+***************************************/
+    .setCard{
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      width: 30%;
+      height: 30%;
+      margin: 0 5%;
+    }
+    .content{
+      font-size: 1em;
+      width: 70%;
+      margin: auto;
+    }
+
     .cardTables{
-        margin: auto;
-        width: 60%;
-        display: flex;
-        border-radius: 7px;
-        flex-direction: column;
-        flex-wrap: wrap;
+      margin: auto;
+      width: 60%;
+      display: flex;
+      border-radius: 7px;
+      flex-direction: column;
+      flex-wrap: wrap;
     }
     table{
         margin-top: 10px;
@@ -203,19 +233,11 @@ export default {
       width: 100%;
       object-fit: contain;
       height: 100%;
+      max-width: 70px;
+      min-width: 45px;
     }
-    .setCard{
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        width: 10%;
-        height: 10%;
-        margin: 0 5%;
-    }
-.card-footer, .footer{
-  width: 100%;
-  height: 50px;
-  margin: 0;
-  padding: 0;
-}
+
+/*************************************
+mobile
+***************************************/
 </style>

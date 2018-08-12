@@ -6,6 +6,7 @@ import Router from 'vue-router'
 import axios from 'axios'
 import instractionsTables from '@/components/instractionsTables'
 import game from '@/components/game'
+import gameOver from '@/components/gameOver'
 import start from '@/components/start'
 import practice from '@/components/practice'
 import footerNextPage from '@/components/footer'
@@ -82,6 +83,11 @@ const routes = [
     path: '/offlineSignUp',
     name: 'offlineSignUp',
     component: offlineSignUp
+  },
+  {
+    path: '/gameOver',
+    name: 'gameOver',
+    component: gameOver
   }
 ]
 

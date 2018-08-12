@@ -1,5 +1,5 @@
 <template>
-  <div class="offlineSignUp">
+  <div class="offlineSignUp template-div">
   <gameMenu></gameMenu>
   <div class="card">
     <div class="card-content">
@@ -31,17 +31,20 @@
       </div>
       </div>
     </div>
+    <brand-footer class="footer"></brand-footer>
   </div>
 </template>
 
 <script>
 import gameMenu from '@/components/nav.vue'
 import store from '../js/store.js'
+import brandFooter from '@/components/brandFooter.vue'
 
 export default {
   name: 'offlineSignUp',
   components: {
-    gameMenu
+    gameMenu,
+    brandFooter
   },
   data () {
     return {

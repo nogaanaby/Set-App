@@ -2,10 +2,10 @@
   <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         <a class="desktopLogo">
-         <img class="myLogo" src='@/assets/logo-white-align-left.png'>
+         <router-link to="/start"><img class="myLogo" src='@/assets/logo-white-align-left.png'></router-link>
         </a>
         <a class="mobileOnly">
-         <img class="myLogo" src='@/assets/logoMiddle.png'>
+         <router-link to="/start"><img class="myLogo" src='@/assets/logoMiddle.png'></router-link>
         </a>
         <a class="mobileBurger mobileOnly"> <router-link to="/start"><img src='@/assets/burgerWhite.png' width="50px" height="50px"></router-link></a>
     </div>

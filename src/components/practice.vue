@@ -59,7 +59,7 @@
         v-bind:pageCount = "sets.length"
         @indexUpdateEvent= "onIndexUpdate">
         </footerNextPage>
-      </footer>    
+      </footer>
   </div><!-- main -->
 </template>
 

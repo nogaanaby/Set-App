@@ -1,48 +1,51 @@
 <template>
-  <div class="game">
+  <div class="game template-div">
     <gameMenu></gameMenu>
-      <div class="card" v-show="pageState === 'game'">
-        <header class="card-header">
-          <div class="greenButton"><a class="btn" @click="greenPress" :class="{green:whoPressed ==='non' || whoPressed ==='blue', greenPressed:whoPressed ==='green'}"><p style="margin-top: 9px;">space</p></a></div>
-          <a class="button is-warning is-outlined roundedButton" @click = "findSet">
-            <img class="tellMeIcon" src='@/assets/tellMe.png'>
-          </a>
-          <div class="player1Score">
-            <a class="button is-success is-outlined roundedButton">
-              <div class="collect player2Collected">
-                <h1 id="collected">{{this.player2Collect.length / 3}}</h1>
-                <h4 class="playerName">{{players.player2}}</h4>
-              </div>
+      <div class="card">
+        <header class="card-header" v-show="pageState === 'game'">
+            <a class="button is-warning is-outlined roundedButton" @click = "findSet">
+              <img class="icon" src='@/assets/tellMe.png'>
             </a>
-          </div>
-          <div class="player2Score">
-            <a class="button is-purple is-outlined roundedButton">
-              <div class="collect player1Collected">
-                <h1 id="collected">{{this.player1Collect.length / 3}}</h1>
-                <h4 class="playerName">{{players.player1}}</h4>
-              </div>
+            <div class="player1Score">
+              <a class="button is-success is-outlined roundedButton">
+                <div class="collect player2Collected">
+                  <h1 class="title-in" id="collected">{{this.player2Collect.length / 3}}</h1>
+                  <h4 class="playerName">{{players.player2}}</h4>
+                </div>
+              </a>
+            </div>
+            <div class="player2Score">
+              <a class="button is-purple is-outlined roundedButton">
+                <div class="collect player1Collected">
+                  <h1 class="title-in" id="collected">{{this.player1Collect.length / 3}}</h1>
+                  <h4 class="playerName">{{players.player1}}</h4>
+                </div>
+              </a>
+            </div>
+            <a class="button is-orange is-outlined roundedButton" >
+              <p id="time">{{formatTime()}}</p>
             </a>
-          </div>
-          <a class="button is-orange is-outlined roundedButton" >
-            <p id="time">{{formatTime()}}</p>
-          </a>
-          <div class="purpleButton"><a class="btn" @click="bluePress" :class="{blue:whoPressed ==='non' || whoPressed ==='green', bluePressed:whoPressed ==='blue'}"><p style="margin-top: 9px;">enter</p></a></div>       
         </header>
         <div class="card-content">
-              <div class = "cardsContainer">
+          <div class="columns" v-show="pageState === 'game'">
+            <div class="greenButton column"><a class="btn" @click="greenPress" :class="{green:whoPressed ==='non' || whoPressed ==='blue', greenPressed:whoPressed ==='green'}"></a></div>
+              <div class="purpleButton column"><a class="btn" @click="bluePress" :class="{blue:whoPressed ==='non' || whoPressed ==='green', bluePressed:whoPressed ==='blue'}"></a></div>
+              <div class = "cardsContainer column is-two-thirds">
               <!--{{JSON.stringify(cards)}}-->
                 <div v-for="(card, i) in cardsViewsOnTheTable" :key="card.index" class = "cardDiv" :class = "{notSet: notSet}">
                   <canvas id="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
                   <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{blueClicked: card.state === 'blueClicked', greenClicked: card.state === 'greenClicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
                 </div>
               </div><!--end of cardsContainer-->
+            </div>
+            <game-over class="game-over" v-if="pageState === 'over'"
+              v-bind:collectedCardsLength="player1Collect.length"
+              v-bind:fathersTitle="returnTheWinner()"
+              v-bind:fathersColumn1="players.player1 + ' collected ' + player1Collect.length / 3 + ' sets'"
+              v-bind:fathersColumn2="players.player2 + ' collected ' + player2Collect.length / 3 + ' sets'"></game-over>
         </div>
       </div>
-      <game-over v-if="pageState === 'over'"
-        v-bind:collectedCardsLength="player1Collect.length"
-        v-bind:fathersTitle="returnTheWinner()"
-        v-bind:fathersColumn1="players.player1 + ' collected ' + player1Collect.length / 3 + ' sets'"
-        v-bind:fathersColumn2="players.player2 + ' collected ' + player2Collect.length / 3 + ' sets'"></game-over>
+    <brand-footer class="footer"></brand-footer>
   </div>
 </template>
 <script>
@@ -52,11 +55,13 @@ import { CardView } from '../js/CardViews.js'
 import { CardsDeck } from '../js/CardsDeck.js'
 import gameMenu from '@/components/nav.vue'
 import gameOver from '@/components/gameOver.vue'
+import brandFooter from '@/components/brandFooter.vue'
 export default{
   name: 'offline2Players',
   components: {
     gameMenu,
-    gameOver
+    gameOver,
+    brandFooter
   },
   data () {
     return {
@@ -72,8 +77,8 @@ export default{
       player2Collect: [],
       set: [],
       startTime: 0,
-      timeToPlay: 4 * 60 * 1000,
-      timeLeft: 4 * 60 * 1000
+      timeToPlay: 1 * 10 * 1000,
+      timeLeft: 1 * 10 * 1000
     }
   },
   created () {
@@ -82,7 +87,7 @@ export default{
       this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards.cardsDeckArray))
     }
     this.startTime = Date.now()
-    setInterval(this.countDown, 100)
+    // setInterval(this.countDown, 100)
   },
   mounted () {
     this.cardsViewsOnTheTable.forEach((card, i) => {
@@ -267,10 +272,33 @@ export default{
   color: black;
   margin-top: -10px;
 }
-.greenButton{
-  margin-right: 14%;
+
+.card-content{
+  display: flex;
 }
-.purpleButton{
-  margin-left: 14%;
+.game-over{
+  margin: auto;
+}
+.roundedButton, .player1Score, .player2Score {
+  margin: 5px auto;
+}
+
+/* tablet & mobile */
+@media only screen and (max-width: 767px) {
+  .purpleButton{
+    width: 20%;
+    float: right;
+  }
+  .greenButton{
+    width: 20%;
+    float: left;
+  }
+}
+/* desktop */
+@media only screen and (min-width: 768px) {
+  .purpleButton{
+    display:flex;
+    order: 3;
+  }
 }
 </style>

@@ -1,37 +1,40 @@
 <template>
-  <div class="intemidiate game">
+  <div class="game template-div">
     <gameMenu></gameMenu>
-      <div class="card" v-if="pageState === 'game'">
-        <header class="card-header">
-          <a class="button is-warning is-outlined roundedButton" id="tellMe" @click = "findSet">
-            <img class="tellMeIcon" src='@/assets/tellMe.png'>
-          </a>
-          <a class="button is-success is-outlined roundedButton" >
-            <div class="setCollect">
-              <h1 id="collected">
-              {{this.collectedCards.length / 3}}
-              </h1>
-              <p>Sets</p>
-            </div>
-          </a>
+      <div class="card">
+        <header class="card-header" v-if="pageState === 'game'">
+          <div class="menu-fitures">
+            <a class="button is-warning is-outlined roundedButton" id="tellMe" @click = "findSet">
+              <img class="tellMeIcon" src='@/assets/tellMe.png'>
+            </a>
+            <a class="button is-success is-outlined roundedButton" >
+              <div class="setCollect">
+                <h1 class="title-in">
+                {{this.collectedCards.length / 3}}
+                </h1>
+                <p class="small-p">Sets</p>
+              </div>
+            </a>
             <a class="button is-orange is-outlined roundedButton clock" >
               <p id="time">{{formatTime()}}</p>
             </a>
+          </div>
         </header>
         <div class="card-content">
-          <div class = "cardsContainer">
+          <div class = "cardsContainer" v-if="pageState === 'game'">
             <div v-for="(card, i) in cardsViewsOnTheTable" :key="card.index" class = "cardDiv" :class = "{notSet: notSet}">
               <canvas id="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
               <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{clicked: card.state === 'clicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
             </div>
           </div>
+              <game-over v-if="pageState === 'over'"
+                v-bind:collectedCardsLength="collectedCards.length"
+                v-bind:fathersTitle="'Game Over'"
+                v-bind:fathersColumn1="'you collected ' + collectedCards.length / 3 + ' sets'"
+                v-bind:fathersColumn2="'you collected ' + collectedCards.length + ' cards'"></game-over>
         </div>
       </div>
-    <game-over v-if="pageState === 'over'"
-     v-bind:collectedCardsLength="collectedCards.length"
-     v-bind:fathersTitle="'Game Over'"
-     v-bind:fathersColumn1="'you collected ' + collectedCards.length / 3 + ' sets'"
-     v-bind:fathersColumn2="'you collected ' + collectedCards.length + ' cards'"></game-over>
+      <brand-footer class="footer"></brand-footer>
   </div>
 </template>
 <script>
@@ -40,12 +43,14 @@ import { CardView } from '../js/CardViews.js'
 import { CardsDeck } from '../js/CardsDeck.js'
 import gameMenu from '@/components/nav.vue'
 import gameOver from '@/components/gameOver.vue'
+import brandFooter from '@/components/brandFooter.vue'
 
 export default{
   name: 'game',
   components: {
     gameMenu,
-    gameOver
+    gameOver,
+    brandFooter
   },
   data () {
     return {
@@ -57,8 +62,8 @@ export default{
       collectedCards: [],
       set: [],
       startTime: 0,
-      timeToPlay: 2 * 60 * 1000,
-      timeLeft: 2 * 60 * 1000
+      timeToPlay: 1 * 10 * 1000,
+      timeLeft: 1 * 10 * 1000
     }
   },
   created () {
@@ -67,7 +72,7 @@ export default{
       this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards.cardsDeckArray))
     }
     this.startTime = Date.now()
-    setInterval(this.countDown, 100)
+    // setInterval(this.countDown, 100)
   },
   mounted () {
     this.cardsViewsOnTheTable.forEach((card, i) => {

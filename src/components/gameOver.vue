@@ -1,12 +1,10 @@
 <template>
   <div class="gameOver">
-      <div class="card">
-        <header class="card-header fadeInDown">
-          <h1 style="font-size: 2em">{{fathersTitle}}</h1>
+        <header class="fadeInDown">
+          <h1 class="noga-title">{{fathersTitle}}</h1>
         </header>
-        <div class="card-content">
           <a class="button is-medium is-success playAgain" @click = "PlayAgain()">Play Again</a>
-          <div class="columns gameOver">
+          <div class="columns is-mobile gameOver">
             <p class="column collected1">
               {{fathersColumn1}}
             </p>
@@ -14,8 +12,6 @@
               {{fathersColumn2}}
             </p>
           </div><!-- end of colums game over -->
-        </div><!-- end card content -->
-      </div><!-- end card div -->
   </div> <!-- end game over -->
 </template>
 <script>
@@ -23,6 +19,7 @@
 export default{
   name: 'gameOver',
   components: {
+
   },
   props: ['collectedCardsLength', 'fathersTitle', 'fathersColumn2', 'fathersColumn1'],
   data () {
@@ -50,7 +47,6 @@ export default{
 /*************************************
 All device
 ***************************************/
-
 /*************************************
 desktop
 ***************************************/
@@ -64,6 +60,10 @@ desktop
     height: 70px;
     width: 70px;
     border-radius: 50%;
+  }
+  header{
+    margin-bottom: 40px;
+    margin-top: 20px;
   }
 }
 

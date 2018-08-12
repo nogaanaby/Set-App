@@ -1,23 +1,35 @@
 <template>
-  <div>
-    <h1>Welcome</h1>
-    <input placeholder="choose nickname" v-model="nickname"/>
-    <p>Click here to make a POST /pvp/register request:</p>
-    <button @click="pvpRegister">Register with nickname {{nickname}}</button>
-    <p>Click here to get all online users:</p>
-    <button @click="pvpGetOnlinePlayers">Get onlineUsers</button>
-    <ul>
-      <li v-for="user in onlineUsers" v-bind:key="user.index">
-        <span>{{user}}</span>
-      </li>
-    </ul>
+  <div class="template-div">
+    <gameMenu></gameMenu>
+    <div class="card">
+      <header class="card-header">
+        <h1>Welcome</h1>
+      </header>
+      <div class="card-content">
+        <input placeholder="choose nickname" v-model="nickname"/>
+        <p>Click here to make a POST /pvp/register request:</p>
+        <button @click="pvpRegister">Register with nickname {{nickname}}</button>
+        <p>Click here to get all online users:</p>
+        <button @click="pvpGetOnlinePlayers">Get onlineUsers</button>
+        <ul>
+          <li v-for="user in onlineUsers" v-bind:key="user.index">
+            <span>{{user}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <footer class="footer">
+      <h1>footer</h1>
+    </footer>
   </div>
 </template>
 
 <script>
+import gameMenu from '@/components/nav.vue'
 export default {
   name: 'nissim',
   components: {
+    gameMenu
   },
   data () {
     return {

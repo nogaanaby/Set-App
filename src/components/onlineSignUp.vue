@@ -1,5 +1,5 @@
 <template>
-  <div class="onlineSignUp">
+  <div class="onlineSignUp template-div">
   <gameMenu></gameMenu>
   <div class="card">
     <div class="card-content">
@@ -58,15 +58,18 @@
       </div>
       </div>
     </div>
+    <brand-footer class="footer"></brand-footer>
   </div>
 </template>
 
 <script>
+import brandFooter from '@/components/brandFooter.vue'
 import gameMenu from '@/components/nav.vue'
 export default {
   name: 'onlineSignUp',
   components: {
-    gameMenu
+    gameMenu,
+    brandFooter
   },
   data () {
     return {
@@ -76,7 +79,7 @@ export default {
     }
   },
   mounted () {
-    setInterval(this.pvpGetOnlinePlayers, 2000)
+    // setInterval(this.pvpGetOnlinePlayers, 2000)
     console.log(this.onlineUsers)
   },
   methods: {

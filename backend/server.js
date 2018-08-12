@@ -50,7 +50,7 @@ class Server {
     app.use(bodyParser.json({limit: '50mb'}))
     app.use(bodyParser.urlencoded({ extended: false }))
     app.use(express.static(__dirname + '/****'))
-    app.use(express.static(path.join(__dirname, '/../dist/spa-mat/')))
+    app.use(express.static(path.join(__dirname, '/../dist/')))
 
     app.use(expressSession({
       secret: 'gxA5vRBJaN3hpUDDtMz6a',
