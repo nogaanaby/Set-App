@@ -3,60 +3,38 @@
   <gameMenu></gameMenu>
     <div class="card">
       <header class="card-header">
-        <h1>
-          Try It Yourself
+        <h1 class="noga-title" v-show="comment === 'nothing'">
+          which Card Should Be There?
         </h1>
+        <h2 class="noga-title bounceIn" v-show="comment === 'right'" ><img class="vicon icon" src='@/assets/vicon.png'>Well Done!</h2>
+        <h2 class="noga-title wrong" v-show="comment === 'wrong'"><img class="xicon icon" src='@/assets/xicon.png'>Try Again</h2>
       </header>
       <div class="card-content" :class= "{slideInRight: flipNext, fadeInLeft: flipBack}">
-        <div class="columns is-desktop">
-          <div class="setCard column" v-for="(card, i) in sets[contentIndex].first2cards" :key="card.index">
-          <canvas :ref="'shape0'+i" width="150" height="66" v-show="false" ></canvas>
-          <canvas :ref="'card0'+i" width="150" height="198"></canvas>
+          <div class="setContainer">
+            <div class="cardFree" v-for="(card, i) in sets[contentIndex].first2cards" :key="card.index">
+              <canvas :ref="'shape0'+i" width="150" height="66" v-show="false" ></canvas>
+              <canvas class="cardCanvas" :ref="'card0'+i" width="150" height="198"></canvas>
+            </div>
+            <div class="cardFree">
+              <canvas class="cardCanvas" :ref="'card-question'" width="150" height="198" v-show="comment !== 'right'"></canvas>
+              <canvas :ref="'thirdShape'" width="150" height="66" v-show="false" ></canvas>
+              <canvas class="cardCanvas" :ref="'thirdCard'" width="150" height="198" v-show="comment === 'right'"></canvas>
+            </div>
           </div>
-          <div class ="column is-one-quarter cards-in-mobile">
-            <div class="dropdown is-active">
-              <div class="dropdown-trigger">
-                <button class="button is-outlined" aria-haspopup="true" aria-controls="dropdown-menu" @click = "openNcloseMenu()">
-                  <span class="icon is-small">
-                    <i class="fas fa-angle-down" aria-hidden="true">  <img v-if= "pickCard === 'close'" class="downArrow icon" src='@/assets/angle-down-solid.svg'></i>
-                    <i class="fas fa-angle-up" aria-hidden="true"> <img v-if= "pickCard === 'open'" class="upArrow icon" src='@/assets/angle-up-solid.svg'></i>
-                  </span>
-                </button>
-              </div> <!-- dropdown-trigger -->
-              <div class="dropdown-menu" id="dropdown-menu2" role="menu" v-show = "pickCard === 'close'">
-                <div class="dropdown-content" @click = "openNcloseMenu()">
-                  <div class="dropdown-item" @click = "openNcloseMenu()">
-                    <canvas width="150" height="198" @click = "openNcloseMenu()"></canvas>
-                  </div><!-- dropdown-item -->
-                </div><!-- dropdown-content -->
-              </div><!-- dropdown-menu -->
-              <div class="dropdown-menu" id="dropdown-menu2" role="menu" v-show = "pickCard === 'open'">
-                <div class="dropdown-content">
-                  <div class="dropdown-item" v-for="(card, i) in sets[contentIndex].optionsForTheThird" :key="card.index">
-                    <canvas :ref="'shape1'+i" width="150" height="66" v-show="false" ></canvas>
-                    <canvas :ref="'card1'+i" width="150" height="198" @click = "clickCard(card, i)" :class= "{clicked: card.state === 'clicked'}" v-show = "card.state !== 'hide'"></canvas>
-                  </div><!-- dropdown-item -->
-                </div><!-- dropdown-content -->
-              </div><!-- dropdown-menu -->
-            </div><!-- dropdown is-active- -->
-          </div><!-- column -->
-          <div class="column is-one-fifth">
-            <a class="button is-success" @click="check()">
-            <span>Check</span>
-            </a>
-          </div><!-- column -->
-          <div class="column is-one-fifth">
-              <div class="well-done bounceIn" v-show="comment === 'right'"><img class="vicon icon" src='@/assets/vicon.png'>
-              <h3>Well Done!</h3></div>
-              <div class="try-again wrong" v-show="comment === 'wrong'"><img class="xicon icon" src='@/assets/xicon.png'>
-              <h3>Try Again</h3></div>
-          </div><!-- column -->
-        </div><!-- columns -->
+          <div class="container6">
+              <div class="cardFree" v-for="(card, i) in sets[contentIndex].optionsForTheThird" :key="card.index">
+                <canvas class="shapeCanvas" :ref="'shape1'+i" width="150" height="66" v-show="false" ></canvas>
+                <canvas class="cardCanvas" :ref="'card1'+i" width="150" height="198" @click = "clickCard(card, i)" :class= "{clicked: card.state === 'clicked'}" v-show = "card.state !== 'hide'"></canvas>
+              </div>
+          </div><!-- container6 -->
       </div><!-- card-content -->
     </div><!-- card -->
       <footer class="card-footer">
         <footerNextPage class="footer"
         v-bind:pageCount = "sets.length"
+        v-bind:currentIndex = "contentIndex"
+        v-bind:bottunGoOut = "goToGamePage"
+        v-bind:callFrom = "'practice'"
         @indexUpdateEvent= "onIndexUpdate">
         </footerNextPage>
       </footer>
@@ -66,6 +44,7 @@
 <script>
 import utils from '../js/utils.js'
 import { CardView } from '../js/CardViews.js'
+import store from '../js/store.js'
 import gameMenu from '@/components/nav.vue'
 import footerNextPage from '@/components/footer'
 
@@ -81,58 +60,13 @@ export default {
       flipBack: false,
       contentIndex: 0,
       context: [],
-      pickCard: 'close',
       comment: 'nothing',
-      sets: [
-        {
-          first2cards: [
-            utils.cardObject('sub', 'purple', 1, 'stripes'),
-            utils.cardObject('sub', 'purple', 2, 'stripes')
-          ],
-          optionsForTheThird: [
-            utils.cardObject('sub', 'red', 1, 'stripes'),
-            utils.cardObject('sub', 'purple', 2, 'empty'),
-            utils.cardObject('sub', 'purple', 3, 'stripes')
-          ]
-        },
-        {
-          first2cards: [
-            utils.cardObject('rect', 'red', 2, 'empty'),
-            utils.cardObject('rect', 'purple', 2, 'empty')
-          ],
-          optionsForTheThird: [
-            utils.cardObject('rect', 'green', 2, 'empty'),
-            utils.cardObject('rect', 'purple', 2, 'empty'),
-            utils.cardObject('tri', 'green', 2, 'empty')
-          ]
-        },
-        {
-          first2cards: [
-            utils.cardObject('sub', 'red', 2, 'full'),
-            utils.cardObject('tri', 'purple', 1, 'empty')
-          ],
-          optionsForTheThird: [
-            utils.cardObject('tri', 'green', 2, 'empty'),
-            utils.cardObject('rect', 'green', 3, 'stripes'),
-            utils.cardObject('rect', 'green', 1, 'stripes')
-          ]
-        },
-        {
-          first2cards: [
-            utils.cardObject('rect', 'red', 3, 'stripes'),
-            utils.cardObject('sub', 'red', 2, 'empty')
-          ],
-          optionsForTheThird: [
-            utils.cardObject('rect', 'red', 2, 'full'),
-            utils.cardObject('tri', 'red', 1, 'stripes'),
-            utils.cardObject('tri', 'red', 1, 'full')
-          ]
-        }
-      ]
+      sets: store.practiceSets,
+      goToGamePage: false
     }
   },
   mounted () {
-    this.context = [5]
+    this.context = []
     let ctxI = 0
 
     this.sets[this.contentIndex].first2cards
@@ -148,37 +82,23 @@ export default {
         this.context[ctxI].drawCard()
         ctxI++
       })
+
+    const questionMark = new CardView(this.$refs[`card-question`], this.$refs[`card-question`], 'non')
+    questionMark.drawQuestionMark()
   },
   methods: {
     clickCard: function (card, i) {
+      utils.resetCardState(this.sets[this.contentIndex].optionsForTheThird)
       if (card.state === 'clicked') {
         this.comment = 'nothing'
-        this.sets[this.contentIndex].optionsForTheThird.forEach((card) => {
-          card.state = 'unclicked'
-        })
         this.$forceUpdate()
       } else {
         card.state = 'clicked'
+        this.check()
         this.$forceUpdate()
-
-        this.sets[this.contentIndex].optionsForTheThird.forEach((card) => {
-          if (card.state !== 'clicked') {
-            card.state = 'hide'
-          }
-        })
       }
     }, // end of click
 
-    openNcloseMenu: function () {
-      if (this.pickCard === 'close') {
-        this.pickCard = 'open'
-        this.sets[this.contentIndex].optionsForTheThird.forEach((card) => {
-          card.state = 'unclicked'
-        })
-      } else {
-        this.pickCard = 'close'
-      }
-    },
     check: function () {
       const setArray = []
       setArray.push(this.sets[this.contentIndex].first2cards[0])
@@ -189,12 +109,32 @@ export default {
           setArray.push(card)
           if (utils.isSet(setArray, 0, 1, 2)) {
             this.comment = 'right'
+            this.putThirdCard()
+            this.flipPageOnRightAnswer(this.contentIndex + 1)
+            if (this.contentIndex === this.sets.length - 1) {
+              this.goToGamePage = true
+            }
           } else {
             this.comment = 'wrong'
           }
         }
       })
     },
+
+    flipPageOnRightAnswer (nextPageIndex) {
+      if (nextPageIndex < this.sets.length) {
+        setTimeout(() => {
+          this.onIndexUpdate(nextPageIndex, 'next')
+          this.$forceUpdate()
+        }, 1500)
+      }
+    },
+
+    putThirdCard () {
+      const third = new CardView(this.$refs.thirdShape, this.$refs.thirdCard, '', 1, '', '')
+      third.setNewCardAtrr(this.sets[this.contentIndex].third)
+    },
+
     onIndexUpdate: function (index, direction) {
       this.contentIndex = index
       this.sets[this.contentIndex].first2cards.forEach((card, i) => {
@@ -203,7 +143,6 @@ export default {
       this.sets[this.contentIndex].optionsForTheThird.forEach((card, i) => {
         this.context[i + 2].setNewCardAtrr(card)
       })
-      this.pickCard = 'close'
       this.comment = 'nothing'
       if (direction === 'next') {
         this.flipNext = true
@@ -222,20 +161,48 @@ export default {
 </script>
 
 <style scoped>
+
 /*************************************
 all devices
 ***************************************/
-  .clicked {
-    border: solid 3px grey;
-  }
-  canvas{
-    transform: rotate(90deg);
-    margin: 0px;
-    width: 100%;
-    object-fit: contain;
-    height: 100%;
+
+  .cardFree{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    width: 22%;
+    height: 38%;
+    margin: 2%;
+    position: relative;
   }
 
+  .container6{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: auto;
+    width: 43%;
+    height: 65%;
+    border: 1px solid #00D1B2;
+    padding: 10px 20px 0 20px;
+    border-radius: 5px;
+    background-color: white;
+  }
+  .setContainer{
+    border: 1px solid lightpink;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: auto;
+    width: 43%;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background-color: white;
+  }
   /*************************************
 desktop
 ***************************************/
@@ -248,48 +215,6 @@ desktop
     flex-direction: row;
     height: 440px;
   }
-  .setCard{
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    margin: 0 2%;
-    margin-top: 7%;
-  }
-  .columns{
-    width: 100%;
-  }
-
-  .dropdown-item{
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    margin: auto;
-    width: 56%;
-    padding: 0;
-  }
-  .dropdown-content{
-    width: 85%;
-    padding: 0;
-  }
-  .icon{
-    width: 28px;
-    height: 18px;
-  }
-  .dropdown-menu, .dropdown{
-    object-fit: contain;
-  }
-  .is-one-quarter{
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    justify-content: left;
-  }
-  .dropdown-trigger, .dropdown {
-    height: 30%;
-  }
-  .is-one-fifth{
-    margin-top: 11%;
-  }
   .card-footer, .footer{
     width: 100%;
     height: 50px;
@@ -301,40 +226,11 @@ desktop
 mobile
 ***************************************/
 @media only screen and (max-width: 768px) {
-  .dropdown-item{
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    margin: auto;
-    width: 56%;
-    padding: 0;
-  }
-
-  .setCard{
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    width: 25%;
-    margin: 10px;
-    float: left;
-  }
   .card-footer, .footer{
     width: 100%;
     height: 50px;
     margin: 0;
     padding: 0;
-  }
-  .dropdown-content{
-    width: 60%;
-    padding: 0;
-  }
-  .cards-in-mobile{
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-  }
-  .is-one-fifth{
-    margin-top: 30%;
   }
 }
 </style>

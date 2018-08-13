@@ -7,39 +7,39 @@
           {{pageData[contentIndex].title}}
         </h1>
       </header>
-      <div class="card-content" :class= "{slideInRight: flipNext, fadeInLeft: flipBack}" >
+      <div class="card-content" :class= "{fadeInRight: flipNext, fadeInLeft: flipBack}" >
         <div class="content">
           <p class="cardText">{{pageData[contentIndex].setExplain}}</p>
         </div>
         <div class="columns is-mobile">
           <div class="setCard column" v-for="(card, i) in sets[contentIndex]" :key="card.index">
-            <canvas :ref="'shape'+i" width="150" height="66" v-show="false" ></canvas>
-            <canvas :ref="'card'+i" width="150" height="198"></canvas>
+            <canvas class="shapeCanvas" :ref="'shape'+i" width="150" height="66" v-show="false" ></canvas>
+            <canvas class="cardCanvas" :ref="'card'+i" width="150" height="198"></canvas>
           </div>
         </div>
         <div class="cardTables">
           <table class="table is-striped">
 
-            <tr class="cardText">
-              <td v-for="(shape, i) in sets[contentIndex]" :key="shape.index">
+            <tr>
+              <td class="cardText" v-for="(shape, i) in sets[contentIndex]" :key="shape.index">
                 <vx-icon v-bind:setIcon = "setIcon[contentIndex][i].sameShape"></vx-icon>
                 {{sets[contentIndex][i].shape}}
               </td>
             </tr>
-            <tr class="cardText">
-              <td v-for="(card, i) in sets[contentIndex]" :key="card.index">
+            <tr>
+              <td class="cardText" v-for="(card, i) in sets[contentIndex]" :key="card.index">
                   <vx-icon v-bind:setIcon = "setIcon[contentIndex][i].sameNumber"></vx-icon>
                   {{sets[contentIndex][i].number}} shapes
               </td>
             </tr>
-            <tr class="cardText">
-              <td v-for="(color, i) in sets[contentIndex]" :key="color.index">
+            <tr>
+              <td class="cardText" v-for="(color, i) in sets[contentIndex]" :key="color.index">
                   <vx-icon v-bind:setIcon = "setIcon[contentIndex][i].sameColor"></vx-icon>
                   {{sets[contentIndex][i].color}}
               </td>
             </tr>
-            <tr class="cardText">
-              <td v-for="(fill, i) in sets[contentIndex]" :key="fill.index">
+            <tr>
+              <td class="cardText" v-for="(fill, i) in sets[contentIndex]" :key="fill.index">
                 <vx-icon v-bind:setIcon = "setIcon[contentIndex][i].sameFill"></vx-icon>
                 {{sets[contentIndex][i].fill}}
               </td>
@@ -51,6 +51,9 @@
     <footerNextPage
       class="footer"
       v-bind:pageCount = "sets.length"
+      v-bind:currentIndex = "contentIndex"
+      v-bind:bottunGoOut = "finished"
+      v-bind:callFrom = "'instractions'"
       @indexUpdateEvent= "onIndexUpdate">
     </footerNextPage>
   </div>
@@ -75,6 +78,7 @@ export default {
     return {
       flipNext: false,
       flipBack: false,
+      finished: false,
       contentIndex: 0,
       context: [],
       sets: [

@@ -4,16 +4,31 @@
       <a class="pagination-previous"  @click="prevPageIndex">
         <span class="icon"><img src='@/assets/angle-left-solid.svg'></span>
       </a>
-      <a class="pagination-next" v-show="goTo === 'in'" @click="nextPageIndex">
+      <a class="pagination-next" @click="nextPageIndex" v-show = "!bottunGoOut">
         <span class="icon"><img src='@/assets/angle-right-solid.svg'></span>
+      </a>
+      <a class="pagination-next" v-show = "bottunGoOut && currentIndex + 1 === pageCount">
+        <button class="button is-success letsPlay bounceIn">
+          <router-link to="/game" v-if = "callFrom === 'practice'">Let's Play!</router-link>
+        </button>
       </a>
 
       <ul class="pagination-list">
-        <li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
-        <li><a class="pagination-link" aria-label="Goto page 2">2</a></li>
-        <li><a class="pagination-link is-current" aria-label="Page 3" aria-current="page">3</a></li>
-        <li><a class="pagination-link" aria-label="Goto page 47">4</a></li>
-        <li><a class="pagination-link" aria-label="Goto page 86">5</a></li>
+        <li><a class="pagination-link"
+          :class= "{isCurrent: currentIndex === 0, bounceIn: currentIndex === 0}"
+          aria-label="Goto page 1" @click="goToPage(0)">1</a></li>
+        <li><a class="pagination-link"
+          :class= "{isCurrent: currentIndex === 1, bounceIn: currentIndex === 1}"
+          aria-label="Goto page 2" @click="goToPage(1)">2</a></li>
+        <li><a class="pagination-link"
+          :class= "{isCurrent: currentIndex === 2, bounceIn: currentIndex === 2}"
+          aria-label="Page 3" @click="goToPage(2)">3</a></li>
+        <li><a class="pagination-link"
+        :class= "{isCurrent: currentIndex === 3, bounceIn: currentIndex === 3}"
+        aria-label="Goto page 4" @click="goToPage(3)">4</a></li>
+        <li><a class="pagination-link"
+          :class= "{isCurrent: currentIndex === 4, bounceIn: currentIndex === 4}"
+          aria-label="Goto page 5" @click="goToPage(4)">5</a></li>
       </ul>
     </nav>
   </div>
@@ -30,25 +45,30 @@ export default {
     gameMenu,
     vxIcon
   },
-  props: ['pageCount'],
+  props: ['pageCount', 'currentIndex', 'bottunGoOut', 'callFrom'],
   data () {
     return {
-      contentIndex: 0,
       goTo: 'in'
     }
   },
   methods: {
     nextPageIndex: function () {
-      this.contentIndex = Math.min(this.contentIndex + 1, this.pageCount - 1)
-      this.$emit('indexUpdateEvent', this.contentIndex, 'next')
+      this.currentIndex = Math.min(this.currentIndex + 1, this.pageCount - 1)
+      this.$emit('indexUpdateEvent', this.currentIndex, 'next')
     },
     prevPageIndex: function () {
-      this.contentIndex = Math.max(this.contentIndex - 1, 0)
-      this.$emit('indexUpdateEvent', this.contentIndex, 'back')
+      this.currentIndex = Math.max(this.currentIndex - 1, 0)
+      this.$emit('indexUpdateEvent', this.currentIndex, 'back')
     },
     letsPractice () {
-      if (this.pageCount - 1 === this.contentIndex) {
+      if (this.pageCount - 1 === this.currentIndex) {
         this.goTo = 'practice'
+      }
+    },
+    goToPage (pageNum) {
+      if (this.currentIndex > pageNum) {
+        this.currentIndex = pageNum
+        this.$emit('indexUpdateEvent', this.currentIndex, 'back')
       }
     }
   }

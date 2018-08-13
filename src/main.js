@@ -13,7 +13,7 @@ import footerNextPage from '@/components/footer'
 import offline2Players from '@/components/offline2Players'
 import onlineSignUp from '@/components/onlineSignUp'
 import offlineSignUp from '@/components/offlineSignUp'
-import together from '@/components/together'
+import fourInosentCards from '@/components/fourInosentCards'
 import nissim from '@/components/nissim'
 import socketio from 'socket.io-client'
 import VueSocketIO from 'vue-socket.io'
@@ -70,9 +70,9 @@ const routes = [
     component: offline2Players
   },
   {
-    path: '/together',
-    name: 'together',
-    component: together
+    path: '/fourInosentCards',
+    name: 'fourInosentCards',
+    component: fourInosentCards
   },
   {
     path: '/onlineSignUp',

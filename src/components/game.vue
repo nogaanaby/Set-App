@@ -2,7 +2,7 @@
   <div class="game template-div">
     <gameMenu></gameMenu>
       <div class="card">
-        <header class="card-header" v-if="pageState === 'game'">
+        <header class="card-header fadeInDown" v-if="pageState === 'game'">
           <div class="menu-fitures">
             <a class="button is-warning is-outlined roundedButton" id="tellMe" @click = "findSet">
               <img class="tellMeIcon" src='@/assets/tellMe.png'>
@@ -20,11 +20,11 @@
             </a>
           </div>
         </header>
-        <div class="card-content">
+        <div class="card-content fadeInDown">
           <div class = "cardsContainer" v-if="pageState === 'game'">
             <div v-for="(card, i) in cardsViewsOnTheTable" :key="card.index" class = "cardDiv" :class = "{notSet: notSet}">
-              <canvas id="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
-              <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{clicked: card.state === 'clicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
+              <canvas class="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
+              <canvas class="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{clicked: card.state === 'clicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
             </div>
           </div>
               <game-over v-if="pageState === 'over'"
@@ -62,8 +62,8 @@ export default{
       collectedCards: [],
       set: [],
       startTime: 0,
-      timeToPlay: 1 * 10 * 1000,
-      timeLeft: 1 * 10 * 1000
+      timeToPlay: 2 * 60 * 1000,
+      timeLeft: 2 * 60 * 1000
     }
   },
   created () {
@@ -72,7 +72,7 @@ export default{
       this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards.cardsDeckArray))
     }
     this.startTime = Date.now()
-    // setInterval(this.countDown, 100)
+    setInterval(this.countDown, 100)
   },
   mounted () {
     this.cardsViewsOnTheTable.forEach((card, i) => {
@@ -81,6 +81,7 @@ export default{
       card.drawCard()
     })
     utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable)
+    console.log(this.$refs)
   },
   methods: {
     /**************************************

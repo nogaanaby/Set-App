@@ -2,39 +2,35 @@
   <div class="game template-div">
     <gameMenu></gameMenu>
       <div class="card">
-        <header class="card-header" v-show="pageState === 'game'">
+        <header class="card-header fadeInDown" v-show="pageState === 'game'">
+          <div class="menu-fitures">
             <a class="button is-warning is-outlined roundedButton" @click = "findSet">
               <img class="icon" src='@/assets/tellMe.png'>
             </a>
-            <div class="player1Score">
-              <a class="button is-success is-outlined roundedButton">
+              <a class="btn" @click="greenPress" :class="{green:whoPressed ==='non' || whoPressed ==='blue', greenPressed:whoPressed ==='green'}">
                 <div class="collect player2Collected">
                   <h1 class="title-in" id="collected">{{this.player2Collect.length / 3}}</h1>
                   <h4 class="playerName">{{players.player2}}</h4>
                 </div>
               </a>
-            </div>
-            <div class="player2Score">
-              <a class="button is-purple is-outlined roundedButton">
+             <a class="btn" @click="bluePress" :class="{blue:whoPressed ==='non' || whoPressed ==='green', bluePressed:whoPressed ==='blue'}">
                 <div class="collect player1Collected">
                   <h1 class="title-in" id="collected">{{this.player1Collect.length / 3}}</h1>
                   <h4 class="playerName">{{players.player1}}</h4>
                 </div>
               </a>
-            </div>
             <a class="button is-orange is-outlined roundedButton" >
               <p id="time">{{formatTime()}}</p>
             </a>
+          </div>
         </header>
-        <div class="card-content">
+        <div class="card-content fadeInDown">
           <div class="columns" v-show="pageState === 'game'">
-            <div class="greenButton column"><a class="btn" @click="greenPress" :class="{green:whoPressed ==='non' || whoPressed ==='blue', greenPressed:whoPressed ==='green'}"></a></div>
-              <div class="purpleButton column"><a class="btn" @click="bluePress" :class="{blue:whoPressed ==='non' || whoPressed ==='green', bluePressed:whoPressed ==='blue'}"></a></div>
               <div class = "cardsContainer column is-two-thirds">
               <!--{{JSON.stringify(cards)}}-->
                 <div v-for="(card, i) in cardsViewsOnTheTable" :key="card.index" class = "cardDiv" :class = "{notSet: notSet}">
-                  <canvas id="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
-                  <canvas id="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{blueClicked: card.state === 'blueClicked', greenClicked: card.state === 'greenClicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
+                  <canvas class="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
+                  <canvas class="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{blueClicked: card.state === 'blueClicked', greenClicked: card.state === 'greenClicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
                 </div>
               </div><!--end of cardsContainer-->
             </div>
@@ -77,8 +73,8 @@ export default{
       player2Collect: [],
       set: [],
       startTime: 0,
-      timeToPlay: 1 * 10 * 1000,
-      timeLeft: 1 * 10 * 1000
+      timeToPlay: 2 * 60 * 1000,
+      timeLeft: 2 * 60 * 1000
     }
   },
   created () {
@@ -87,7 +83,7 @@ export default{
       this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards.cardsDeckArray))
     }
     this.startTime = Date.now()
-    // setInterval(this.countDown, 100)
+    setInterval(this.countDown, 100)
   },
   mounted () {
     this.cardsViewsOnTheTable.forEach((card, i) => {
@@ -223,8 +219,6 @@ export default{
   color: #fff;
   position: relative;
   display: inline-block;
-  width: 35px;
-  height: 35px;
 }
 
 .btn:active {
@@ -239,7 +233,6 @@ export default{
 }
 
 .bluePressed {
-  margin-top: 27px;
   background-color: plum;
 }
 
@@ -279,9 +272,6 @@ export default{
 .game-over{
   margin: auto;
 }
-.roundedButton, .player1Score, .player2Score {
-  margin: 5px auto;
-}
 
 /* tablet & mobile */
 @media only screen and (max-width: 767px) {
@@ -300,5 +290,17 @@ export default{
     display:flex;
     order: 3;
   }
+}
+@media only screen and (min-width: 560px) {
+  .btn {
+    width: 70px;
+    height: 70px;
+  }
+}
+@media only screen and (max-width: 559px) {
+  .btn {
+    width: 50px;
+    height: 50px;
+  }  
 }
 </style>

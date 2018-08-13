@@ -7,11 +7,11 @@
         <a class="mobileOnly">
          <router-link to="/start"><img class="myLogo" src='@/assets/logoMiddle.png'></router-link>
         </a>
-        <a class="mobileBurger mobileOnly"> <router-link to="/start"><img src='@/assets/burgerWhite.png' width="50px" height="50px"></router-link></a>
+        <a class="mobileBurger mobileOnly"> <router-link to="/start"><img src='@/assets/burgerWhite.png'></router-link></a>
     </div>
     <div class="navbar-menu">
       <div class="navbar-end">
-        <a class="burger"> <router-link to="/start"><img src='@/assets/burgerWhite.png' width="50px" height="50px"></router-link></a>
+        <a class="burger"> <router-link to="/start"><img src='@/assets/burgerWhite.png'></router-link></a>
       </div>
     </div>
   </nav>
@@ -58,13 +58,13 @@ mobile
 @media only screen and (max-width: 400px) {
   .myLogo{
     width: 70%;
-    margin: auto;
   }
   .desktopLogo{
     display: none;
   }
   .mobileBurger{
-    width: 35px;
+    width: 65px;
+    margin: 20px 20px 20px 0;
   }
 }
 </style>

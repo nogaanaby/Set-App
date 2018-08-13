@@ -1,11 +1,7 @@
 <template>
   <div class="template-div">
     <gameMenu></gameMenu>
-    <div class="card">
-      <header class="card-header">
         <h1>Welcome</h1>
-      </header>
-      <div class="card-content">
         <input placeholder="choose nickname" v-model="nickname"/>
         <p>Click here to make a POST /pvp/register request:</p>
         <button @click="pvpRegister">Register with nickname {{nickname}}</button>
@@ -16,20 +12,18 @@
             <span>{{user}}</span>
           </li>
         </ul>
-      </div>
-    </div>
-    <footer class="footer">
-      <h1>footer</h1>
-    </footer>
+      <div class="cardsCracker"><fourInosentCards></fourInosentCards></div>
   </div>
 </template>
 
 <script>
 import gameMenu from '@/components/nav.vue'
+import fourInosentCards from '@/components/fourInosentCards.vue'
 export default {
   name: 'nissim',
   components: {
-    gameMenu
+    gameMenu,
+    fourInosentCards
   },
   data () {
     return {

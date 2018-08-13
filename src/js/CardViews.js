@@ -317,6 +317,12 @@ export class CardView {
   printCard () {
     console.log(`card: ` + this.shape + ` ` + this.color + ` ` + this.number + ` ` + this.fill)
   }
+
+  drawQuestionMark () {
+    this.getCardContext.font = '90px Kirang Haerang'
+    this.getCardContext.fillStyle = 'grey'
+    this.getCardContext.fillText('?', 50, 110)
+  }
 }
 
 export class Set {

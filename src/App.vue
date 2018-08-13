@@ -126,15 +126,14 @@ html, .main, body, .template-div{
 *{
   font-family: cursive;
 }
+  .cardText{
+    font-family:Arial, Helvetica, sans-serif;
+  }
 
 .link{
   text-decoration: none;
 }
-canvas{
-  border: 1px solid gray;
-  border-radius: 10%;
-  background-color: #f5f5f0;
-}
+
 .vertical-gap-medium{
   margin-left: 10px;
   margin-right: 10px;
@@ -155,7 +154,13 @@ canvas{
 .noga-title{
   text-align: center;
   font-size: 1.5em;
-  font-family: cursive;
+  font-family: Kirang Haerang, cursive;
+  margin: auto;
+}
+.center-medium-title{
+  text-align: center;
+  font-size: 1em;
+  font-family: Kirang Haerang, cursive;
   margin: auto;
 }
 .footer{
@@ -176,16 +181,20 @@ GAME BOARD
 .menu-fitures{/*the rounded buttons on the top*/
   margin: auto;
 }
-#cardCanvas{
+.cardCanvas{
   width: 100%;
   object-fit: contain;
   height: 100%;
   max-width: 85px;
   min-width: 55px;
+  border: 1px solid lightgrey;
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.2), 0 2px 6px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 10%;
+  background-color:white;
 }
 /**mobile**/
 @media only screen and (max-width: 500px) {
-  #cardCanvas{
+  .cardCanvas{
   max-height: 80px;
 }
 }
@@ -200,7 +209,7 @@ GAME BOARD
   margin: 2% 2%;
 }
 .clicked {
-  border: solid 3px grey;
+  border: solid 2px #33cccc;
 }
 .takeSet {
     opacity: 1;
@@ -217,7 +226,7 @@ GAME BOARD
 fitures
 ***********/
 .findSet {
-  border: solid 4px #23D160;
+  border: solid 3px #FFDD58;
 }
 .button.is-orange:hover{
   background-color: #ff6500;

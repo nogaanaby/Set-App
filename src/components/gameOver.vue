@@ -5,10 +5,10 @@
         </header>
           <a class="button is-medium is-success playAgain" @click = "PlayAgain()">Play Again</a>
           <div class="columns is-mobile gameOver">
-            <p class="column collected1">
+            <p class="noga-title column collected1">
               {{fathersColumn1}}
             </p>
-            <p class="column collected2">
+            <p class="noga-title column collected2">
               {{fathersColumn2}}
             </p>
           </div><!-- end of colums game over -->

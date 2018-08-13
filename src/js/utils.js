@@ -87,5 +87,13 @@ export default{
     const seconds = '' + Math.floor((ms / 1000) % 60)
     const minutes = '' + Math.floor((ms / 1000 / 60) % 60)
     return minutes + ' : ' + seconds
+  },
+  mixArray (orderd) {
+    const mixed = []
+    for (let i = 0; i < orderd.length + mixed.length; i++) {
+      const card = this.takeNewCard(orderd)
+      mixed.push(card)
+    }
+    return mixed
   }
 }
