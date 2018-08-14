@@ -4,10 +4,10 @@ const edges = [
   'pvp'
 ]
 
-function registerApi (apiRouter) {
+function registerApi (apiRouter, io) {
   for (const edge of edges) {
     const api = require(`./api-${edge}`)
-    api(apiSubRouter)
+    api(apiSubRouter, io)
     apiRouter.use(`/${edge}`, apiSubRouter)
   }
 }

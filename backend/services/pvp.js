@@ -18,16 +18,24 @@ class Users {
   }
 
   nicknameExist (nickname) {
-    return this.list.find(e => e.nickname === nickname) !== undefined
+    return this.getUserByNickname(nickname) !== undefined
   }
 
   socketExist (socketId) {
-    return this.list.find(e => e.socketId === socketId) !== undefined
+    return this.getUserBySocketId(socketId) !== undefined
   }
 
   deleteBySocket (socketId) {
     const userLeftIndex = this.list.findIndex(e => e.socketId === socketId)
     this.list.splice(userLeftIndex, 1)
+  }
+
+  getUserByNickname (nickname) {
+    return this.list.find(e => e.nickname === nickname)
+  }
+
+  getUserBySocketId (socketId) {
+    return this.list.find(e => e.socketId === socketId)
   }
 }
 
@@ -35,12 +43,26 @@ class Pvp {
   constructor () {
     this.onlineUsers = new Users()
   }
+  initSocket (socket, io) {
+    socket.on('sendInvitation', (friendNickname) => {
+      console.log(socket.nickname + ' invites ' + friendNickname)
+      // 1. find the socket of the user whos nickname is 'friendNickname'
+      const peerSocketId = this.onlineUsers.getUserByNickname(friendNickname).socketId
+      const peerSocket = io.sockets.connected[peerSocketId]
+      // 2. emit 'getInvitation' from THAT socket
+      peerSocket.emit('getInvitation', {
+        socketId: socket.id,
+        nickname: socket.nickname
+      })
+    })
+  }
   nickNameIsTaken (nickname) {
     return this.onlineUsers.nicknameExist(nickname)
   }
-  register (socketId, nickname) {
-    this.onlineUsers.createUser(nickname, socketId)
+  register (socket, nickname) {
+    this.onlineUsers.createUser(nickname, socket.id)
     console.log(`${nickname} has been registered`)
+    socket.nickname = nickname
   }
   getOnlineUsers () {
     // console.log(`getOnlineUsers ${JSON.stringify(this.onlineUsers)}`)

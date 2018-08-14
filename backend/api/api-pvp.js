@@ -1,7 +1,7 @@
 const { asyncWrap } = require('./utils')
 const pvp = require('../services/pvp')
 
-module.exports = app => {
+module.exports = (app, io) => {
   app.post('/register', asyncWrap(async (req, res) => {
     const {socketId, nickname} = req.body
     if (!socketId) {
@@ -13,7 +13,9 @@ module.exports = app => {
       return
     }
     try {
-      pvp.register(socketId, nickname)
+      const socket = io.sockets.connected[socketId]
+      pvp.register(socket, nickname)
+      pvp.initSocket(socket, io)
       res.send('success')
     } catch (e) {
       res.status(401).send(e.message)

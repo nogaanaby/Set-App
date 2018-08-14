@@ -30,6 +30,7 @@ const api = require('./api')
 class Server {
   constructor () {
     this.api = api
+    this.io = io
   }
 
   async init () {
@@ -76,7 +77,7 @@ class Server {
     })
 
     // Create all api edges with '/api' prefix
-    this.api(apiRouter)
+    this.api(apiRouter, this.io)
 
     if (config.allowHelpAPI) {
       this.apiEdgeDefinitions = []
