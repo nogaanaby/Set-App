@@ -149,6 +149,11 @@ export default {
         this.context.push(cardView)
         this.context[i].drawCard()
       })
+    if (this.contentIndex === this.sets.length - 1) {
+      setTimeout(() => {
+        this.finished = true
+      }, 1000)
+    }
   },
   methods: {
     onIndexUpdate: function (index, direction) {
@@ -165,6 +170,13 @@ export default {
         this.flipBack = true
         setTimeout(() => {
           this.flipBack = false
+        }, 1000)
+      }
+    },
+    finishInstractions () {
+      if (this.contentIndex === this.sets.length - 1) {
+        setTimeout(() => {
+          this.finished = true
         }, 1000)
       }
     }

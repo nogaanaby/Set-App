@@ -111,14 +111,20 @@ export default {
             this.comment = 'right'
             this.putThirdCard()
             this.flipPageOnRightAnswer(this.contentIndex + 1)
-            if (this.contentIndex === this.sets.length - 1) {
-              this.goToGamePage = true
-            }
+            this.finishPractice()
           } else {
             this.comment = 'wrong'
           }
         }
       })
+    },
+
+    finishPractice () {
+      if (this.contentIndex === this.sets.length - 1) {
+        setTimeout(() => {
+          this.goToGamePage = true
+        }, 1000)
+      }
     },
 
     flipPageOnRightAnswer (nextPageIndex) {
@@ -184,8 +190,6 @@ all devices
     flex-wrap: wrap;
     justify-content: center;
     margin: auto;
-    width: 43%;
-    height: 65%;
     border: 1px solid #00D1B2;
     padding: 10px 20px 0 20px;
     border-radius: 5px;
@@ -198,7 +202,6 @@ all devices
     flex-wrap: wrap;
     justify-content: center;
     margin: auto;
-    width: 43%;
     border-radius: 5px;
     margin-bottom: 20px;
     background-color: white;
@@ -221,6 +224,13 @@ desktop
     margin: 0;
     padding: 0;
   }
+  .container6{
+    width: 43%;
+    height: 65%;
+  }
+  .setContainer{
+    width: 43%;
+  }  
 }
 /*************************************
 mobile
@@ -231,6 +241,13 @@ mobile
     height: 50px;
     margin: 0;
     padding: 0;
+  }
+  .container6{
+    width: 100%;
+    height: 65%;
+  }
+  .setContainer{
+    width: 100%;
   }
 }
 </style>

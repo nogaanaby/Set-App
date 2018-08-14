@@ -31,7 +31,8 @@
                 v-bind:collectedCardsLength="collectedCards.length"
                 v-bind:fathersTitle="'Game Over'"
                 v-bind:fathersColumn1="'you collected ' + collectedCards.length / 3 + ' sets'"
-                v-bind:fathersColumn2="'you collected ' + collectedCards.length + ' cards'"></game-over>
+                v-bind:fathersColumn2="'you collected ' + collectedCards.length + ' cards'"
+                @playAgainEvent= "playAgain"></game-over>
         </div>
       </div>
       <brand-footer class="footer"></brand-footer>
@@ -80,8 +81,7 @@ export default{
       card.cardCanvas = this.$refs[`card${i}`][0]
       card.drawCard()
     })
-    utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable)
-    console.log(this.$refs)
+    utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.cardsDeckArray)
   },
   methods: {
     /**************************************
@@ -111,6 +111,9 @@ export default{
         if (this.set.length === 3) {
           if (this.isSet()) {
             this.switchCards()
+            if (this.cards.cardsDeckArray.length <= 9) {
+              this.cards = new CardsDeck()
+            }
           }
           this.set.splice(0)
         }
@@ -124,7 +127,8 @@ export default{
           element.state = 'isTaken'
         }
       })
-      utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable)
+      utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.cardsDeckArray)
+      console.log(this.cards.cardsDeckArray.length)
     },
 
     resetCardState: function () {
@@ -147,7 +151,7 @@ export default{
     formatTime () {
       return utils.formatTime(this.timeLeft)
     },
-    PlayAgain: function () {
+    playAgain () {
       location.reload()
     }
   }

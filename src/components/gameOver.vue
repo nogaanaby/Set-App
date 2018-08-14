@@ -37,7 +37,7 @@ export default{
   methods: {
 
     PlayAgain: function () {
-      location.reload()
+      this.$emit('playAgainEvent')
     }
   }
 }

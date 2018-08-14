@@ -38,7 +38,8 @@
               v-bind:collectedCardsLength="player1Collect.length"
               v-bind:fathersTitle="returnTheWinner()"
               v-bind:fathersColumn1="players.player1 + ' collected ' + player1Collect.length / 3 + ' sets'"
-              v-bind:fathersColumn2="players.player2 + ' collected ' + player2Collect.length / 3 + ' sets'"></game-over>
+              v-bind:fathersColumn2="players.player2 + ' collected ' + player2Collect.length / 3 + ' sets'"
+              @playAgainEvent= "playAgain"></game-over>
         </div>
       </div>
     <brand-footer class="footer"></brand-footer>
@@ -117,7 +118,7 @@ export default{
       if (card.state === 'blueClicked' || card.state === 'greenClicked') {
         card.state = 'unclicked'
         this.set.pop()
-      } else {
+      } else if (this.whoPressed !== 'non') {
         this.set.push(card)
         this.collectByPlayer(card)
         this.$forceUpdate()
@@ -125,6 +126,9 @@ export default{
         if (this.set.length === 3) {
           if (this.isSet()) {
             this.switchCards()
+            if (this.cards.cardsDeckArray.length <= 9) {
+              this.cards = new CardsDeck()
+            }
           }
           this.set.splice(0)
         }
@@ -138,7 +142,7 @@ export default{
           element.state = 'isTaken'
         }
       })
-      utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable)
+      utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.cardsDeckArray)
     },
     /**************************************
      2 pleyers staf

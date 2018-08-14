@@ -4,15 +4,19 @@
       <a class="pagination-previous"  @click="prevPageIndex">
         <span class="icon"><img src='@/assets/angle-left-solid.svg'></span>
       </a>
-      <a class="pagination-next" @click="nextPageIndex" v-show = "!bottunGoOut">
+      <a class="pagination-next" @click="nextPageIndex" v-show = "currentIndex + 1 !== pageCount">
         <span class="icon"><img src='@/assets/angle-right-solid.svg'></span>
       </a>
-      <a class="pagination-next" v-show = "bottunGoOut && currentIndex + 1 === pageCount">
+      <a class="pagination-next" v-show = "bottunGoOut && currentIndex + 1 === pageCount && callFrom === 'practice'">
         <button class="button is-success letsPlay bounceIn">
-          <router-link to="/game" v-if = "callFrom === 'practice'">Let's Play!</router-link>
+          <router-link to="/game">Let's Play!</router-link>
         </button>
       </a>
-
+      <a class="pagination-next" v-show = "currentIndex + 1 === pageCount && callFrom === 'instractions'">
+        <button class="button is-success letsPlay bounceIn">
+          <router-link to="/practice">Let's Practice!</router-link>
+        </button>
+      </a>
       <ul class="pagination-list">
         <li><a class="pagination-link"
           :class= "{isCurrent: currentIndex === 0, bounceIn: currentIndex === 0}"
@@ -48,7 +52,7 @@ export default {
   props: ['pageCount', 'currentIndex', 'bottunGoOut', 'callFrom'],
   data () {
     return {
-      goTo: 'in'
+
     }
   },
   methods: {
@@ -60,16 +64,9 @@ export default {
       this.currentIndex = Math.max(this.currentIndex - 1, 0)
       this.$emit('indexUpdateEvent', this.currentIndex, 'back')
     },
-    letsPractice () {
-      if (this.pageCount - 1 === this.currentIndex) {
-        this.goTo = 'practice'
-      }
-    },
     goToPage (pageNum) {
-      if (this.currentIndex > pageNum) {
-        this.currentIndex = pageNum
-        this.$emit('indexUpdateEvent', this.currentIndex, 'back')
-      }
+      this.currentIndex = pageNum
+      this.$emit('indexUpdateEvent', this.currentIndex, 'back')
     }
   }
 }

@@ -72,6 +72,9 @@ export default {
     font-size: 2em;
     color: black;
   }
+  .noga-title{
+    font-size: 1.5em;
+  }
 }
 
 /* tablet & mobile */
@@ -93,6 +96,9 @@ export default {
     font-size: 1.2em;
     color: black;
   }
+.noga-title{
+  font-size: 1em;
+}  
 }
 
 /***********************
@@ -153,7 +159,6 @@ html, .main, body, .template-div{
 }
 .noga-title{
   text-align: center;
-  font-size: 1.5em;
   font-family: Kirang Haerang, cursive;
   margin: auto;
 }

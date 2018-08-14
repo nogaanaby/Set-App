@@ -79,7 +79,7 @@ export default {
     }
   },
   mounted () {
-    // setInterval(this.pvpGetOnlinePlayers, 2000)
+    setInterval(this.pvpGetOnlinePlayers, 2000)
     console.log(this.onlineUsers)
   },
   methods: {
@@ -96,7 +96,7 @@ export default {
     async pvpGetOnlinePlayers () {
       const response = await this.$axios.get('pvp/onlineUsers')
       this.onlineUsers = response.data
-    },
+    }
   }
 }
 </script>

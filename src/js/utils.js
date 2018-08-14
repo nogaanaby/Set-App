@@ -84,9 +84,12 @@ export default{
     }
   },
   formatTime (ms) {
-    const seconds = '' + Math.floor((ms / 1000) % 60)
-    const minutes = '' + Math.floor((ms / 1000 / 60) % 60)
-    return minutes + ' : ' + seconds
+    let seconds = '' + Math.floor((ms / 1000) % 60)
+    let minutes = '' + Math.floor((ms / 1000 / 60) % 60)
+    if (seconds < 10) {
+      seconds = 0 + seconds
+    }
+    return 0 + minutes + ' : ' + seconds
   },
   mixArray (orderd) {
     const mixed = []
