@@ -43,7 +43,7 @@ class Pvp {
     console.log(`${nickname} has been registered`)
   }
   getOnlineUsers () {
-    console.log(`getOnlineUsers ${JSON.stringify(this.onlineUsers)}`)
+    // console.log(`getOnlineUsers ${JSON.stringify(this.onlineUsers)}`)
     return this.onlineUsers.list
   }
   dismissPlayer (socketId) {

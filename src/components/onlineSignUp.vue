@@ -19,28 +19,6 @@
           <div class="tile is-child box">
             <h5 class="title is-5">Online Users</h5>
             <ul class="onlineUsers-list">
-              <li class="field is-grouped">
-                <span class="vertical-gap-medium">User 1</span>
-                <p class="control">
-                  <a class="button is-small is-link is-tiny">
-                    <span class="icon is-small">
-                      <img src='@/assets/multiplayerWhite.png'>
-                    </span>
-                    <span class="vertical-gap-small">Invite</span>
-                  </a>
-                </p>
-              </li>
-              <li class="field is-grouped">
-                <span class="vertical-gap-medium">User 2</span>
-                <p class="control">
-                  <a class="button is-small is-link is-tiny">
-                    <span class="icon is-small">
-                      <img src='@/assets/multiplayerWhite.png'>
-                    </span>
-                    <span class="vertical-gap-small">Invite</span>
-                  </a>
-                </p>
-              </li>
               <li class="userOnline field is-grouped" v-for="user in onlineUsers" v-bind:key="user.index">
                 <span class="vertical-gap-medium">{{user.nickname}}</span>
                 <p class="control">
