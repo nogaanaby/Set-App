@@ -23,7 +23,7 @@
               <li class="userOnline field is-grouped" v-for="user in onlineUsers" v-bind:key="user.index">
                 <span class="vertical-gap-medium">{{user.nickname}}</span>
                 <p class="control">
-                  <a class="button is-small is-link is-tiny">
+                  <a class="button is-small is-link is-tiny" @click="invite">
                     <span class="icon is-small">
                       <img src='@/assets/multiplayerWhite.png'>
                     </span>
@@ -79,6 +79,9 @@ export default {
     async pvpGetOnlinePlayers () {
       const response = await this.$axios.get('pvp/onlineUsers')
       this.onlineUsers = response.data
+    },
+    invite () {
+      //send to server invite request
     }
   }
 }
