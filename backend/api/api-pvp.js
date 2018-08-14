@@ -15,7 +15,6 @@ module.exports = (app, io) => {
     try {
       const socket = io.sockets.connected[socketId]
       pvp.register(socket, nickname)
-      pvp.initSocket(socket, io)
       res.send('success')
     } catch (e) {
       res.status(401).send(e.message)

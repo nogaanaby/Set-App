@@ -55,6 +55,12 @@ class Pvp {
         nickname: socket.nickname
       })
     })
+
+    socket.on('another event', (payload) => {
+    })
+
+    socket.on('and another one...', (payload) => {
+    })
   }
   nickNameIsTaken (nickname) {
     return this.onlineUsers.nicknameExist(nickname)
@@ -63,6 +69,7 @@ class Pvp {
     this.onlineUsers.createUser(nickname, socket.id)
     console.log(`${nickname} has been registered`)
     socket.nickname = nickname
+    this.initSocket(socket, io)
   }
   getOnlineUsers () {
     // console.log(`getOnlineUsers ${JSON.stringify(this.onlineUsers)}`)
