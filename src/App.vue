@@ -247,7 +247,7 @@ fitures
 .button.is-purple{
   border: solid 1px purple;
 }
-.is-green{
+.isGreen{
   color: #15B358;
 }
 .roundedButton{

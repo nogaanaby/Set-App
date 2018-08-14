@@ -11,8 +11,9 @@
                 <input type="text" class="input" placeholder="The IceCream Men" v-model="nickname" @keyup.enter="pvpRegister">
                 <button class="button is-success is-small input-button" @click="pvpRegister">Register</button>
               </div>
-              <p class="wrong notAvailble">{{error}}</p>
-              <div class="bounceIn"><p class="is-green">You'r In</p></div>
+              <div :class="{bounceIn: !error && comment==='You Are In!'}">
+                <p :class="{isGreen: comment==='You Are In!', wrong: error, notAvailble: error}">{{comment}}</p>
+              </div>
           </div>
         </div>
         <div class="tile is-5 is-vertical is-parent">
@@ -53,7 +54,8 @@ export default {
     return {
       nickname: '',
       onlineUsers: [],
-      error: ''
+      error: false,
+      comment: ''
     }
   },
   mounted () {
@@ -67,8 +69,11 @@ export default {
           nickname: this.nickname,
           socketId: this.$socket.id
         })
+        this.comment = 'You Are In!'
+        this.error = false
       } catch (e) {
-        this.error = e.response.data
+        this.comment = e.response.data
+        this.error = true
       }
     },
     async pvpGetOnlinePlayers () {
