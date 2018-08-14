@@ -230,7 +230,7 @@ desktop
   }
   .setContainer{
     width: 43%;
-  }  
+  }
 }
 /*************************************
 mobile

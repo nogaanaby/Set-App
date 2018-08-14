@@ -98,7 +98,7 @@ export default {
   }
 .noga-title{
   font-size: 1em;
-}  
+}
 }
 
 /***********************

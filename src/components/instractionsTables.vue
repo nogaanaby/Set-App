@@ -193,7 +193,7 @@ export default {
   .columns.is-mobile{
     width: 80%;
     margin: auto;
-  }  
+  }
 }
 /**tablets**/
 @media only screen and (min-width: 561px) and (max-width: 1019px) {
