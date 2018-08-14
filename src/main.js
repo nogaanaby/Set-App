@@ -45,6 +45,11 @@ const routes = [
     component: instractionsTables
   },
   {
+    path: '/',
+    name: 'start',
+    component: start
+  },
+  {
     path: '/start',
     name: 'start',
     component: start

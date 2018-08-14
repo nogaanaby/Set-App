@@ -83,15 +83,15 @@ export default {
     console.log(this.onlineUsers)
   },
   methods: {
-    catch (error) {
-      this.pvpRegister()
-      this.error = error
-    },
     async pvpRegister () {
-      await this.$axios.post('pvp/register', {
-        nickname: this.nickname,
-        socketId: this.$socket.id
-      })
+      try {
+        await this.$axios.post('pvp/register', {
+          nickname: this.nickname,
+          socketId: this.$socket.id
+        })
+      } catch (e) {
+        this.error = e.response.data
+      }
     },
     async pvpGetOnlinePlayers () {
       const response = await this.$axios.get('pvp/onlineUsers')

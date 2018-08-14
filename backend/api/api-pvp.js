@@ -12,11 +12,11 @@ module.exports = app => {
       res.status(400).send('Missing nickname in POST /register request')
       return
     }
-    if (!pvp.nickNameIsTaken(nickname)) {
+    try {
       pvp.register(socketId, nickname)
       res.send('success')
-    } else {
-      res.status(401).send(`Nickname ${nickname} is already taken`)
+    } catch (e) {
+      res.status(401).send(e.message)
     }
   }))
 
