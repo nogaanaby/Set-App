@@ -63,10 +63,10 @@ export default {
   sockets: { // listeners
     getARefuse (rejecter) {
       this.onlineUsers.find(e => e.nickname === rejecter.nickname).status = 'not availble'
+    },
+    getNewUser (newUser) {
+      this.onlineUsers.push(newUser)
     }
-    // getNewUser (newUser) {
-    //   this.onlineUsers.push(newUser)
-    // }
   },
   methods: {
     async pvpRegister () {
@@ -77,7 +77,6 @@ export default {
         })
         this.comment = 'You Are In!'
         this.error = false
-        // this.$socket.emit('reportAllUsersAboutTheNew')
         store.thisUser.nickname = this.nickname
         this.pvpGetOnlinePlayers()
       } catch (e) {

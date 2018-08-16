@@ -144,7 +144,7 @@ html, .main, body{
   padding: 2% auto;
 }
   html{
-  background-color: red;
+  background-color: green;
   margin: 0px;
   padding: 0px;
 }
@@ -171,7 +171,7 @@ html, .main, body{
   color:  #404040;
 }
 a:hover{
-  color:  #15B358;  
+  color:  #15B358;
 }
 
 .vertical-gap-medium{

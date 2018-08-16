@@ -46,20 +46,18 @@ class Pvp {
     this.onlineUsers = new Users()
   }
   initSocket (socket, io, newNickname) {
-    // socket.on('reportAllUsersAboutTheNew', () => {
-    //   const newUserSocketId = this.onlineUsers.getUserByNickname(newNickname).socketId
-    //   // 2. call getNewUser to update alll the users about the new one
-    //   console.log(this.onlineUsers.list)
-    //   console.log('newNickname: ' + newNickname)
-    //   this.onlineUsers.list.forEach(user => {
-    //     const currSocket = io.sockets.connected[user.socketId]
-    //     console.log('forEatch online user, all the users: ' + user.nickname)
-    //     currSocket.emit('getNewUser', {
-    //       socketId: newUserSocketId,
-    //       nickname: newNickname
-    //     })
-    //   })
-    // })
+    const newUserSocketId = this.onlineUsers.getUserByNickname(newNickname).socketId
+    // 2. call getNewUser to update alll the users about the new one
+    console.log(this.onlineUsers.list)
+    console.log('newNickname: ' + newNickname)
+    this.onlineUsers.list.forEach(user => {
+      const currSocket = io.sockets.connected[user.socketId]
+      console.log('forEatch online user, all the users: ' + user.nickname)
+      currSocket.emit('getNewUser', {
+        socketId: newUserSocketId,
+        nickname: newNickname
+      })
+    })
 
     socket.on('sendInvitation', (invited) => {
       console.log(socket.nickname + ' invites ' + invited)
