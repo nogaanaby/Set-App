@@ -1,13 +1,18 @@
 <template>
   <div id="app">
     <div class="main">
+      <gameMenu></gameMenu>
+      <invitation class="massage fadeIn"
+      v-if="openMassage.gotInvitation">
+      </invitation>
       <router-link to="/game" class="link"></router-link>
-      <router-view></router-view>
+      <router-view :class='{blur: openMassage.gotInvitation}'></router-view>
     </div>
   </div>
 </template>
 
 <script>
+import store from '@/js/store.js'
 import instractionsTables from '@/components/instractionsTables'
 import game from '@/components/game.vue'
 import gameMenu from '@/components/nav.vue'
@@ -17,6 +22,7 @@ import offline2Players from '@/components/offline2Players'
 import onlineSignUp from '@/components/onlineSignUp'
 import offlineSignUp from '@/components/offlineSignUp'
 import brandFooter from '@/components/brandFooter'
+import invitation from '@/components/invitation.vue'
 
 export default {
   name: 'app',
@@ -29,14 +35,25 @@ export default {
     offline2Players,
     onlineSignUp,
     offlineSignUp,
-    brandFooter
+    brandFooter,
+    invitation
   },
   data () {
     return {
-
+      openMassage: store.gotMassage,
+      inviter: store.inviter,
+      gotInv: store.gotMassage
     }
   },
   mounted () {
+  },
+  sockets: { // listeners
+    getInvitation (inviter) {
+    //  if (this.thisUser.onPage !== 'game') {
+      this.inviter.nickname = inviter.nickname
+      this.gotInv.gotInvitation = true
+    //  }
+    }
   },
   methods: {
 
@@ -49,6 +66,7 @@ export default {
 @import './assets/bulma.css';
 @import './assets/animations.css';
 @import '.././node_modules/vue2-animate/dist/vue2-animate.min.css';
+@import url('https://fonts.googleapis.com/css?family=Jua');
 
 /* desktop & big tablet*/
 @media only screen and (min-width: 768px) {
@@ -64,8 +82,8 @@ export default {
     height: 100%;
   }
   .roundedButton{
-  height: 70px;
-  width: 70px;
+  height: 60px;
+  width: 60px;
   }
   .title-in{
     margin: 0;
@@ -74,6 +92,10 @@ export default {
   }
   .noga-title{
     font-size: 1.5em;
+  }
+  #time{
+    font-size: 1em;
+    color: black;
   }
 }
 
@@ -96,19 +118,27 @@ export default {
     font-size: 1.2em;
     color: black;
   }
-.noga-title{
-  font-size: 1em;
-}
+  .noga-title{
+    font-size: 1em;
+  }
+  #time{
+    font-size: 0.7em;
+    color: black;
+  }
 }
 
 /***********************
  GENERAL DESIGN
  **********************/
-html, .main, body, .template-div{
+html, .main, body{
   height: 100%;
 }
+
+.template-div{
+  height: 87%;
+}
 .card-content, .card{
-  height: 80%;
+  height: 90%;
 }
 .footer{
   padding: 2% auto;
@@ -119,7 +149,7 @@ html, .main, body, .template-div{
   padding: 0px;
 }
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family:'Jua', 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -130,14 +160,18 @@ html, .main, body, .template-div{
   height: 100%;
 }
 *{
-  font-family: cursive;
+  font-family: 'Jua', sans-serif;
 }
   .cardText{
-    font-family:Arial, Helvetica, sans-serif;
+    font-family:'Jua', Helvetica, sans-serif;
   }
 
-.link{
+.link, a{
   text-decoration: none;
+  color:  #404040;
+}
+a:hover{
+  color:  #15B358;  
 }
 
 .vertical-gap-medium{
@@ -152,24 +186,36 @@ html, .main, body, .template-div{
 .horizontal-seperator{
   margin-top: 10%;
 }
-
 .small-p{
   font-size: 0.7em;
   color: black;
+  margin-top: -10px;
 }
 .noga-title{
   text-align: center;
-  font-family: Kirang Haerang, cursive;
+  font-family: 'Jua', cursive;
   margin: auto;
+  color: #404040;
+}
+.noga{
+   font-family: 'Jua', cursive;
+   color: #404040;
 }
 .center-medium-title{
   text-align: center;
   font-size: 1em;
-  font-family: Kirang Haerang, cursive;
+  font-family: 'Jua', cursive;
   margin: auto;
 }
 .footer{
   padding: 0;
+}
+
+.massage{
+  position: absolute;
+  z-index: 1;
+  width: 50%;
+  margin: 5% 10%;
 }
 
 /**************************************
@@ -250,6 +296,10 @@ fitures
 .isGreen{
   color: #15B358;
 }
+.isGrey{
+  background-color: gray;
+  color: gray;
+}
 .roundedButton{
   margin: 15px;
   border-radius: 50%;
@@ -292,5 +342,13 @@ animations
   40%, 60% {
     transform: translate3d(4px, 0, 0);
   }
+}
+
+.blur{
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
 }
 </style>

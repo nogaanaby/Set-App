@@ -1,12 +1,11 @@
 <template>
   <div class="onlineSignUp template-div">
-  <gameMenu></gameMenu>
   <div class="card">
     <div class="card-content">
       <div class="tile is-ancestor fadeInDown">
         <div class="tile is-parent">
           <div class="tile is-child box">
-            <h5 class="title is-5">Choose A Nickname</h5>
+            <h5 class="noga-title is-5">Choose A Nickname</h5>
               <div class="field is-grouped">
                 <input type="text" class="input" placeholder="The IceCream Men" v-model="nickname" @keyup.enter="pvpRegister">
                 <button class="button is-success is-small input-button" @click="pvpRegister">Register</button>
@@ -18,17 +17,19 @@
         </div>
         <div class="tile is-5 is-vertical is-parent">
           <div class="tile is-child box">
-            <h5 class="title is-5">Online Users</h5>
+            <h5 class="title is-5 noga-title">Online Users</h5>
             <ul class="onlineUsers-list">
               <li class="userOnline field is-grouped" v-for="user in onlineUsers" v-bind:key="user.index">
                 <span class="vertical-gap-medium">{{user.nickname}}</span>
-                <p class="control">
-                  <a class="button is-small is-link is-tiny" @click="invite(user.nickname)">
+                <p class="control" v-if="user.nickname !== nickname">
+                  <a v-show="user.status === 'availble'" class="button is-small is-link is-tiny" @click="invite(user.nickname)">
                     <span class="icon is-small">
                       <img src='@/assets/multiplayerWhite.png'>
                     </span>
                     <span class="vertical-gap-small">Invite</span>
                   </a>
+                    <span v-show="user.status === 'not availble'" class="tag vertical-gap-small is-danger is-tiny">not Availble</span>
+                    <span v-show="user.status === 'hold'" class="tag vertical-gap-small isGrey is-tiny">on hold</span>
                 </p>
               </li>
             </ul>
@@ -43,11 +44,10 @@
 
 <script>
 import brandFooter from '@/components/brandFooter.vue'
-import gameMenu from '@/components/nav.vue'
+import store from '../js/store.js'
 export default {
   name: 'onlineSignUp',
   components: {
-    gameMenu,
     brandFooter
   },
   data () {
@@ -59,13 +59,14 @@ export default {
     }
   },
   mounted () {
-    setInterval(this.pvpGetOnlinePlayers, 2000)
-    console.log(this.onlineUsers)
   },
-  sockets: {
-    getInvitation (inviter) {
-      alert(`You were invited by ${inviter.nickname}`)
+  sockets: { // listeners
+    getARefuse (rejecter) {
+      this.onlineUsers.find(e => e.nickname === rejecter.nickname).status = 'not availble'
     }
+    // getNewUser (newUser) {
+    //   this.onlineUsers.push(newUser)
+    // }
   },
   methods: {
     async pvpRegister () {
@@ -76,6 +77,9 @@ export default {
         })
         this.comment = 'You Are In!'
         this.error = false
+        // this.$socket.emit('reportAllUsersAboutTheNew')
+        store.thisUser.nickname = this.nickname
+        this.pvpGetOnlinePlayers()
       } catch (e) {
         this.comment = e.response.data
         this.error = true
@@ -84,10 +88,13 @@ export default {
     async pvpGetOnlinePlayers () {
       const response = await this.$axios.get('pvp/onlineUsers')
       this.onlineUsers = response.data
+      store.onlineUsersCopy.users = this.onlineUsers
     },
-    invite (friendNickname) {
+    invite (invited) {
+      this.onlineUsers.find(e => e.nickname === invited).status = 'hold'
       // send to server invite request
-      this.$socket.emit('sendInvitation', friendNickname)
+      this.$socket.emit('sendInvitation', invited)
+      this.$forceUpdate()
     }
   }
 }

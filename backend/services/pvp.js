@@ -2,6 +2,8 @@ class User {
   constructor (nickname, socketId) {
     this.nickname = nickname
     this.socketId = socketId
+    this.status = 'availble'
+    this.onPage = ''
   }
 }
 
@@ -43,11 +45,26 @@ class Pvp {
   constructor () {
     this.onlineUsers = new Users()
   }
-  initSocket (socket, io) {
-    socket.on('sendInvitation', (friendNickname) => {
-      console.log(socket.nickname + ' invites ' + friendNickname)
-      // 1. find the socket of the user whos nickname is 'friendNickname'
-      const peerSocketId = this.onlineUsers.getUserByNickname(friendNickname).socketId
+  initSocket (socket, io, newNickname) {
+    // socket.on('reportAllUsersAboutTheNew', () => {
+    //   const newUserSocketId = this.onlineUsers.getUserByNickname(newNickname).socketId
+    //   // 2. call getNewUser to update alll the users about the new one
+    //   console.log(this.onlineUsers.list)
+    //   console.log('newNickname: ' + newNickname)
+    //   this.onlineUsers.list.forEach(user => {
+    //     const currSocket = io.sockets.connected[user.socketId]
+    //     console.log('forEatch online user, all the users: ' + user.nickname)
+    //     currSocket.emit('getNewUser', {
+    //       socketId: newUserSocketId,
+    //       nickname: newNickname
+    //     })
+    //   })
+    // })
+
+    socket.on('sendInvitation', (invited) => {
+      console.log(socket.nickname + ' invites ' + invited)
+      // 1. find the socket of the user whos nickname is 'invited'
+      const peerSocketId = this.onlineUsers.getUserByNickname(invited).socketId
       const peerSocket = io.sockets.connected[peerSocketId]
       // 2. emit 'getInvitation' from THAT socket
       peerSocket.emit('getInvitation', {
@@ -56,7 +73,15 @@ class Pvp {
       })
     })
 
-    socket.on('another event', (payload) => {
+    socket.on('refuseInvitation', (sender) => {
+      console.log(sender + ' this is the person who got rejention')
+      console.log(socket.nickname + ' this is the person who reject')
+      const senderSocketId = this.onlineUsers.getUserByNickname(sender).socketId
+      const senderSocket = io.sockets.connected[senderSocketId]
+      senderSocket.emit('getARefuse', {
+        socketId: socket.id,
+        nickname: socket.nickname
+      })
     })
 
     socket.on('and another one...', (payload) => {
@@ -65,11 +90,11 @@ class Pvp {
   nickNameIsTaken (nickname) {
     return this.onlineUsers.nicknameExist(nickname)
   }
-  register (socket, nickname) {
+  register (socket, nickname, io) {
     this.onlineUsers.createUser(nickname, socket.id)
     console.log(`${nickname} has been registered`)
     socket.nickname = nickname
-    this.initSocket(socket, io)
+    this.initSocket(socket, io, nickname)
   }
   getOnlineUsers () {
     // console.log(`getOnlineUsers ${JSON.stringify(this.onlineUsers)}`)

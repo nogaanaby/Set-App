@@ -1,6 +1,5 @@
 <template>
   <div class="game template-div">
-    <gameMenu></gameMenu>
       <div class="card">
         <header class="card-header fadeInDown" v-if="pageState === 'game'">
           <div class="menu-fitures">
@@ -42,14 +41,12 @@
 import utils from '../js/utils.js'
 import { CardView } from '../js/CardViews.js'
 import { CardsDeck } from '../js/CardsDeck.js'
-import gameMenu from '@/components/nav.vue'
 import gameOver from '@/components/gameOver.vue'
 import brandFooter from '@/components/brandFooter.vue'
 
 export default{
   name: 'game',
   components: {
-    gameMenu,
     gameOver,
     brandFooter
   },

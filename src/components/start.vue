@@ -1,6 +1,5 @@
 <template>
   <div class="main template-div">
-    <gameMenu></gameMenu>
       <div class="card">
         <div class="card-content">
           <div class="is-narrow">
@@ -44,13 +43,11 @@
 </template>
 
 <script>
-import gameMenu from '@/components/nav.vue'
 import brandFooter from '@/components/brandFooter.vue'
 
 export default {
   name: 'start',
   components: {
-    gameMenu,
     brandFooter
   },
   data () {

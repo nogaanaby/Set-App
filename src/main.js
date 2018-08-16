@@ -15,6 +15,7 @@ import onlineSignUp from '@/components/onlineSignUp'
 import offlineSignUp from '@/components/offlineSignUp'
 import fourInosentCards from '@/components/fourInosentCards'
 import nissim from '@/components/nissim'
+import invitation from '@/components/invitation'
 import socketio from 'socket.io-client'
 import VueSocketIO from 'vue-socket.io'
 
@@ -93,7 +94,12 @@ const routes = [
     path: '/gameOver',
     name: 'gameOver',
     component: gameOver
-  }
+  },
+  {
+    path: '/invitation',
+    name: 'invitation',
+    component: invitation
+  }  
 ]
 
 const router = new Router({

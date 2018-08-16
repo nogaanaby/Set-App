@@ -1,6 +1,5 @@
 <template>
   <div class="main">
-  <gameMenu></gameMenu>
     <div class="card">
       <header class="card-header">
         <h1 class="noga-title" v-show="comment === 'nothing'">
@@ -45,13 +44,11 @@
 import utils from '../js/utils.js'
 import { CardView } from '../js/CardViews.js'
 import store from '../js/store.js'
-import gameMenu from '@/components/nav.vue'
 import footerNextPage from '@/components/footer'
 
 export default {
   name: 'practice',
   components: {
-    gameMenu,
     footerNextPage
   },
   data () {

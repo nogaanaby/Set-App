@@ -1,6 +1,5 @@
 <template>
   <div class="main">
-    <gameMenu></gameMenu>
     <div class="card">
       <header class="card-header">
         <h1 class="noga-title">
@@ -63,14 +62,12 @@
 
 import utils from '../js/utils.js'
 import { CardView } from '../js/CardViews.js'
-import gameMenu from '@/components/nav.vue'
 import vxIcon from '@/components/vx-icon'
 import footerNextPage from '@/components/footer'
 
 export default {
   name: 'instractionsTables',
   components: {
-    gameMenu,
     vxIcon,
     footerNextPage
   },

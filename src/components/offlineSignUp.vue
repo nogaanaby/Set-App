@@ -1,29 +1,28 @@
 <template>
   <div class="offlineSignUp template-div">
-  <gameMenu></gameMenu>
   <div class="card">
     <div class="card-content">
       <div class="tile is-ancestor fadeInDown">
         <div class="tile is-parent">
           <div class="tile is-child box">
-            <h5 class="title is-5">First Player Nickname</h5>
+            <h5 class="noga-title is-5">First Player Nickname</h5>
               <div class="field is-grouped">
                 <input type="text" class="input" placeholder="The IceCream Men" v-model="players.player1" @keyup.enter="offlineRegister1">
-                <button class="button is-success is-small input-button" @click="offlineRegister1">Register</button>
+                <button class="button is-success is-small input-button noga" @click="offlineRegister1">Register</button>
               </div>
             <div class="horizontal-seperator"></div>
-            <h5 class="title is-5">Second Player Nickname</h5>
+            <h5 class="noga-title is-5">Second Player Nickname</h5>
               <div class="field is-grouped">
                 <input type="text" class="input" placeholder="Banana Men" v-model="players.player2" @keyup.enter="offlineRegister2">
-                <button class="button is-success is-small input-button" @click="offlineRegister2">Register</button>
+                <button class="button is-success is-small input-button noga" @click="offlineRegister2">Register</button>
               </div>
 
           </div>
         </div>
         <div class="tile is-5 is-vertical is-parent">
           <div class="tile is-child box">
-            <div v-show="player1Sign" class="bounceIn"><h5 class="title is-5">{{player1Nickname}} vs </h5></div>
-            <div v-show="player2Sign" class="bounceIn"><h5 class="title is-5">{{player2Nickname}}</h5></div>
+            <div v-show="player1Sign" class="bounceIn"><h5 class="title is-5 noga">{{player1Nickname}} vs </h5></div>
+            <div v-show="player2Sign" class="bounceIn"><h5 class="title is-5 noga">{{player2Nickname}}</h5></div>
             <div class="horizontal-seperator"></div>
             <div v-show="letsPlay" class="bounceIn"><button class="button is-success letsPlay"><router-link to="/offline2Players">Let's Play!</router-link></button></div>
           </div>
@@ -36,14 +35,12 @@
 </template>
 
 <script>
-import gameMenu from '@/components/nav.vue'
 import store from '../js/store.js'
 import brandFooter from '@/components/brandFooter.vue'
 
 export default {
   name: 'offlineSignUp',
   components: {
-    gameMenu,
     brandFooter
   },
   data () {
