@@ -90,6 +90,7 @@ export default{
       card.drawCard()
     })
     utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.CardsDeckArray)
+    store.onGame = true
   },
   methods: {
     /**************************************

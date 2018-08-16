@@ -15,7 +15,7 @@
   </div> <!-- end game over -->
 </template>
 <script>
-
+import store from '../js/store.js'
 export default{
   name: 'gameOver',
   components: {
@@ -32,7 +32,7 @@ export default{
 
   },
   mounted () {
-
+    store.onGame = false
   },
   methods: {
 

@@ -43,6 +43,7 @@ import { CardView } from '../js/CardViews.js'
 import { CardsDeck } from '../js/CardsDeck.js'
 import gameOver from '@/components/gameOver.vue'
 import brandFooter from '@/components/brandFooter.vue'
+import store from '../js/store.js'
 
 export default{
   name: 'game',
@@ -79,6 +80,7 @@ export default{
       card.drawCard()
     })
     utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.cardsDeckArray)
+    store.onGame = true
   },
   methods: {
     /**************************************

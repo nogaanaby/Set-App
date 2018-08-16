@@ -49,10 +49,10 @@ export default {
   },
   sockets: { // listeners
     getInvitation (inviter) {
-    //  if (this.thisUser.onPage !== 'game') {
-      this.inviter.nickname = inviter.nickname
-      this.gotInv.gotInvitation = true
-    //  }
+      if (!store.onGame) {
+        this.inviter.nickname = inviter.nickname
+        this.gotInv.gotInvitation = true
+      }
     }
   },
   methods: {
@@ -144,7 +144,7 @@ html, .main, body{
   padding: 2% auto;
 }
   html{
-  background-color: green;
+  background-color: gainsboro;
   margin: 0px;
   padding: 0px;
 }

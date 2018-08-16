@@ -59,6 +59,7 @@ export default {
     }
   },
   mounted () {
+    this.pvpGetOnlinePlayers()
   },
   sockets: { // listeners
     getARefuse (rejecter) {

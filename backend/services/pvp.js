@@ -3,7 +3,6 @@ class User {
     this.nickname = nickname
     this.socketId = socketId
     this.status = 'availble'
-    this.onPage = ''
   }
 }
 
@@ -48,14 +47,12 @@ class Pvp {
   initSocket (socket, io, newNickname) {
     const newUserSocketId = this.onlineUsers.getUserByNickname(newNickname).socketId
     // 2. call getNewUser to update alll the users about the new one
-    console.log(this.onlineUsers.list)
-    console.log('newNickname: ' + newNickname)
-    this.onlineUsers.list.forEach(user => {
-      const currSocket = io.sockets.connected[user.socketId]
-      console.log('forEatch online user, all the users: ' + user.nickname)
+    Object.keys(io.sockets.connected).forEach(key => {
+      const currSocket = io.sockets.connected[key]
       currSocket.emit('getNewUser', {
         socketId: newUserSocketId,
-        nickname: newNickname
+        nickname: newNickname,
+        status: 'availble'
       })
     })
 

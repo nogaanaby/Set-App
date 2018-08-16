@@ -20,6 +20,7 @@ export class PracticeSetClass {
 }
 
 export default{
+  onGame: false,
   multplayerOffline: {
     player1: '',
     player2: ''
