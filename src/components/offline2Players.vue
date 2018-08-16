@@ -294,8 +294,8 @@ export default{
 }
 @media only screen and (min-width: 560px) {
   .btn {
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
   }
 }
 @media only screen and (max-width: 559px) {

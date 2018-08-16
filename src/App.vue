@@ -79,7 +79,7 @@ export default {
 @media only screen and (min-width: 560px) {
   .cardsContainer {
     width: 60%;
-    height: 100%;
+    height: 90%;
   }
   .roundedButton{
   height: 60px;
@@ -103,7 +103,7 @@ export default {
 @media only screen and (max-width: 559px) {
   .cardsContainer {
     min-width: 100%;
-    height: 100%;
+    height: 80%;
   }
 
   .menu-links, a{
