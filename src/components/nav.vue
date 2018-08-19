@@ -2,27 +2,30 @@
   <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         <a class="desktopLogo">
-         <router-link to="/start"><img class="myLogo" src='@/assets/logo-white-align-left.png'></router-link>
+         <img class="myLogo" src='@/assets/logo-white-align-left.png'>
         </a>
         <a class="mobileOnly">
-         <router-link to="/start"><img class="myLogo" src='@/assets/logoMiddle.png'></router-link>
+         <img class="myLogo" src='@/assets/logoMiddle.png'>
         </a>
-        <a class="mobileBurger mobileOnly"> <router-link to="/start"><img src='@/assets/burgerWhite.png'></router-link></a>
+        <a v-if="!onGame" class="mobileBurger mobileOnly"> <router-link to="/start"><img src='@/assets/burgerWhite.png'></router-link></a>
+        <a v-if="onGame" class="mobileBurger mobileOnly"><img src='@/assets/pauseWhite.png'></a>
     </div>
     <div class="navbar-menu">
       <div class="navbar-end">
-        <a class="burger"> <router-link to="/start"><img src='@/assets/burgerWhite.png'></router-link></a>
+        <a v-if="!onGame" class="burger"> <router-link to="/start"><img src='@/assets/burgerWhite.png'></router-link></a>
+        <a v-if="onGame" class="burger"><img src='@/assets/pauseWhite.png'></a>
       </div>
     </div>
   </nav>
 </template>
 
 <script>
-
+import store from '../js/store.js'
 export default {
   name: 'gameMenu',
   data () {
     return {
+      onGame: store.onGame
     }
   },
   mounted () {

@@ -32,10 +32,8 @@ export default{
 
   },
   mounted () {
-    store.onGame = false
   },
   methods: {
-
     PlayAgain: function () {
       this.$emit('playAgainEvent')
     }

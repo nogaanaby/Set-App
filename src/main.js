@@ -13,7 +13,7 @@ import footerNextPage from '@/components/footer'
 import offline2Players from '@/components/offline2Players'
 import onlineSignUp from '@/components/onlineSignUp'
 import offlineSignUp from '@/components/offlineSignUp'
-import fourInosentCards from '@/components/fourInosentCards'
+import pause from '@/components/pause'
 import nissim from '@/components/nissim'
 import invitation from '@/components/invitation'
 import socketio from 'socket.io-client'
@@ -76,9 +76,9 @@ const routes = [
     component: offline2Players
   },
   {
-    path: '/fourInosentCards',
-    name: 'fourInosentCards',
-    component: fourInosentCards
+    path: '/pause',
+    name: 'pause',
+    component: pause
   },
   {
     path: '/onlineSignUp',
@@ -99,7 +99,7 @@ const routes = [
     path: '/invitation',
     name: 'invitation',
     component: invitation
-  }  
+  }
 ]
 
 const router = new Router({

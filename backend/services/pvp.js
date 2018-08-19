@@ -79,7 +79,12 @@ class Pvp {
       })
     })
 
-    socket.on('and another one...', (payload) => {
+    socket.on('updateOnChangingStatus', (userAndStatus) => {
+      // 2.update alll the users about the new one
+      Object.keys(io.sockets.connected).forEach(key => {
+        const currSocket = io.sockets.connected[key]
+        currSocket.emit('getUpdateOnStatusChangings', userAndStatus)
+      })
     })
   }
   nickNameIsTaken (nickname) {

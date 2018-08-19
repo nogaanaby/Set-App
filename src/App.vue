@@ -23,6 +23,7 @@ import onlineSignUp from '@/components/onlineSignUp'
 import offlineSignUp from '@/components/offlineSignUp'
 import brandFooter from '@/components/brandFooter'
 import invitation from '@/components/invitation.vue'
+import pause from '@/components/pause.vue'
 
 export default {
   name: 'app',
@@ -36,7 +37,8 @@ export default {
     onlineSignUp,
     offlineSignUp,
     brandFooter,
-    invitation
+    invitation,
+    pause
   },
   data () {
     return {
@@ -46,13 +48,12 @@ export default {
     }
   },
   mounted () {
+
   },
   sockets: { // listeners
     getInvitation (inviter) {
-      if (!store.onGame) {
-        this.inviter.nickname = inviter.nickname
-        this.gotInv.gotInvitation = true
-      }
+      this.inviter.nickname = inviter.nickname
+      this.gotInv.gotInvitation = true
     }
   },
   methods: {
@@ -119,7 +120,7 @@ export default {
     color: black;
   }
   .noga-title{
-    font-size: 1em;
+    font-size: 1.3em;
   }
   #time{
     font-size: 0.7em;
@@ -135,10 +136,19 @@ html, .main, body{
 }
 
 .template-div{
-  height: 87%;
+  height: 82%;
 }
-.card-content, .card{
-  height: 90%;
+.card{
+  height: 100%;
+  max-height: 547px;
+}
+.card-content{
+  height: inherit;
+  max-height: 547px;
+}
+.card-header{
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 .footer{
   padding: 2% auto;
@@ -190,6 +200,9 @@ a:hover{
   font-size: 0.7em;
   color: black;
   margin-top: -10px;
+}
+.p-small{
+  font-size: 0.7em;
 }
 .noga-title{
   text-align: center;

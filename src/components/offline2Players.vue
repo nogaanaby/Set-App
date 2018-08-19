@@ -91,6 +91,10 @@ export default{
     })
     utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.CardsDeckArray)
     store.onGame = true
+    if (store.onlineUsersCopy.users.length !== 0) {
+      store.onlineUsersCopy.users.find(e => e.nickname === store.thisUser.nickname).status = 'unavailble'
+      this.updateMyUnavailbility()
+    }
   },
   methods: {
     /**************************************
@@ -204,6 +208,9 @@ export default{
     },
     formatTime () {
       return utils.formatTime(this.timeLeft)
+    },
+    updateMyUnavailbility () {
+      this.$socket.emit('updateAllUsersThatThisUserIsUnavailble', store.thisUser.nickname)
     }
   }
 }

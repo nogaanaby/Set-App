@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="template-div">
     <div class="card">
       <header class="card-header">
         <h1 class="noga-title" v-show="comment === 'nothing'">
@@ -187,13 +187,13 @@ all devices
     flex-wrap: wrap;
     justify-content: center;
     margin: auto;
-    border: 1px solid #00D1B2;
+    border: 1px solid lightgrey;
     padding: 10px 20px 0 20px;
     border-radius: 5px;
     background-color: white;
   }
   .setContainer{
-    border: 1px solid lightpink;
+    border: 1px solid lightgrey;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -240,11 +240,11 @@ mobile
     padding: 0;
   }
   .container6{
-    width: 100%;
-    height: 65%;
+    width: 90%;
+    height: 50%;
   }
   .setContainer{
-    width: 100%;
+    width: 90%;
   }
 }
 </style>

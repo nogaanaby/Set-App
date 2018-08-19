@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="instractions template-div">
     <div class="card">
       <header class="card-header">
         <h1 class="noga-title">
@@ -216,7 +216,7 @@ all devices
       display: flex;
       width: 30%;
       height: 30%;
-      margin: 0 5%;
+      margin: 0 2%;
     }
     .content{
       font-size: 1em;

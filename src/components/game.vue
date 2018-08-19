@@ -42,6 +42,7 @@ import utils from '../js/utils.js'
 import { CardView } from '../js/CardViews.js'
 import { CardsDeck } from '../js/CardsDeck.js'
 import gameOver from '@/components/gameOver.vue'
+import gameMenu from '@/components/nav.vue'
 import brandFooter from '@/components/brandFooter.vue'
 import store from '../js/store.js'
 
@@ -49,7 +50,8 @@ export default{
   name: 'game',
   components: {
     gameOver,
-    brandFooter
+    brandFooter,
+    gameMenu
   },
   data () {
     return {
@@ -81,6 +83,10 @@ export default{
     })
     utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.cardsDeckArray)
     store.onGame = true
+    if (store.onlineUsersCopy.users.length !== 0) {
+      // store.onlineUsersCopy.users.find(e => e.nickname === store.thisUser.nickname).status = 'onGame'
+      this.updateMyStatus('onGame')
+    }
   },
   methods: {
     /**************************************
@@ -144,14 +150,32 @@ export default{
       this.timeLeft = utils.countDown(this.startTime, this.timeToPlay)
       if (this.timeLeft === 0) {
         this.pageState = 'over'
-        this.$forceUpdate()
+
+        if (store.onlineUsersCopy.users.length !== 0) {
+          const thisUserCurrStatus = store.onlineUsersCopy.users.find(e => e.nickname === store.thisUser.nickname).status
+          if (thisUserCurrStatus !== 'unavailble') {
+            this.updateMyStatus('availble')
+          }
+          this.$forceUpdate()
+        }
       }
     },
     formatTime () {
       return utils.formatTime(this.timeLeft)
     },
     playAgain () {
-      location.reload()
+      this.collectedCards.splice(0)
+      this.pageState = 'game'
+      this.timeLeft = this.timeToPlay
+      this.startTime = Date.now()
+      this.updateMyStatus('onGame')
+    },
+    updateMyStatus (status) {
+      const userAndStatus = {
+        nickname: store.thisUser.nickname,
+        status: status
+      }
+      this.$socket.emit('updateOnChangingStatus', userAndStatus)
     }
   }
 }
