@@ -3,7 +3,8 @@
     <div class="main">
       <gameMenu></gameMenu>
       <invitation class="massage fadeIn"
-      v-if="openMassage.gotInvitation">
+      v-if="openMassage.gotInvitation"
+      v-bind:massage = "massageContent">
       </invitation>
       <router-link to="/game" class="link"></router-link>
       <router-view :class='{blur: openMassage.gotInvitation}'></router-view>
@@ -24,6 +25,9 @@ import offlineSignUp from '@/components/offlineSignUp'
 import brandFooter from '@/components/brandFooter'
 import invitation from '@/components/invitation.vue'
 import pause from '@/components/pause.vue'
+import fourInosentCards from '@/components/fourInosentCards.vue'
+import copyOfGame from '@/components/copyOfGame.vue'
+import onlineGame from '@/components/onlineGame.vue'
 
 export default {
   name: 'app',
@@ -38,13 +42,17 @@ export default {
     offlineSignUp,
     brandFooter,
     invitation,
-    pause
+    pause,
+    fourInosentCards,
+    copyOfGame,
+    onlineGame
   },
   data () {
     return {
       openMassage: store.gotMassage,
       inviter: store.inviter,
-      gotInv: store.gotMassage
+      gotInv: store.gotMassage,
+      massageContent: ''
     }
   },
   mounted () {
@@ -53,6 +61,11 @@ export default {
   sockets: { // listeners
     getInvitation (inviter) {
       this.inviter.nickname = inviter.nickname
+      this.massageContent = `Do You Want To Play With ` + inviter.nickname + ` ?`
+      this.gotInv.gotInvitation = true
+    },
+    startOnlineGame (invited) {
+      this.massageContent = invited.nickname + ' got your invitation, start to play now!'
       this.gotInv.gotInvitation = true
     }
   },
@@ -79,7 +92,7 @@ export default {
 /* tablet & desktop */
 @media only screen and (min-width: 560px) {
   .cardsContainer {
-    width: 60%;
+    width: 50%;
     height: 90%;
   }
   .roundedButton{
@@ -140,11 +153,9 @@ html, .main, body{
 }
 .card{
   height: 100%;
-  max-height: 547px;
 }
 .card-content{
-  height: inherit;
-  max-height: 547px;
+  height: 80%;
 }
 .card-header{
   padding-top: 5px;
@@ -239,7 +250,7 @@ GAME BOARD
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  margin: auto;
+  margin: 0 auto;
 }
 
 .menu-fitures{/*the rounded buttons on the top*/

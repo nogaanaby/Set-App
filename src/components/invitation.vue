@@ -3,15 +3,14 @@
     <article class="message is-info">
       <div class="message-header">
         <p>You were challenged by {{inviter.nickname}}</p>
-        <button class="delete" aria-label="delete" @click="closeMassage()"></button>
       </div>
       <div class="message-body">
         <div class="invitation">
-          <h1 class="noga-title">You were challenged by {{inviter.nickname}} !</h1>
-          <p>({{inviter.nickname}} is waiting for you to answer)</p>
-          <p>Do You Want To Play With {{inviter.nickname}} ?</p>
+          <p>{{massageContent}}</p>
           <div class="horizontal-seperator"></div>
-          <button class="button is-success is-small">Yes</button>
+          <button class="button is-success is-small" @click="WannaPlay">
+            <router-link to="/onlineGame">yes</router-link>
+          </button>
           <button class="button is-danger is-small" @click="dontWannaPlay">No</button>
         </div>
       </div>
@@ -26,13 +25,12 @@ export default {
   components: {
 
   },
-  props: [],
+  props: ['massage'],
   data () {
     return {
       inviter: store.inviter,
-      watingTitle: '',
-      watingMassage: '',
-      gotInv: store.gotMassage
+      gotInv: store.gotMassage,
+      massageContent: this.massage
     }
   },
   mounted () {
@@ -49,6 +47,10 @@ export default {
     },
     closeMassage () {
       this.gotInv.gotInvitation = false
+    },
+    WannaPlay () {
+      this.massageContent = 'just a sec...'
+      this.$socket.emit('getInvitation', this.inviter.nickname)
     }
   }
 }

@@ -6,16 +6,16 @@
             <a class="button is-warning is-outlined roundedButton" @click = "findSet">
               <img class="icon" src='@/assets/tellMe.png'>
             </a>
-              <a class="btn" @click="greenPress" :class="{green:whoPressed ==='non' || whoPressed ==='blue', greenPressed:whoPressed ==='green'}">
+              <a class="button roundedButton">
                 <div class="collect player2Collected">
                   <h1 class="title-in" id="collected">{{this.player2Collect.length / 3}}</h1>
-                  <h4 class="playerName">{{players.player2}}</h4>
+                  <p class="small-p">oponent</p>
                 </div>
               </a>
-             <a class="btn" @click="bluePress" :class="{blue:whoPressed ==='non' || whoPressed ==='green', bluePressed:whoPressed ==='blue'}">
+             <a class="button roundedButton is-success is-outlined">
                 <div class="collect player1Collected">
-                  <h1 class="title-in" id="collected">{{this.player1Collect.length / 3}}</h1>
-                  <h4 class="playerName">{{players.player1}}</h4>
+                  <h1 class="title-in" id="collected">{{this.myCollection.length / 3}}</h1>
+                  <p class="small-p">me</p>
                 </div>
               </a>
             <a class="button is-orange is-outlined roundedButton" >
@@ -58,14 +58,13 @@ export default{
   data () {
     return {
       players: store.multplayerOffline,
-      whoPressed: 'non',
       id: 0,
       notSet: false, // bazzes the cards in a mistaken set
       pageState: 'game',
       cardsViewsOnTheTable: [],
       cards: new CardsDeck(),
       collectedCards: [],
-      player1Collect: [],
+      myCollection: [],
       player2Collect: [],
       set: [],
       startTime: 0,
@@ -77,7 +76,7 @@ export default{
   created () {
     this.cardsViewsOnTheTable = utils.createCanvases(this.cards.cardsDeckArray)
     this.startTime = Date.now()
-    this.runTimer = setInterval(this.countDown, 100)
+    // this.runTimer = setInterval(this.countDown, 100)
   },
   mounted () {
     this.cardsViewsOnTheTable.forEach((card, i) => {
@@ -96,11 +95,7 @@ export default{
     *************************************/
     isSet: function () {
       if (utils.isSet(this.set, 0, 1, 2)) {
-        if (this.whoPressed === 'green') {
-          this.player2Collect.push(...this.set)
-        } else if (this.whoPressed === 'blue') {
-          this.player1Collect.push(...this.set)
-        }
+        this.myCollection.push(...this.set)
         return true
       } else {
         this.notSet = true
@@ -111,12 +106,12 @@ export default{
 
     clickedCard: function (card, i) {
       this.notSet = false
-      if (card.state === 'blueClicked' || card.state === 'greenClicked') {
+      if (card.state === 'greenClicked') {
         card.state = 'unclicked'
         this.set.pop()
-      } else if (this.whoPressed !== 'non') {
+      } else {
         this.set.push(card)
-        this.collectByPlayer(card)
+        card.state = 'greenClicked'
         this.$forceUpdate()
 
         if (this.set.length === 3) {
@@ -133,31 +128,6 @@ export default{
     /**************************************
      2 pleyers staf
     *************************************/
-    bluePress () {
-      this.whoPressed = 'blue'
-      setTimeout(() => {
-        this.whoPressed = 'non'
-        console.log(this.whoPressed)
-      }, 4000)
-      this.$forceUpdate()
-      console.log(this.whoPressed)
-    },
-    greenPress () {
-      this.whoPressed = 'green'
-      setTimeout(() => {
-        this.whoPressed = 'non'
-        console.log(this.whoPressed)
-      }, 4000)
-      this.$forceUpdate()
-      console.log(this.whoPressed)
-    },
-    collectByPlayer (card) {
-      if (this.whoPressed === 'green') {
-        card.state = 'greenClicked'
-      } else if (this.whoPressed === 'blue') {
-        card.state = 'blueClicked'
-      }
-    },
     returnTheWinner () {
       if (this.player1Collect > this.player2Collect) {
         return 'Congradulations! ' + this.players.player1 + ' Is The Winner!'
@@ -265,6 +235,10 @@ export default{
 .playerName{
   color: black;
   margin-top: -10px;
+}
+
+.card-content{
+  display: flex;
 }
 .game-over{
   margin: auto;

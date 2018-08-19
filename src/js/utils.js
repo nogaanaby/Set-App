@@ -62,7 +62,17 @@ export default{
       cardsViewsArray[1].setNewCardAtrr(this.takeNewCard(cardsDeck))
     }
   },
-
+  switchCards (cardVArray, cardsArray, setArray) {
+    const tempArray = cardVArray
+    tempArray.forEach((card, i) => {
+      if (setArray[0] === card || setArray[1] === card || setArray[2] === card) {
+        tempArray[i].setNewCardAtrr(this.takeNewCard(cardsArray))
+        tempArray[i].state = 'isTaken'
+      }
+    })
+    this.allwaysSetOnTheTable(tempArray, cardsArray)
+    return tempArray
+  },
   /**************************************
      fitures
   *************************************/
@@ -98,5 +108,17 @@ export default{
       mixed.push(card)
     }
     return mixed
+  },
+
+  /**************************************
+     created
+  *************************************/
+  createCanvases (cards81) {
+    // pull out random card from the card deck and puts it on the table
+    const cardViewsArray = []
+    for (let i = 0; i < 12; i++) {
+      cardViewsArray[i] = new CardView('notThereYet', 'notThereYet', this.takeNewCard(cards81))
+    }
+    return cardViewsArray
   }
 }

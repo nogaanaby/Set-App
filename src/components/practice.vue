@@ -203,6 +203,14 @@ all devices
     margin-bottom: 20px;
     background-color: white;
   }
+.card{
+  height: 100%;
+  max-height: 547px;
+}
+.card-content{
+  height: inherit;
+  max-height: 547px;
+}
   /*************************************
 desktop
 ***************************************/

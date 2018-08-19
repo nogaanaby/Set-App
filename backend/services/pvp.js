@@ -79,6 +79,15 @@ class Pvp {
       })
     })
 
+    socket.on('getInvitation', (sender) => {
+      const senderSocketId = this.onlineUsers.getUserByNickname(sender).socketId
+      const senderSocket = io.sockets.connected[senderSocketId]
+      senderSocket.emit('startOnlineGame', {
+        socketId: socket.id,
+        nickname: socket.nickname
+      })
+    })
+
     socket.on('updateOnChangingStatus', (userAndStatus) => {
       // 2.update alll the users about the new one
       Object.keys(io.sockets.connected).forEach(key => {

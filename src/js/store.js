@@ -34,6 +34,7 @@ export default{
   inviter: {
     nickname: ''
   },
+  invitedNick: '',
   gotMassage: {
     gotInvitation: false
   },
