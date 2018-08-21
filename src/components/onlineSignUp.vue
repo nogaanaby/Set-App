@@ -95,6 +95,7 @@ export default {
     },
     invite (invited) {
       this.onlineUsers.find(e => e.nickname === invited).status = 'hold'
+      store.invited.nickname = invited
       // send to server invite request
       this.$socket.emit('sendInvitation', invited)
       this.$forceUpdate()

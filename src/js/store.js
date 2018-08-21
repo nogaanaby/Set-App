@@ -24,7 +24,8 @@ export default{
   multplayerOffline: {
     player1: '',
     player2: ''
-  }, // this is the multiplayer online data, the inviting staff
+  },
+  // this is the multiplayer online data, the inviting staff
   onlineUsersCopy: {
     users: []
   },
@@ -34,10 +35,13 @@ export default{
   inviter: {
     nickname: ''
   },
-  invitedNick: '',
+  invited: {
+    nickname: ''
+  },
   gotMassage: {
     gotInvitation: false
   },
+  // the game staff
   cards: new CardsDeck(),
   practiceSets: [
     new PracticeSetClass(

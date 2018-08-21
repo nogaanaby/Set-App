@@ -28,7 +28,7 @@
                   </span>
                   <router-link class="menu-links cardText" to="/Practice">Practice!</router-link>
                 </a>
-                <a class="button is-medium is-fullwidth" v-show="false">
+                <a class="button is-medium is-fullwidth" v-show="true">
                   <span class="icon is-small">
                     <img class="icon" src='@/assets/multiplayer.png'>
                   </span>

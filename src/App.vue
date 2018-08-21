@@ -4,7 +4,8 @@
       <gameMenu></gameMenu>
       <invitation class="massage fadeIn"
       v-if="openMassage.gotInvitation"
-      v-bind:massage = "massageContent">
+      v-bind:massage = "massageContent"
+      v-bind:pingpong = "pinpongStatus">
       </invitation>
       <router-link to="/game" class="link"></router-link>
       <router-view :class='{blur: openMassage.gotInvitation}'></router-view>
@@ -52,21 +53,24 @@ export default {
       openMassage: store.gotMassage,
       inviter: store.inviter,
       gotInv: store.gotMassage,
-      massageContent: ''
+      massageContent: '',
+      pinpongStatus: ''
     }
   },
   mounted () {
 
   },
   sockets: { // listeners
-    getInvitation (inviter) {
-      this.inviter.nickname = inviter.nickname
-      this.massageContent = `Do You Want To Play With ` + inviter.nickname + ` ?`
+    getInvitation (sender) {
+      this.inviter.nickname = sender.nickname
+      this.massageContent = `Do You Want To Play With ` + sender.nickname + ` ?`
+      this.pinpongStatus = 'firstCatch'
       this.gotInv.gotInvitation = true
     },
-    startOnlineGame (invited) {
+    getTheAccept (invited) {
       this.massageContent = invited.nickname + ' got your invitation, start to play now!'
       this.gotInv.gotInvitation = true
+      this.pinpongStatus = 'secondCatch'
     }
   },
   methods: {

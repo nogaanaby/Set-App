@@ -9,13 +9,13 @@
               <a class="button roundedButton">
                 <div class="collect player2Collected">
                   <h1 class="title-in" id="collected">{{this.player2Collect.length / 3}}</h1>
-                  <p class="small-p">oponent</p>
+                  <p class="small-p">{{opponentNickname}}</p>
                 </div>
               </a>
              <a class="button roundedButton is-success is-outlined">
                 <div class="collect player1Collected">
                   <h1 class="title-in" id="collected">{{this.myCollection.length / 3}}</h1>
-                  <p class="small-p">me</p>
+                  <p class="small-p">{{myNickname}}</p>
                 </div>
               </a>
             <a class="button is-orange is-outlined roundedButton" >
@@ -57,11 +57,13 @@ export default{
   },
   data () {
     return {
-      players: store.multplayerOffline,
+      myNickname: store.thisUser.nickname,
+      opponentNickname: '',
       id: 0,
       notSet: false, // bazzes the cards in a mistaken set
       pageState: 'game',
       cardsViewsOnTheTable: [],
+      cardsOnTheTable: [],
       cards: new CardsDeck(),
       collectedCards: [],
       myCollection: [],
@@ -74,22 +76,45 @@ export default{
     }
   },
   created () {
-    this.cardsViewsOnTheTable = utils.createCanvases(this.cards.cardsDeckArray)
     this.startTime = Date.now()
     // this.runTimer = setInterval(this.countDown, 100)
+
+    for (let i = 0; i < 12; i++) {
+      this.cardsViewsOnTheTable[i] = 0
+    }
+    this.findTheOpponent()
   },
   mounted () {
-    this.cardsViewsOnTheTable.forEach((card, i) => {
-      card.shapeCanvas = this.$refs[`shape${i}`][0]
-      card.cardCanvas = this.$refs[`card${i}`][0]
-      card.drawCard()
-    })
-    utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.CardsDeckArray)
+    // utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.CardsDeckArray)
     if (store.onlineUsersCopy.users.length !== 0) {
       this.updateMyStatus('onGame')
     }
+    setTimeout(() => {
+      this.putCards()
+    }, 500)
+  },
+  sockets: {
+    fillCardsData (tableCardsData) {
+      this.cardsOnTheTable = tableCardsData
+    },
+    opponentHasClicked (card) {
+      card.state = 'blueClicked'
+    }
   },
   methods: {
+    findTheOpponent () {
+      if (store.inviter.nickname === '') {
+        this.opponentNickname = store.invited.nickname
+      } else {
+        this.opponentNickname = store.inviter.nickname
+      }
+    },
+    putCards () {
+      for (let i = 0; i < 12; i++) {
+        this.cardsViewsOnTheTable[i] = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.cardsOnTheTable[i])
+        this.cardsViewsOnTheTable[i].drawCard()
+      }
+    },
     /**************************************
      game
     *************************************/
@@ -113,6 +138,7 @@ export default{
         this.set.push(card)
         card.state = 'greenClicked'
         this.$forceUpdate()
+        this.sendTheClickToTheOpponent(card)
 
         if (this.set.length === 3) {
           if (this.isSet()) {
@@ -124,6 +150,13 @@ export default{
           this.set.splice(0)
         }
       }
+    },
+    sendTheClickToTheOpponent (card) {
+      const oppAndCard = {
+        nickname: this.opponentNickname,
+        card: card
+      }
+      this.$socket.emit('clickCard', oppAndCard)
     },
     /**************************************
      2 pleyers staf

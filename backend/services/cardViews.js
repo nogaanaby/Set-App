@@ -1,7 +1,8 @@
 /********************************************************
- * FRONT-END
+ * BACK-END
  ******************************************************/
-export class CardView {
+
+class CardView {
   constructor (shapeCanvas, cardCanvas, {shape, color, number, fill}) {
     this.shapeCanvas = shapeCanvas
     this.cardCanvas = cardCanvas
@@ -326,14 +327,4 @@ export class CardView {
     this.getCardContext.fillText('?', 50, 110)
   }
 }
-
-export class Set {
-  constructor (shape, color, fill, number, canvas, take) {
-    this.shape = shape
-    this.color = color
-    this.fill = fill
-    this.number = number
-    this.canvas = canvas
-    this.take = take
-  }
-}
+module.exports = new CardView()

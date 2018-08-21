@@ -1,8 +1,6 @@
 /********************************************************
- * FRONT-END
+ * BACK-END
  ******************************************************/
-
-import { CardView } from '../js/CardViews.js'
 const utils = {
   cardObject (shape, color, number, fill) {
     return ({
@@ -112,19 +110,28 @@ const utils = {
       mixed.push(card)
     }
     return mixed
-  },
-
-  /**************************************
-     created
-  *************************************/
-  createCanvases (cards81) {
-    // pull out random card from the card deck and puts it on the table
-    const cardViewsArray = []
-    for (let i = 0; i < 12; i++) {
-      cardViewsArray[i] = new CardView('notThereYet', 'notThereYet', this.takeNewCard(cards81))
-    }
-    return cardViewsArray
   }
+
 }
 
-export default utils
+class CardsDeck {
+  constructor () {
+    const shapes = ['rect', 'sub', 'tri']
+    const numbers = [1, 2, 3]
+    const colors = ['green', 'purple', 'red']
+    const fills = ['empty', 'full', 'stripes']
+
+    this.cardsDeckArray = []
+
+    shapes.forEach(shape => numbers
+      .forEach(number => colors
+        .forEach(color => fills
+          .forEach(fill =>
+            this.cardsDeckArray.push(utils.cardObject(shape, color, number, fill))
+          )
+        )
+      )
+    )
+  }
+}
+module.exports = new CardsDeck()
