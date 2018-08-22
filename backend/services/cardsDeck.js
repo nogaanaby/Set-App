@@ -1,5 +1,5 @@
-import utils from '../js/utils.js'
-export class CardsDeck {
+const backGame = require('../services/backGame')
+class CardsDeck {
   constructor () {
     const shapes = ['rect', 'sub', 'tri']
     const numbers = [1, 2, 3]
@@ -12,10 +12,12 @@ export class CardsDeck {
       .forEach(number => colors
         .forEach(color => fills
           .forEach(fill =>
-            this.cardsDeckArray.push(utils.cardObject(shape, color, number, fill))
+            this.cardsDeckArray.push(backGame.cardObject(shape, color, number, fill))
           )
         )
       )
     )
   }
 }
+
+module.exports = new CardsDeck()

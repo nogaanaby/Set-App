@@ -2,21 +2,19 @@
   <div class="game template-div">
       <div class="card">
         <header class="card-header fadeInDown" v-if="pageState === 'game'">
-          <div class="menu-fitures">
-            <a class="button is-warning is-outlined roundedButton" id="tellMe" @click = "findSet">
-              <img class="tellMeIcon" src='@/assets/tellMe.png'>
-            </a>
-            <a class="button is-success is-outlined roundedButton" >
-              <div class="setCollect">
-                <h1 class="title-in">
-                {{this.collectedCards.length / 3}}
-                </h1>
-                <p class="small-p">Sets</p>
-              </div>
-            </a>
-            <a class="button is-orange is-outlined roundedButton clock" >
-              <p id="time">{{formatTime()}}</p>
-            </a>
+          <div class="menu-fitures columns is-mobile">
+            <help class = "column"
+            v-bind:cardsViewsArray = "cardsViewsOnTheTable"
+            v-bind:hintState = "hintState"
+            @findSetEvent= "getHelp"></help>
+            <score class = "column"
+            v-bind:cards = "collectedCards.length"
+            v-bind:nickname = "'sets'"
+            v-bind:color = "'green'"
+            v-bind:gameStatus = "'single'"></score>
+            <clock class = "column"
+            v-bind:timeToPlay = "timeToPlay"
+            @timeOver= "gameOver"></clock>
           </div>
         </header>
         <div class="card-content fadeInDown">
@@ -38,9 +36,11 @@
   </div>
 </template>
 <script>
-import utils from '../js/utils.js'
-import { CardView } from '../js/CardViews.js'
-import { CardsDeck } from '../js/CardsDeck.js'
+import backGame, { CardsDeck } from '../js/backGame.js'
+import frontGame from '../js/frontGame.js'
+import clock from '@/components/clock.vue'
+import help from '@/components/help.vue'
+import score from '@/components/score.vue'
 import gameOver from '@/components/gameOver.vue'
 import gameMenu from '@/components/nav.vue'
 import brandFooter from '@/components/brandFooter.vue'
@@ -51,7 +51,10 @@ export default{
   components: {
     gameOver,
     brandFooter,
-    gameMenu
+    gameMenu,
+    clock,
+    help,
+    score
   },
   data () {
     return {
@@ -62,17 +65,12 @@ export default{
       cards: new CardsDeck(),
       collectedCards: [],
       set: [],
-      startTime: 0,
       timeToPlay: 2 * 60 * 1000,
-      timeLeft: 2 * 60 * 1000,
-      runTimer: ''
+      hintState: 1
     }
   },
   created () {
-    this.cardsViewsOnTheTable = utils.createCanvases(this.cards.cardsDeckArray)
-
-    this.startTime = Date.now()
-    this.runTimer = setInterval(this.countDown, 100)
+    this.cardsViewsOnTheTable = frontGame.createCanvases(this.cards.cardsDeckArray)
   },
   mounted () {
     this.cardsViewsOnTheTable.forEach((card, i) => {
@@ -80,7 +78,7 @@ export default{
       card.cardCanvas = this.$refs[`card${i}`][0]
       card.drawCard()
     })
-    utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.cardsDeckArray)
+    backGame.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.cardsDeckArray)
     if (store.onlineUsersCopy.users.length !== 0) {
       this.updateMyStatus('onGame')
     }
@@ -90,12 +88,12 @@ export default{
      game
     *************************************/
     isSet: function () {
-      if (utils.isSet(this.set, 0, 1, 2)) {
+      if (backGame.isSet(this.set, 0, 1, 2)) {
         this.collectedCards.push(...this.set)
         return true
       } else {
         this.notSet = true
-        this.resetCardState()
+        this.resetCardsState()
         return false
       }
     },
@@ -112,7 +110,8 @@ export default{
 
         if (this.set.length === 3) {
           if (this.isSet()) {
-            this.cardsViewsOnTheTable = utils.switchCards(this.cardsViewsOnTheTable, this.cards.cardsDeckArray, this.set)
+            this.cardsViewsOnTheTable = backGame.switchCards(this.cardsViewsOnTheTable, this.cards.cardsDeckArray, this.set)
+            this.hintState = 1
             if (this.cards.cardsDeckArray.length <= 9) {
               this.cards = new CardsDeck()
             }
@@ -122,34 +121,29 @@ export default{
       }
     }, // end of click
 
-    resetCardState: function () {
+    resetCardsState: function () {
       this.cardsViewsOnTheTable.forEach((element) => { element.state = 'unclicked' })
     },
     /*****************************
      * fitures
      *************************/
-    findSet () {
-      utils.findSetButton(this.cardsViewsOnTheTable)
-      this.$forceUpdate()
-    },
-    countDown () {
-      this.timeLeft = utils.countDown(this.startTime, this.timeToPlay)
-      if (this.timeLeft === 0) {
-        this.pageState = 'over'
-        clearInterval(this.runTimer)
-        this.updateMyStatus('availble')
+    getHelp (cardsArray) {
+      if (this.hintState < 3) {
+        this.cardsViewsOnTheTable = cardsArray
+        this.hintState++
       }
-    },
-    formatTime () {
-      return utils.formatTime(this.timeLeft)
     },
     playAgain () {
       this.collectedCards.splice(0)
       this.pageState = 'game'
-      this.timeLeft = this.timeToPlay
-      this.startTime = Date.now()
       this.updateMyStatus('onGame')
-      this.runTimer = setInterval(this.countDown, 100)
+      this.$forceUpdate()
+    },
+    gameOver () {
+      this.pageState = 'over'
+      this.resetCardsState()
+      this.hintState = 1
+      this.updateMyStatus('availble')
       this.$forceUpdate()
     },
     updateMyStatus (status) {
@@ -164,5 +158,10 @@ export default{
 </script>
 
 <style scoped>
-
+.column{
+  padding: 0;
+}
+.card-header{
+  padding: 0;
+}
 </style>

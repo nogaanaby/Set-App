@@ -8,8 +8,7 @@ function onlyForAuthedUser (fnTakeUsernameFromReq) {
     const user = req.user
     if (user && req.isAuthenticated() && user === fnTakeUsernameFromReq(req)) {
       next()
-    }
-    else {
+    } else {
       res.status(403).send('Forbidden')
     }
   }

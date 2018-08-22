@@ -4,31 +4,52 @@
         <div class="card-content">
           <div class="is-narrow">
             <div class="buttons fadeInDown">
-                <a class="button is-medium is-fullwidth">
-                  <span class="icon is-small">
-                    <img class="icon" src='@/assets/single.png'>
-                  </span>
-                  <router-link class="menu-links cardText" to="/game">Single-Player</router-link>
-                </a>
-                <a class="button is-medium is-fullwidth">
-                  <span class="icon is-small">
-                    <img class="icon" src='@/assets/multiplayer.png'>
-                  </span>
-                   <router-link class="menu-links cardText" to="/offlineSignUp">multiPlayer offline</router-link>
-                </a>
-                <a class="button is-medium is-fullwidth">
-                  <span class="icon is-small">
-                    <img class="icon" src='@/assets/HowToIcon.png'>
-                  </span>
-                  <router-link class="menu-links cardText" to="/instractionsTables">How To Play</router-link>
-                </a>
-                <a class="button is-medium is-fullwidth">
-                  <span class="icon is-small ">
-                    <img class="icon" src='@/assets/pencil.png'>
-                  </span>
-                  <router-link class="menu-links cardText" to="/Practice">Practice!</router-link>
-                </a>
-                <a class="button is-medium is-fullwidth" v-show="false">
+
+              <router-link class="link" to="/game">
+               <p class="control">
+                  <a class="button is-large is-light-orange is-fullwidth">
+                    <span class="icon is-small">
+                      <img class="icon" src='@/assets/single.png'>
+                    </span>
+                    <span>Single-Player</span>
+                  </a>
+                </p>
+                </router-link>
+
+                <router-link class="link" to="/offlineSignUp">
+                  <p class="control">
+                    <a class="button is-large is-light-orange is-fullwidth">
+                      <span class="icon is-small">
+                        <img class="icon" src='@/assets/multiplayer.png'>
+                      </span>
+                      <span>multiPlayer offline</span>
+                    </a>
+                  </p>
+                </router-link>
+
+                <router-link class="link" to="/instractionsTables">
+                  <p class="control">
+                    <a class="button is-large is-light-orange is-fullwidth">
+                      <span class="icon is-small">
+                        <img class="icon" src='@/assets/HowToIcon.png'>
+                      </span>
+                      <span>How To Play</span>
+                    </a>
+                  </p>
+                </router-link>
+
+                <router-link class="link" to="/Practice">
+                  <p class="control">
+                    <a class="button is-large is-light-orange is-fullwidth">
+                      <span class="icon is-small">
+                        <img class="icon" src='@/assets/pencil.png'>
+                      </span>
+                      <span>Practice!</span>
+                    </a>
+                  </p>
+                </router-link>
+
+                <a class="button is-large is-fullwidth" v-show="false">
                   <span class="icon is-small">
                     <img class="icon" src='@/assets/multiplayer.png'>
                   </span>
@@ -71,4 +92,12 @@ allDevices
   width: 20px;
   height: 20px;
 }
+.is-narrow{
+  margin-top: 10%;
+  min-width: 200px;
+}
+.link{
+  width: 100%;
+}
+
 </style>

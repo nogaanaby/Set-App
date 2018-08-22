@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import backGame, { CardsDeck } from '../js/backGame.js'
+import frontGame from '../js/frontGame.js'
 import utils from '../js/utils.js'
 import { CardView } from '../js/CardViews.js'
 import store from '../js/store.js'
@@ -85,7 +87,7 @@ export default {
   },
   methods: {
     clickCard: function (card, i) {
-      utils.resetCardState(this.sets[this.contentIndex].optionsForTheThird)
+      backGame.resetCardState(this.sets[this.contentIndex].optionsForTheThird)
       if (card.state === 'clicked') {
         this.comment = 'nothing'
         this.$forceUpdate()
@@ -104,7 +106,7 @@ export default {
       this.sets[this.contentIndex].optionsForTheThird.forEach((card, i) => {
         if (card.state === 'clicked') {
           setArray.push(card)
-          if (utils.isSet(setArray, 0, 1, 2)) {
+          if (backGame.isSet(setArray, 0, 1, 2)) {
             this.comment = 'right'
             this.putThirdCard()
             this.flipPageOnRightAnswer(this.contentIndex + 1)
@@ -175,7 +177,7 @@ all devices
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    width: 22%;
+    width: 27%;
     height: 38%;
     margin: 2%;
     position: relative;
@@ -201,6 +203,7 @@ all devices
     margin: auto;
     border-radius: 5px;
     margin-bottom: 20px;
+    padding: 20px;
     background-color: white;
   }
 .card{

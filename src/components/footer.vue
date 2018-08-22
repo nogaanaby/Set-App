@@ -40,14 +40,10 @@
 
 <script>
 
-import gameMenu from '@/components/nav.vue'
-import vxIcon from '@/components/vx-icon'
-
 export default {
   name: 'footerNextPage',
   components: {
-    gameMenu,
-    vxIcon
+
   },
   props: ['pageCount', 'currentIndex', 'bottunGoOut', 'callFrom'],
   data () {

@@ -4,7 +4,8 @@
       <gameMenu></gameMenu>
       <invitation class="massage fadeIn"
       v-if="openMassage.gotInvitation"
-      v-bind:massage = "massageContent">
+      v-bind:massage = "massageContent"
+      v-bind:pingpong = "pinpongStatus">
       </invitation>
       <router-link to="/game" class="link"></router-link>
       <router-view :class='{blur: openMassage.gotInvitation}'></router-view>
@@ -25,9 +26,11 @@ import offlineSignUp from '@/components/offlineSignUp'
 import brandFooter from '@/components/brandFooter'
 import invitation from '@/components/invitation.vue'
 import pause from '@/components/pause.vue'
-import fourInosentCards from '@/components/fourInosentCards.vue'
-import copyOfGame from '@/components/copyOfGame.vue'
+import empty from '@/components/empty.vue'
 import onlineGame from '@/components/onlineGame.vue'
+import clock from '@/components/clock.vue'
+import help from '@/components/help.vue'
+import score from '@/components/score.vue'
 
 export default {
   name: 'app',
@@ -43,30 +46,38 @@ export default {
     brandFooter,
     invitation,
     pause,
-    fourInosentCards,
-    copyOfGame,
-    onlineGame
+    empty,
+    onlineGame,
+    clock,
+    help,
+    score
   },
   data () {
     return {
       openMassage: store.gotMassage,
       inviter: store.inviter,
       gotInv: store.gotMassage,
-      massageContent: ''
+      massageContent: '',
+      pinpongStatus: ''
     }
   },
   mounted () {
 
   },
   sockets: { // listeners
-    getInvitation (inviter) {
-      this.inviter.nickname = inviter.nickname
-      this.massageContent = `Do You Want To Play With ` + inviter.nickname + ` ?`
+    getInvitation (sender) {
+      this.inviter.nickname = sender.nickname
+      this.massageContent = `Do You Want To Play With ` + sender.nickname + ` ?`
+      this.pinpongStatus = 'firstCatch'
       this.gotInv.gotInvitation = true
     },
-    startOnlineGame (invited) {
+    getTheAccept (invited) {
       this.massageContent = invited.nickname + ' got your invitation, start to play now!'
       this.gotInv.gotInvitation = true
+      this.pinpongStatus = 'secondCatch'
+    },
+    getCards (tableCardsData) {
+      store.cardsOnTheTable = tableCardsData
     }
   },
   methods: {
@@ -92,7 +103,7 @@ export default {
 /* tablet & desktop */
 @media only screen and (min-width: 560px) {
   .cardsContainer {
-    width: 50%;
+    width: 48%;
     height: 90%;
   }
   .roundedButton{
@@ -270,8 +281,12 @@ GAME BOARD
 /**mobile**/
 @media only screen and (max-width: 500px) {
   .cardCanvas{
-  max-height: 80px;
-}
+    max-height: 118px;
+  }
+  .cardDiv {
+    width: 25%;
+    height: 39%;
+  }
 }
 .cardDiv {
   display: -webkit-box;
@@ -279,8 +294,6 @@ GAME BOARD
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 17%;
-  height: 28%;
   margin: 2% 2%;
 }
 .clicked {
@@ -310,6 +323,13 @@ fitures
 .button.is-orange{
   border: solid 1px #ff6500;
 }
+.button.is-light-orange:hover{
+  background-color: #e7ab86;
+  border: solid 2px #f28b4b;
+}
+.button.is-light-orange{
+  border: solid 1px #f0985e;
+}
   .button.is-purple:hover{
   background-color: plum;
   border: solid 1px purple;
@@ -335,11 +355,6 @@ fitures
 .is-grouped{
   display: flex;
   justify-content: space-between;
-}
-.is-narrow{
-  width: 40%;
-  margin: auto;
-  min-width: 200px;
 }
 
 /**************************************
