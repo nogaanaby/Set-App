@@ -51,6 +51,16 @@ export class CardView {
     this.drawCard()
   }
 
+  getCardData () {
+    const cardDataObj = {
+      color: this.color,
+      fill: this.fill,
+      numbrt: this.number,
+      shape: this.shape
+    }
+    return (cardDataObj)
+  }
+
   drawCard () {
     // set the properties to the shape - witch is not displayed
     this.drawShape()

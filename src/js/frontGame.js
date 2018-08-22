@@ -12,7 +12,7 @@ export default {
   createCanvases (cards81) {
     // pull out random card from the card deck and puts it on the table
     const cardViewsArray = []
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 9; i++) {
       cardViewsArray[i] = new CardView('notThereYet', 'notThereYet', backGame.takeNewCard(cards81))
     }
     return cardViewsArray

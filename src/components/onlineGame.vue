@@ -2,23 +2,24 @@
   <div class="game template-div">
       <div class="card">
         <header class="card-header fadeInDown" v-if="pageState === 'game'">
-          <div class="menu-fitures columns">
+          <div class="menu-fitures columns is-mobile">
             <help class = "column"
             v-bind:cardsViewsArray = "cardsViewsOnTheTable"
             v-bind:hintState = "hintState"
             @findSetEvent= "getHelp"></help>
-              <a class="button roundedButton column">
-                <div class="collect player2Collected">
-                  <h1 class="title-in" id="collected">{{this.player2Collect.length / 3}}</h1>
-                  <p class="small-p">{{opponentNickname}}</p>
-                </div>
-              </a>
-             <a class="button roundedButton is-success is-outlined column">
-                <div class="collect player1Collected">
-                  <h1 class="title-in" id="collected">{{this.myCollection.length / 3}}</h1>
-                  <p class="small-p">{{myNickname}}</p>
-                </div>
-              </a>
+
+            <score class = "column"
+            v-bind:cards = "player2Collect.length"
+            v-bind:nickname = "opponentNickname"
+            v-bind:color = "'grey'"
+            v-bind:gameStatus = "'single'"></score>
+
+            <score class = "column"
+            v-bind:cards = "myCollection.length"
+            v-bind:nickname = "myNickname"
+            v-bind:color = "'green'"
+            v-bind:gameStatus = "'single'"></score>
+
             <clock class = "column"
             v-bind:timeToPlay = "timeToPlay"
             @timeOver= "gameOver"></clock>
@@ -27,7 +28,7 @@
         <div class="card-content fadeInDown">
               <div class = "cardsContainer" v-show="pageState === 'game'">
               <!--{{JSON.stringify(cards)}}-->
-                <div v-for="(card, i) in cardsViewsOnTheTable" :key="card.index" class = "cardDiv" :class = "{notSet: notSet}">
+                <div v-for="(card, i) in cardsOnTheTable" :key="card.index" class = "cardDiv" :class = "{notSet: notSet}">
                   <canvas class="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
                   <canvas class="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{blueClicked: card.state === 'blueClicked', greenClicked: card.state === 'greenClicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
                 </div>
@@ -46,6 +47,7 @@
 <script>
 import clock from '@/components/clock.vue'
 import help from '@/components/help.vue'
+import score from '@/components/score.vue'
 import utils from '../js/utils.js'
 import store from '../js/store.js'
 import { CardView } from '../js/CardViews.js'
@@ -59,7 +61,8 @@ export default{
     gameOver,
     brandFooter,
     clock,
-    help
+    help,
+    score
   },
   data () {
     return {
@@ -69,8 +72,7 @@ export default{
       notSet: false, // bazzes the cards in a mistaken set
       pageState: 'game',
       cardsViewsOnTheTable: [],
-      cardsOnTheTable: [],
-      cards: new CardsDeck(),
+      cardsOnTheTable: store.cardsOnTheTable,
       collectedCards: [],
       myCollection: [],
       player2Collect: [],
@@ -80,9 +82,7 @@ export default{
     }
   },
   created () {
-    for (let i = 0; i < 12; i++) {
-      this.cardsViewsOnTheTable[i] = 0
-    }
+    console.log(this.cardsOnTheTable)
     this.findTheOpponent()
   },
   mounted () {
@@ -90,16 +90,20 @@ export default{
     if (store.onlineUsersCopy.users.length !== 0) {
       this.updateMyStatus('onGame')
     }
-    setTimeout(() => {
-      this.putCards()
-    }, 500)
+    for (let i = 0; i < 12; i++) {
+      this.cardsViewsOnTheTable[i] = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.cardsOnTheTable[i])
+      this.cardsViewsOnTheTable[i].drawCard()
+    }
   },
   sockets: {
-    getCards (tableCardsData) {
-      this.cardsOnTheTable = tableCardsData
-    },
     opponentHasClicked (card) {
-      card.state = 'blueClicked'
+      const findCard = this.cardsViewsOnTheTable.find(cv => cv.shape === card.shape &&
+                                                      cv.color === card.color &&
+                                                      cv.number === card.number &&
+                                                      cv.fill === card.fill)
+      findCard.state = 'blueClicked'
+      console.log(findCard)
+      this.$forceUpdate()
     }
   },
   methods: {
@@ -114,6 +118,7 @@ export default{
       for (let i = 0; i < 12; i++) {
         this.cardsViewsOnTheTable[i] = new CardView(this.$refs[`shape${i}`][0], this.$refs[`card${i}`][0], this.cardsOnTheTable[i])
         this.cardsViewsOnTheTable[i].drawCard()
+        // console.log(this.cardsViewsOnTheTable[i])
       }
     },
     /**************************************
@@ -137,10 +142,9 @@ export default{
         this.set.pop()
       } else {
         this.set.push(card)
-        console.log(card)
+        this.sendTheClickToTheOpponent(card)
         card.state = 'greenClicked'
         this.$forceUpdate()
-        this.sendTheClickToTheOpponent(card)
 
         if (this.set.length === 3) {
           if (this.isSet()) {
@@ -263,7 +267,7 @@ export default{
 }
 
 .blueClicked{
-  border: solid 3px plum;
+  border: solid 3px lightgray;
 }
 
 .playerName{

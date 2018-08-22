@@ -1,4 +1,5 @@
-const cardsDeck = require('../services/utils')
+const backGame = require('../services/backGame')
+const cardsDeck = require('../services/cardsDeck')
 class User {
   constructor (nickname, socketId) {
     this.nickname = nickname
@@ -41,12 +42,13 @@ class Users {
   }
 }
 
-class TewlveCards {
+class Game {
   constructor () {
-    this.cardsDataOnTheTable = new Array(12)
-    const cards81 = cardsDeck.cardsDeckArray
-    for (let i = 0; i < this.cardsDataOnTheTable.length; i++) {
-      this.cardsDataOnTheTable[i] = cards81.splice((Math.floor(Math.random() * cards81.length)), 1)[0]
+    this.cards81 = cardsDeck.cardsDeckArray
+    this.cardsOnTheTable = []
+
+    for (let i = 0; i < 12; i++) {
+      this.cardsOnTheTable.push(backGame.takeNewCard(this.cards81))
     }
   }
 }
@@ -54,7 +56,7 @@ class TewlveCards {
 class Pvp {
   constructor () {
     this.onlineUsers = new Users()
-    this.cards = new TewlveCards()
+    this.cards = new Game()
   }
   getSocketIdByNickname (nickname) {
     return this.onlineUsers.getUserByNickname(nickname).socketId
@@ -77,6 +79,8 @@ class Pvp {
     })
 
     socket.on('sendInvitation', (invited) => {
+      io.sockets.connected[socket.id].emit('getCards', this.cards.cardsOnTheTable)
+      this.getSocketByNickname(io, invited).emit('getCards', this.cards.cardsOnTheTable)
       console.log(invited + ' invite ' + socket.nickname)
       this.getSocketByNickname(io, invited).emit('getInvitation', {
         socketId: socket.id,
@@ -109,7 +113,6 @@ class Pvp {
      * game
      ******************/
     socket.on('acceptInvitation', (sender) => {
-      io.sockets.connected[socket.id].emit('getCards', this.cards.cardsDataOnTheTable)
       this.getSocketByNickname(io, sender).emit('getTheAccept', {
         socketId: socket.id,
         nickname: socket.nickname
@@ -117,8 +120,7 @@ class Pvp {
     })
 
     socket.on('letsStartPlay', (invited) => {
-      io.sockets.connected[socket.id].emit('getCards', this.cards.cardsDataOnTheTable)
-      this.getSocketByNickname(io, invited).emit('closeM', this.cards.cardsDataOnTheTable)
+      this.getSocketByNickname(io, invited).emit('closeM', this.cards.cardsOnTheTable)
     })
 
     socket.on('clickCard', (oppAndCard) => {

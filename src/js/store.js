@@ -43,6 +43,7 @@ export default{
     gotInvitation: false
   },
   // the game staff
+  cardsOnTheTable: [],
   cards: new CardsDeck(),
   practiceSets: [
     new PracticeSetClass(

@@ -7,6 +7,7 @@
             v-bind:cardsViewsArray = "cardsViewsOnTheTable"
             v-bind:hintState = "hintState"
             @findSetEvent= "getHelp"></help>
+            
             <score class = "column"
             v-bind:cards = "player2Collect.length"
             v-bind:nickname = "players.player2"
@@ -14,26 +15,13 @@
             v-bind:gameStatus = "'copple'"
             @pressEvent= "press"></score>
 
-              <a class="btn column" :class="{green:whoPressed ==='non' || whoPressed ==='purple', greenPressed:whoPressed ==='green'}">
-                <div class="collect player2Collected">
-                  <h1 class="title-in" id="collected">{{this.player2Collect.length / 3}}</h1>
-                  <h4 class="playerName">{{players.player2}}</h4>
-                </div>
-              </a>
-
-             <a class="btn column" :class="{purple:whoPressed ==='non' || whoPressed ==='green', purplePressed:whoPressed ==='purple'}">
-                <div class="collect player1Collected">
-                  <h1 class="title-in" id="collected">{{this.player1Collect.length / 3}}</h1>
-                  <h4 class="playerName">{{players.player1}}</h4>
-                </div>
-              </a>
-
             <score class = "column"
             v-bind:cards = "player1Collect.length"
             v-bind:nickname = "players.player1"
             v-bind:color = "'purple'"
             v-bind:gameStatus = "'copple'"
-            @pressEvent= "press"></score>
+            @pressEvent= "press"
+            @resetCardsEvent = "resetCardsState"></score>
 
             <clock class = "column"
             v-bind:timeToPlay = "timeToPlay"
@@ -149,6 +137,9 @@ export default{
           this.set.splice(0)
         }
       }
+    },
+    resetCardsState: function () {
+      this.cardsViewsOnTheTable.forEach((element) => { element.state = 'unclicked' })
     },
     /**************************************
      2 pleyers staf

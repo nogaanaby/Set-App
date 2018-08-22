@@ -75,6 +75,9 @@ export default {
       this.massageContent = invited.nickname + ' got your invitation, start to play now!'
       this.gotInv.gotInvitation = true
       this.pinpongStatus = 'secondCatch'
+    },
+    getCards (tableCardsData) {
+      store.cardsOnTheTable = tableCardsData
     }
   },
   methods: {
@@ -100,7 +103,7 @@ export default {
 /* tablet & desktop */
 @media only screen and (min-width: 560px) {
   .cardsContainer {
-    width: 50%;
+    width: 48%;
     height: 90%;
   }
   .roundedButton{
@@ -278,8 +281,12 @@ GAME BOARD
 /**mobile**/
 @media only screen and (max-width: 500px) {
   .cardCanvas{
-  max-height: 80px;
-}
+    max-height: 118px;
+  }
+  .cardDiv {
+    width: 25%;
+    height: 39%;
+  }
 }
 .cardDiv {
   display: -webkit-box;
@@ -287,8 +294,6 @@ GAME BOARD
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 17%;
-  height: 28%;
   margin: 2% 2%;
 }
 .clicked {
@@ -318,6 +323,13 @@ fitures
 .button.is-orange{
   border: solid 1px #ff6500;
 }
+.button.is-light-orange:hover{
+  background-color: #e7ab86;
+  border: solid 2px #f28b4b;
+}
+.button.is-light-orange{
+  border: solid 1px #f0985e;
+}
   .button.is-purple:hover{
   background-color: plum;
   border: solid 1px purple;
@@ -343,11 +355,6 @@ fitures
 .is-grouped{
   display: flex;
   justify-content: space-between;
-}
-.is-narrow{
-  width: 40%;
-  margin: auto;
-  min-width: 200px;
 }
 
 /**************************************

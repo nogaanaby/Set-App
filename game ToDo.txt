@@ -11,3 +11,29 @@ dont repit yourself on code:
 
 almost every page has the coontext and computed\mounted methods, witch turning complicated every time,
 make sure theres a different component for the canvasses and the drowings
+
+user accounts - login
+sql database (leader bord)
+
+google anlytics
+
+domain
+
+rest api
+
+egghead - learn express
+
+לא קשור למשחק:
+משחק של פקודות גיט
+hackerrunk
+open the git project to the word
+add in the redme link to the application
+linkdin: update the resume
+publish the application
+and send to nissim
+javascript es6
+acync await
+var let
+array manipulations -
+foreactch, find, m ap, reduce, filter, etzetra
+Set - its like array

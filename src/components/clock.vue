@@ -3,7 +3,7 @@
     <a class="button is-orange is-outlined roundedButton clock" >
       <p id="time">{{formatTime(timeLeft)}}</p>
     </a>
-    <span class="tag">time</span>
+    <span class="tag">Time</span>
   </div>
 </template>
 
