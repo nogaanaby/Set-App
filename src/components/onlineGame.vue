@@ -1,26 +1,27 @@
 <template>
   <div class="game template-div">
       <div class="card">
-        <header class="card-header fadeInDown" v-show="pageState === 'game'">
-          <div class="menu-fitures">
-            <a class="button is-warning is-outlined roundedButton" @click = "findSet">
-              <img class="icon" src='@/assets/tellMe.png'>
-            </a>
-              <a class="button roundedButton">
+        <header class="card-header fadeInDown" v-if="pageState === 'game'">
+          <div class="menu-fitures columns">
+            <help class = "column"
+            v-bind:cardsViewsArray = "cardsViewsOnTheTable"
+            v-bind:hintState = "hintState"
+            @findSetEvent= "getHelp"></help>
+              <a class="button roundedButton column">
                 <div class="collect player2Collected">
                   <h1 class="title-in" id="collected">{{this.player2Collect.length / 3}}</h1>
                   <p class="small-p">{{opponentNickname}}</p>
                 </div>
               </a>
-             <a class="button roundedButton is-success is-outlined">
+             <a class="button roundedButton is-success is-outlined column">
                 <div class="collect player1Collected">
                   <h1 class="title-in" id="collected">{{this.myCollection.length / 3}}</h1>
                   <p class="small-p">{{myNickname}}</p>
                 </div>
               </a>
-            <a class="button is-orange is-outlined roundedButton" >
-              <p id="time">{{formatTime()}}</p>
-            </a>
+            <clock class = "column"
+            v-bind:timeToPlay = "timeToPlay"
+            @timeOver= "gameOver"></clock>
           </div>
         </header>
         <div class="card-content fadeInDown">
@@ -43,17 +44,22 @@
   </div>
 </template>
 <script>
+import clock from '@/components/clock.vue'
+import help from '@/components/help.vue'
 import utils from '../js/utils.js'
 import store from '../js/store.js'
 import { CardView } from '../js/CardViews.js'
-import { CardsDeck } from '../js/CardsDeck.js'
+import backGame, { CardsDeck } from '../js/backGame.js'
+import frontGame from '../js/frontGame.js'
 import gameOver from '@/components/gameOver.vue'
 import brandFooter from '@/components/brandFooter.vue'
 export default{
   name: 'offline2Players',
   components: {
     gameOver,
-    brandFooter
+    brandFooter,
+    clock,
+    help
   },
   data () {
     return {
@@ -69,16 +75,11 @@ export default{
       myCollection: [],
       player2Collect: [],
       set: [],
-      startTime: 0,
-      timeToPlay: 2 * 60 * 1000,
-      timeLeft: 2 * 60 * 1000,
-      runTimer: ''
+      timeToPlay: 4 * 60 * 1000,
+      hintState: 1
     }
   },
   created () {
-    this.startTime = Date.now()
-    // this.runTimer = setInterval(this.countDown, 100)
-
     for (let i = 0; i < 12; i++) {
       this.cardsViewsOnTheTable[i] = 0
     }
@@ -94,7 +95,7 @@ export default{
     }, 500)
   },
   sockets: {
-    fillCardsData (tableCardsData) {
+    getCards (tableCardsData) {
       this.cardsOnTheTable = tableCardsData
     },
     opponentHasClicked (card) {
@@ -119,12 +120,12 @@ export default{
      game
     *************************************/
     isSet: function () {
-      if (utils.isSet(this.set, 0, 1, 2)) {
+      if (backGame.isSet(this.set, 0, 1, 2)) {
         this.myCollection.push(...this.set)
         return true
       } else {
         this.notSet = true
-        utils.resetCardState(this.cardsViewsOnTheTable)
+        backGame.resetCardState(this.cardsViewsOnTheTable)
         return false
       }
     },
@@ -136,13 +137,14 @@ export default{
         this.set.pop()
       } else {
         this.set.push(card)
+        console.log(card)
         card.state = 'greenClicked'
         this.$forceUpdate()
         this.sendTheClickToTheOpponent(card)
 
         if (this.set.length === 3) {
           if (this.isSet()) {
-            this.cardsViewsOnTheTable = utils.switchCards(this.cardsViewsOnTheTable, this.cards.cardsDeckArray, this.set)
+            this.cardsViewsOnTheTable = backGame.switchCards(this.cardsViewsOnTheTable, this.cards.cardsDeckArray, this.set)
             if (this.cards.cardsDeckArray.length <= 9) {
               this.cards = new CardsDeck()
             }
@@ -170,35 +172,28 @@ export default{
         return 'This Is A Tie!'
       }
     },
+    /*****************************
+     * fitures
+     *************************/
+    getHelp (cardsArray) {
+      if (this.hintState < 3) {
+        this.cardsViewsOnTheTable = cardsArray
+        this.hintState++
+      }
+    },
     playAgain () {
       this.player1Collect.splice(0)
       this.player2Collect.splice(0)
       this.pageState = 'game'
-      this.timeLeft = this.timeToPlay
-      this.startTime = Date.now()
       this.updateMyStatus('onGame')
-      this.runTimer = setInterval(this.countDown, 100)
       this.$forceUpdate()
     },
-
-    /*****************************
-     * fitures
-     *************************/
-    findSet () {
-      utils.findSetButton(this.cardsViewsOnTheTable)
+    gameOver () {
+      this.pageState = 'over'
+      this.resetCardsState()
+      this.hintState = 1
+      this.updateMyStatus('availble')
       this.$forceUpdate()
-    },
-    countDown () {
-      this.timeLeft = utils.countDown(this.startTime, this.timeToPlay)
-      if (this.timeLeft === 0) {
-        this.pageState = 'over'
-        clearInterval(this.runTimer)
-        this.updateMyStatus('availble')
-        this.$forceUpdate()
-      }
-    },
-    formatTime () {
-      return utils.formatTime(this.timeLeft)
     },
     updateMyStatus (status) {
       const userAndStatus = {
@@ -212,6 +207,12 @@ export default{
 </script>
 
 <style scoped>
+.column{
+  padding: 0;
+}
+.card-header{
+  padding: 0;
+}
 /*************************************
 2players game
 ***************************************/

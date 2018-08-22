@@ -1,26 +1,43 @@
 <template>
   <div class="game template-div">
       <div class="card">
-        <header class="card-header fadeInDown" v-show="pageState === 'game'">
-          <div class="menu-fitures">
-            <a class="button is-warning is-outlined roundedButton" @click = "findSet">
-              <img class="icon" src='@/assets/tellMe.png'>
-            </a>
-              <a class="btn" @click="greenPress" :class="{green:whoPressed ==='non' || whoPressed ==='blue', greenPressed:whoPressed ==='green'}">
+        <header class="card-header fadeInDown" v-if="pageState === 'game'">
+          <div class="menu-fitures columns is-mobile">
+            <help class = "column"
+            v-bind:cardsViewsArray = "cardsViewsOnTheTable"
+            v-bind:hintState = "hintState"
+            @findSetEvent= "getHelp"></help>
+            <score class = "column"
+            v-bind:cards = "player2Collect.length"
+            v-bind:nickname = "players.player2"
+            v-bind:color = "'green'"
+            v-bind:gameStatus = "'copple'"
+            @pressEvent= "press"></score>
+
+              <a class="btn column" :class="{green:whoPressed ==='non' || whoPressed ==='purple', greenPressed:whoPressed ==='green'}">
                 <div class="collect player2Collected">
                   <h1 class="title-in" id="collected">{{this.player2Collect.length / 3}}</h1>
                   <h4 class="playerName">{{players.player2}}</h4>
                 </div>
               </a>
-             <a class="btn" @click="bluePress" :class="{blue:whoPressed ==='non' || whoPressed ==='green', bluePressed:whoPressed ==='blue'}">
+
+             <a class="btn column" :class="{purple:whoPressed ==='non' || whoPressed ==='green', purplePressed:whoPressed ==='purple'}">
                 <div class="collect player1Collected">
                   <h1 class="title-in" id="collected">{{this.player1Collect.length / 3}}</h1>
                   <h4 class="playerName">{{players.player1}}</h4>
                 </div>
               </a>
-            <a class="button is-orange is-outlined roundedButton" >
-              <p id="time">{{formatTime()}}</p>
-            </a>
+
+            <score class = "column"
+            v-bind:cards = "player1Collect.length"
+            v-bind:nickname = "players.player1"
+            v-bind:color = "'purple'"
+            v-bind:gameStatus = "'copple'"
+            @pressEvent= "press"></score>
+
+            <clock class = "column"
+            v-bind:timeToPlay = "timeToPlay"
+            @timeOver= "gameOver"></clock>
           </div>
         </header>
         <div class="card-content fadeInDown">
@@ -28,7 +45,7 @@
               <!--{{JSON.stringify(cards)}}-->
                 <div v-for="(card, i) in cardsViewsOnTheTable" :key="card.index" class = "cardDiv" :class = "{notSet: notSet}">
                   <canvas class="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
-                  <canvas class="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{blueClicked: card.state === 'blueClicked', greenClicked: card.state === 'greenClicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
+                  <canvas class="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{purpleClicked: card.state === 'purpleClicked', greenClicked: card.state === 'greenClicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
                 </div>
               </div><!--end of cardsContainer-->
             <game-over class="game-over" v-if="pageState === 'over'"
@@ -45,15 +62,21 @@
 <script>
 import utils from '../js/utils.js'
 import store from '../js/store.js'
-import { CardView } from '../js/CardViews.js'
-import { CardsDeck } from '../js/CardsDeck.js'
+import clock from '@/components/clock.vue'
+import backGame, { CardsDeck } from '../js/backGame.js'
+import frontGame from '../js/frontGame.js'
 import gameOver from '@/components/gameOver.vue'
 import brandFooter from '@/components/brandFooter.vue'
+import help from '@/components/help.vue'
+import score from '@/components/score.vue'
 export default{
   name: 'offline2Players',
   components: {
     gameOver,
-    brandFooter
+    brandFooter,
+    clock,
+    help,
+    score
   },
   data () {
     return {
@@ -68,16 +91,12 @@ export default{
       player1Collect: [],
       player2Collect: [],
       set: [],
-      startTime: 0,
-      timeToPlay: 2 * 60 * 1000,
-      timeLeft: 2 * 60 * 1000,
-      runTimer: ''
+      timeToPlay: 4 * 60 * 1000,
+      hintState: 1
     }
   },
   created () {
-    this.cardsViewsOnTheTable = utils.createCanvases(this.cards.cardsDeckArray)
-    this.startTime = Date.now()
-    this.runTimer = setInterval(this.countDown, 100)
+    this.cardsViewsOnTheTable = frontGame.createCanvases(this.cards.cardsDeckArray)
   },
   mounted () {
     this.cardsViewsOnTheTable.forEach((card, i) => {
@@ -85,7 +104,7 @@ export default{
       card.cardCanvas = this.$refs[`card${i}`][0]
       card.drawCard()
     })
-    utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.CardsDeckArray)
+    backGame.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.CardsDeckArray)
     if (store.onlineUsersCopy.users.length !== 0) {
       this.updateMyStatus('onGame')
     }
@@ -95,23 +114,23 @@ export default{
      game
     *************************************/
     isSet: function () {
-      if (utils.isSet(this.set, 0, 1, 2)) {
+      if (backGame.isSet(this.set, 0, 1, 2)) {
         if (this.whoPressed === 'green') {
           this.player2Collect.push(...this.set)
-        } else if (this.whoPressed === 'blue') {
+        } else if (this.whoPressed === 'purple') {
           this.player1Collect.push(...this.set)
         }
         return true
       } else {
         this.notSet = true
-        utils.resetCardState(this.cardsViewsOnTheTable)
+        backGame.resetCardState(this.cardsViewsOnTheTable)
         return false
       }
     },
 
     clickedCard: function (card, i) {
       this.notSet = false
-      if (card.state === 'blueClicked' || card.state === 'greenClicked') {
+      if (card.state === 'purpleClicked' || card.state === 'greenClicked') {
         card.state = 'unclicked'
         this.set.pop()
       } else if (this.whoPressed !== 'non') {
@@ -121,7 +140,8 @@ export default{
 
         if (this.set.length === 3) {
           if (this.isSet()) {
-            this.cardsViewsOnTheTable = utils.switchCards(this.cardsViewsOnTheTable, this.cards.cardsDeckArray, this.set)
+            this.cardsViewsOnTheTable = backGame.switchCards(this.cardsViewsOnTheTable, this.cards.cardsDeckArray, this.set)
+            this.hintState = 1
             if (this.cards.cardsDeckArray.length <= 9) {
               this.cards = new CardsDeck()
             }
@@ -133,29 +153,15 @@ export default{
     /**************************************
      2 pleyers staf
     *************************************/
-    bluePress () {
-      this.whoPressed = 'blue'
-      setTimeout(() => {
-        this.whoPressed = 'non'
-        console.log(this.whoPressed)
-      }, 4000)
-      this.$forceUpdate()
-      console.log(this.whoPressed)
+    press (color) {
+      this.whoPressed = color
     },
-    greenPress () {
-      this.whoPressed = 'green'
-      setTimeout(() => {
-        this.whoPressed = 'non'
-        console.log(this.whoPressed)
-      }, 4000)
-      this.$forceUpdate()
-      console.log(this.whoPressed)
-    },
+
     collectByPlayer (card) {
       if (this.whoPressed === 'green') {
         card.state = 'greenClicked'
-      } else if (this.whoPressed === 'blue') {
-        card.state = 'blueClicked'
+      } else if (this.whoPressed === 'purple') {
+        card.state = 'purpleClicked'
       }
     },
     returnTheWinner () {
@@ -167,35 +173,29 @@ export default{
         return 'This Is A Tie!'
       }
     },
-    playAgain () {
-      this.player1Collect.splice(0)
-      this.player2Collect.splice(0)
-      this.pageState = 'game'
-      this.timeLeft = this.timeToPlay
-      this.startTime = Date.now()
-      this.updateMyStatus('onGame')
-      this.runTimer = setInterval(this.countDown, 100)
-      this.$forceUpdate()
-    },
 
     /*****************************
      * fitures
      *************************/
-    findSet () {
-      utils.findSetButton(this.cardsViewsOnTheTable)
-      this.$forceUpdate()
-    },
-    countDown () {
-      this.timeLeft = utils.countDown(this.startTime, this.timeToPlay)
-      if (this.timeLeft === 0) {
-        this.pageState = 'over'
-        clearInterval(this.runTimer)
-        this.updateMyStatus('availble')
-        this.$forceUpdate()
+    getHelp (cardsArray) {
+      if (this.hintState < 3) {
+        this.cardsViewsOnTheTable = cardsArray
+        this.hintState++
       }
     },
-    formatTime () {
-      return utils.formatTime(this.timeLeft)
+    playAgain () {
+      this.player1Collect.splice(0)
+      this.player2Collect.splice(0)
+      this.pageState = 'game'
+      this.updateMyStatus('onGame')
+      this.$forceUpdate()
+    },
+    gameOver () {
+      this.pageState = 'over'
+      this.resetCardsState()
+      this.hintState = 1
+      this.updateMyStatus('availble')
+      this.$forceUpdate()
     },
     updateMyStatus (status) {
       const userAndStatus = {
@@ -209,6 +209,12 @@ export default{
 </script>
 
 <style scoped>
+.column{
+  padding: 0;
+}
+.card-header{
+  padding: 0;
+}
 /*************************************
 2players game
 ***************************************/
@@ -228,12 +234,12 @@ export default{
   box-shadow: 0px 0px 0px 0px;
 }
 
-.blue {
+.purple {
   background-color: #d173d1;
   box-shadow:0 5px 0px 0px purple;
 }
 
-.bluePressed {
+.purplePressed {
   background-color: plum;
 }
 
@@ -241,7 +247,7 @@ export default{
   background-color: #48E68B;
 }
 
-.blue:hover {
+.purple:hover {
   background-color: plum;
 }
 
@@ -255,11 +261,11 @@ export default{
 }
 
 .greenClicked{
-  border: solid 3px #48E68B;
+  border: solid 3px #15B358;
 }
 
-.blueClicked{
-  border: solid 3px plum;
+.purpleClicked{
+  border: solid 3px purple;
 }
 
 .playerName{

@@ -18,12 +18,10 @@
 
 <script>
 import gameMenu from '@/components/nav.vue'
-import fourInosentCards from '@/components/fourInosentCards.vue'
 export default {
   name: 'nissim',
   components: {
-    gameMenu,
-    fourInosentCards
+    gameMenu
   },
   data () {
     return {

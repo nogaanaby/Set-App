@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import backGame, { CardsDeck } from '../js/backGame.js'
+import frontGame from '../js/frontGame.js'
 import utils from '../js/utils.js'
 import { CardView } from '../js/CardViews.js'
 import store from '../js/store.js'

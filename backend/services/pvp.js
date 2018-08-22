@@ -109,7 +109,7 @@ class Pvp {
      * game
      ******************/
     socket.on('acceptInvitation', (sender) => {
-      io.sockets.connected[socket.id].emit('fillCardsData', this.cards.cardsDataOnTheTable)
+      io.sockets.connected[socket.id].emit('getCards', this.cards.cardsDataOnTheTable)
       this.getSocketByNickname(io, sender).emit('getTheAccept', {
         socketId: socket.id,
         nickname: socket.nickname
@@ -117,7 +117,7 @@ class Pvp {
     })
 
     socket.on('letsStartPlay', (invited) => {
-      io.sockets.connected[socket.id].emit('fillCardsData', this.cards.cardsDataOnTheTable)
+      io.sockets.connected[socket.id].emit('getCards', this.cards.cardsDataOnTheTable)
       this.getSocketByNickname(io, invited).emit('closeM', this.cards.cardsDataOnTheTable)
     })
 

@@ -26,9 +26,11 @@ import offlineSignUp from '@/components/offlineSignUp'
 import brandFooter from '@/components/brandFooter'
 import invitation from '@/components/invitation.vue'
 import pause from '@/components/pause.vue'
-import fourInosentCards from '@/components/fourInosentCards.vue'
-import copyOfGame from '@/components/copyOfGame.vue'
+import empty from '@/components/empty.vue'
 import onlineGame from '@/components/onlineGame.vue'
+import clock from '@/components/clock.vue'
+import help from '@/components/help.vue'
+import score from '@/components/score.vue'
 
 export default {
   name: 'app',
@@ -44,9 +46,11 @@ export default {
     brandFooter,
     invitation,
     pause,
-    fourInosentCards,
-    copyOfGame,
-    onlineGame
+    empty,
+    onlineGame,
+    clock,
+    help,
+    score
   },
   data () {
     return {

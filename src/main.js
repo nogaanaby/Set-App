@@ -10,7 +10,6 @@ import gameOver from '@/components/gameOver'
 import start from '@/components/start'
 import practice from '@/components/practice'
 import footerNextPage from '@/components/footer'
-import fourInosentCards from '@/components/fourInosentCards'
 import offline2Players from '@/components/offline2Players'
 import onlineSignUp from '@/components/onlineSignUp'
 import offlineSignUp from '@/components/offlineSignUp'
@@ -19,8 +18,11 @@ import nissim from '@/components/nissim'
 import invitation from '@/components/invitation'
 import socketio from 'socket.io-client'
 import VueSocketIO from 'vue-socket.io'
-import copyOfGame from '@/components/copyOfGame'
+import empty from '@/components/empty'
 import onlineGame from '@/components/onlineGame'
+import clock from '@/components/clock'
+import help from '@/components/help'
+import score from '@/components/score'
 
 Vue.config.productionTip = false
 
@@ -104,19 +106,29 @@ const routes = [
     component: invitation
   },
   {
-    path: '/fourInosentCards',
-    name: 'fourInosentCards',
-    component: fourInosentCards
-  },
-  {
-    path: '/copyOfGame',
-    name: 'copyOfGame',
-    component: copyOfGame
+    path: '/empty',
+    name: 'empty',
+    component: empty
   },
   {
     path: '/onlineGame',
     name: 'onlineGame',
     component: onlineGame
+  },
+  {
+    path: '/clock',
+    name: 'clock',
+    component: clock
+  },
+  {
+    path: '/help',
+    name: 'help',
+    component: help
+  },
+  {
+    path: '/score',
+    name: 'score',
+    component: score
   }
 ]
 
