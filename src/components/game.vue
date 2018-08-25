@@ -67,7 +67,7 @@ export default{
       cards: new CardsDeck(),
       collectedCards: [],
       set: [],
-      timeToPlay: 1 * 60 * 1000,
+      timeToPlay: 2 * 60 * 1000,
       hintState: 1,
       playerFound: false
     }
@@ -177,6 +177,6 @@ export default{
   padding: 0;
 }
 .fitures{
-  margin: 0 9px;
+  margin: 0 7px;
 }
 </style>

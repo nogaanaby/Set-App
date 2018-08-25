@@ -130,6 +130,7 @@ export default {
   .cardsContainer {
     min-width: 100%;
     height: 80%;
+    padding-top: 20px;
   }
 
   .menu-links, a{
@@ -266,7 +267,7 @@ GAME BOARD
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  margin: 0 auto;
+  margin: auto;
 }
 
 .menu-fitures{/*the rounded buttons on the top*/
@@ -290,7 +291,7 @@ GAME BOARD
   }
   .cardDiv {
     width: 25%;
-    height: 39%;
+    height: 37%;
   }
 }
 .cardDiv {
