@@ -41,19 +41,19 @@ const backGame = {
               ? this.findSet(array, x, y + 1, y + 2)
               : this.findSet(array, x, y, z + 1))
   },
-
-  allwaysSetOnTheTable (cardsViewsArray, cardsDeck) {
-    while (this.findSet(cardsViewsArray, 0, 1, 2) === 'no set here' || this.haveTheSameCard(cardsViewsArray)) {
-      cardsViewsArray[1].setNewCardAtrr(this.takeNewCard(cardsDeck))
-    }
-  },
-  haveTheSameCard (cardsViewsArray) {
+  haveTheSameCard (cardsViewsArray, cardsDeck) {
     for (let i = 0; i < cardsViewsArray.length; i++) {
       for (let j = i + 1; j < cardsViewsArray.length - 1; j++) {
-        if (cardsViewsArray[i] === cardsViewsArray[j]) {
-          return true
+        if (cardsViewsArray[i].getCardData === cardsViewsArray[j].getCardData) {
+          cardsViewsArray[i].setNewCardAtrr(this.takeNewCard(cardsDeck))
         }
       }
+    }
+  },
+  allwaysSetOnTheTable (cardsViewsArray, cardsDeck) {
+    while (this.findSet(cardsViewsArray, 0, 1, 2) === 'no set here') {
+      cardsViewsArray[1].setNewCardAtrr(this.takeNewCard(cardsDeck))
+      this.haveTheSameCard(cardsViewsArray, cardsDeck)
     }
   },
   switchCards (cardVArray, cardsArray, setArray) {

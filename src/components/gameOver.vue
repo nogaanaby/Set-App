@@ -1,7 +1,7 @@
 <template>
   <div class="gameOver">
         <header class="fadeInDown">
-          <h1 class="noga-title">{{fathersTitle}}</h1>
+          <h1 class="huge-title">{{fathersTitle}}</h1>
         </header>
         <div class="myScore bounceIn">
           <p>You Collected: </p>

@@ -7,14 +7,15 @@
       </p>
       </div>
     </a>
-    <a v-if="gameStatus==='copple'" @click="press" class="button is-outlined roundedButton btn" :class="{greenbutton: this.color==='green', purpleButton: this.color==='purple'}" >
+    <a v-if="gameStatus==='copple'" @click="press" class="button is-outlined roundedButton btn" :class="{greenbutton: this.color==='green' && this.presser !=='green', purplebutton: this.color==='purple' && this.presser !=='purple',
+    greenPressed:presser ==='green', purplePressed:presser ==='purple'}" >
       <div :class="{bounceIn: playerFound}">
       <p class="title-in">
         {{cards / 3}}
       </p>
       </div>
     </a>
-    <span class="tag game-tags" :class="{greenBackground: this.color==='green', greyBackground: this.color==='grey',purpleBackground: this.color==='purple'}">{{nickname}}</span>
+    <span class="tag game-tags" :class="{greenBackground: this.color==='green', greyBackground: this.color==='grey', purpleBackground: this.color==='purple'}">{{nickname}}</span>
     <button v-if=false class="button btn"
       @click="press" :class="{tagIsGreen: this.color==='green',
       tagIsPurple: this.color==='purple', greenPressed:presser ==='green',
@@ -94,24 +95,13 @@ export default {
   background-color: plum;
 }
 
-.greenPressed {
-  background-color: lightgreen;
-  border: 1px solid #23D160;
-  box-shadow: none;
-}
-
-.purplePressed{
-  background-color: plum;
-  border: 1px solid purple;
-  box-shadow: none;
-}
-
 /********* 2 players staff*/
   .btn {
   border-radius: 50%;
   font-size: 1em;
   text-decoration: none;
   font-family: 'Jua';
+  border: none;
 }
 
 .btn:active {
@@ -162,21 +152,11 @@ export default {
 
 /* tablet & mobile */
 @media only screen and (max-width: 767px) {
-  .purpleButton{
-    width: 20%;
-    float: right;
-  }
-  .greenButton{
-    width: 20%;
-    float: left;
-  }
+
 }
 /* desktop */
 @media only screen and (min-width: 768px) {
-  .purpleButton{
-    display:flex;
-    order: 3;
-  }
+
 }
 @media only screen and (min-width: 560px) {
   .btn {

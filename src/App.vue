@@ -31,6 +31,7 @@ import onlineGame from '@/components/onlineGame.vue'
 import clock from '@/components/clock.vue'
 import help from '@/components/help.vue'
 import score from '@/components/score.vue'
+import nissim from '@/components/nissim.vue'
 
 export default {
   name: 'app',
@@ -50,7 +51,8 @@ export default {
     onlineGame,
     clock,
     help,
-    score
+    score,
+    nissim
   },
   data () {
     return {
@@ -146,7 +148,7 @@ export default {
     color: black;
   }
   .noga-title{
-    font-size: 2em;
+    font-size: 1em;
   }
   #time{
     font-size: 0.7em;
@@ -237,6 +239,10 @@ a:hover{
 .noga{
    font-family: 'Jua', cursive;
    color: #404040;
+}
+.huge-title{
+  font-size: 2em;
+  font-family: 'Jua', cursive;  
 }
 .center-medium-title{
   text-align: center;
