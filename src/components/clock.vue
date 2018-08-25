@@ -1,9 +1,9 @@
 <template>
-  <div class="clock">
+  <div class="clock fitures">
     <a class="button is-orange is-outlined roundedButton clock" >
       <p id="time">{{formatTime(timeLeft)}}</p>
     </a>
-    <span class="tag">Time</span>
+    <span class="tag game-tags">Time</span>
   </div>
 </template>
 
@@ -61,7 +61,9 @@ export default {
 }
 .tag{
   background: #FF6601;
-  width: 40%;
-  margin: 0 auto;
+}
+#time{
+  font-size: 1em;
+  font-family: 'jua';
 }
 </style>

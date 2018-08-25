@@ -3,27 +3,30 @@
       <div class="card">
         <header class="card-header fadeInDown" v-if="pageState === 'game'">
           <div class="menu-fitures columns is-mobile">
-            <help class = "column"
+            <help class = "column fiture2"
             v-bind:cardsViewsArray = "cardsViewsOnTheTable"
             v-bind:hintState = "hintState"
             @findSetEvent= "getHelp"></help>
             
-            <score class = "column"
+            <score class = "column fiture2"
             v-bind:cards = "player2Collect.length"
             v-bind:nickname = "players.player2"
             v-bind:color = "'green'"
             v-bind:gameStatus = "'copple'"
-            @pressEvent= "press"></score>
+            v-bind:playerFound = "player2Found"
+            @pressEvent= "press"
+            @resetCardsEvent = "resetCardsState"></score>
 
-            <score class = "column"
+            <score class = "column fiture2"
             v-bind:cards = "player1Collect.length"
             v-bind:nickname = "players.player1"
             v-bind:color = "'purple'"
             v-bind:gameStatus = "'copple'"
+            v-bind:playerFound = "player1Found"
             @pressEvent= "press"
             @resetCardsEvent = "resetCardsState"></score>
 
-            <clock class = "column"
+            <clock class = "column fiture2"
             v-bind:timeToPlay = "timeToPlay"
             @timeOver= "gameOver"></clock>
           </div>
@@ -80,7 +83,9 @@ export default{
       player2Collect: [],
       set: [],
       timeToPlay: 4 * 60 * 1000,
-      hintState: 1
+      hintState: 1,
+      player1Found: false,
+      player2Found: false
     }
   },
   created () {
@@ -205,6 +210,10 @@ export default{
 }
 .card-header{
   padding: 0;
+}
+.fiture2{
+  width: 70%;
+  height: 70%;
 }
 /*************************************
 2players game

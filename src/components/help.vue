@@ -1,9 +1,9 @@
 <template>
-  <div class="help">
+  <div class="help fitures">
     <a class="button roundedButton" :class='{isYellow: hintState < 3}' @click = "hint">
       <img src='@/assets/tellMe.png'>
     </a>
-    <span class="tag is-warning">Hint</span>
+    <span class="tag is-warning game-tags">Hint</span>
   </div>
 </template>
 
@@ -54,7 +54,6 @@ export default {
 </script>
 <style scoped>
 .help{
-  margin: 0;
   display: flex;
   flex-direction: column;
 }
@@ -65,9 +64,5 @@ export default {
 
 .isYellow:hover{
   background-color: #FFDD58;
-}
-.tag{
-  width: 40%;
-  margin: 0 auto;
 }
 </style>

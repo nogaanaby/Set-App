@@ -11,7 +11,8 @@
             v-bind:cards = "collectedCards.length"
             v-bind:nickname = "'sets'"
             v-bind:color = "'green'"
-            v-bind:gameStatus = "'single'"></score>
+            v-bind:gameStatus = "'single'"
+            v-bind:playerFound = "playerFound"></score>
             <clock class = "column"
             v-bind:timeToPlay = "timeToPlay"
             @timeOver= "gameOver"></clock>
@@ -29,6 +30,7 @@
                 v-bind:fathersTitle="'Game Over'"
                 v-bind:fathersColumn1="'you collected ' + collectedCards.length / 3 + ' sets'"
                 v-bind:fathersColumn2="'you collected ' + collectedCards.length + ' cards'"
+                v-bind:collection="collectedCards.length / 3"
                 @playAgainEvent= "playAgain"></game-over>
         </div>
       </div>
@@ -65,8 +67,9 @@ export default{
       cards: new CardsDeck(),
       collectedCards: [],
       set: [],
-      timeToPlay: 2 * 60 * 1000,
-      hintState: 1
+      timeToPlay: 1 * 60 * 1000,
+      hintState: 1,
+      playerFound: false
     }
   },
   created () {
@@ -90,14 +93,17 @@ export default{
     isSet: function () {
       if (backGame.isSet(this.set, 0, 1, 2)) {
         this.collectedCards.push(...this.set)
+        this.playerFound = true
+        setTimeout(() => {
+          this.playerFound = false
+        }, 1000)
         return true
       } else {
         this.notSet = true
-        this.resetCardsState()
+        backGame.resetCardState(this.cardsViewsOnTheTable)
         return false
       }
     },
-
     clickedCard: function (card, i) {
       this.notSet = false
       if (card.state === 'clicked') {
@@ -110,19 +116,25 @@ export default{
 
         if (this.set.length === 3) {
           if (this.isSet()) {
-            this.cardsViewsOnTheTable = backGame.switchCards(this.cardsViewsOnTheTable, this.cards.cardsDeckArray, this.set)
-            this.hintState = 1
-            if (this.cards.cardsDeckArray.length <= 9) {
-              this.cards = new CardsDeck()
-            }
+            this.takeCardsAndHaveFun()
+            this.flipDeck()
           }
           this.set.splice(0)
         }
       }
     }, // end of click
 
-    resetCardsState: function () {
-      this.cardsViewsOnTheTable.forEach((element) => { element.state = 'unclicked' })
+    takeCardsAndHaveFun () {
+      this.cardsViewsOnTheTable = backGame.switchCards(this.cardsViewsOnTheTable, this.cards.cardsDeckArray, this.set)
+      this.hintState = 1
+      setTimeout(() => {
+        backGame.resetCardState(this.cardsViewsOnTheTable)
+      }, 1000)
+    },
+    flipDeck () {
+      if (this.cards.cardsDeckArray.length <= 10) {
+        this.cards = new CardsDeck()
+      }
     },
     /*****************************
      * fitures
@@ -141,7 +153,7 @@ export default{
     },
     gameOver () {
       this.pageState = 'over'
-      this.resetCardsState()
+      backGame.resetCardState(this.cardsViewsOnTheTable)
       this.hintState = 1
       this.updateMyStatus('availble')
       this.$forceUpdate()
@@ -163,5 +175,8 @@ export default{
 }
 .card-header{
   padding: 0;
+}
+.fitures{
+  margin: 0 9px;
 }
 </style>

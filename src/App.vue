@@ -114,6 +114,7 @@ export default {
     margin: 0;
     font-size: 2em;
     color: black;
+    font-family: 'Jua';
   }
   .noga-title{
     font-size: 1.5em;
@@ -135,16 +136,16 @@ export default {
     font-size: 0.7em;
   }
   .roundedButton{
-    height: 50px;
-    width: 50px;
+    height: 60px;
+    width: 60px;
   }
   .title-in{
     margin: 0;
-    font-size: 1.2em;
+    font-size: 1.7em;
     color: black;
   }
   .noga-title{
-    font-size: 1.3em;
+    font-size: 2em;
   }
   #time{
     font-size: 0.7em;
@@ -252,6 +253,10 @@ a:hover{
   width: 50%;
   margin: 5% 10%;
 }
+.game-tags{
+  width: 50%;
+  margin: 0 auto;
+}
 
 /**************************************
 GAME BOARD
@@ -297,7 +302,8 @@ GAME BOARD
   margin: 2% 2%;
 }
 .clicked {
-  border: solid 2px #33cccc;
+  border: solid 3px #6fe4e4;
+  box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.2), 0 6px 8px 0 rgba(0, 0, 0, 0.19);
 }
 .takeSet {
     opacity: 1;

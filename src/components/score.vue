@@ -1,12 +1,21 @@
 <template>
-  <div class="score">
-    <a class="button is-outlined roundedButton" :class="{isGreen: this.color==='green', isPurple: this.color==='purple'}" >
-      <h1 class="title-in">
+  <div class="score fitures">
+    <a v-if="gameStatus==='single'" class="button is-outlined roundedButton" :class="{greenBorder: this.color==='green', purpleBorder: this.color==='purple'}" >
+      <div :class="{bounceIn: playerFound}">
+      <p class="title-in">
         {{cards / 3}}
-      </h1>
+      </p>
+      </div>
     </a>
-    <span v-if="gameStatus==='single'" class="tag" :class="{green: this.color==='green', grey: this.color==='grey'}">{{nickname}}</span>
-    <button v-if="gameStatus==='copple'" class="button btn"
+    <a v-if="gameStatus==='copple'" @click="press" class="button is-outlined roundedButton btn" :class="{greenbutton: this.color==='green', purpleButton: this.color==='purple'}" >
+      <div :class="{bounceIn: playerFound}">
+      <p class="title-in">
+        {{cards / 3}}
+      </p>
+      </div>
+    </a>
+    <span class="tag game-tags" :class="{greenBackground: this.color==='green', greyBackground: this.color==='grey',purpleBackground: this.color==='purple'}">{{nickname}}</span>
+    <button v-if=false class="button btn"
       @click="press" :class="{tagIsGreen: this.color==='green',
       tagIsPurple: this.color==='purple', greenPressed:presser ==='green',
       purplePressed:presser ==='purple'}">{{nickname}}</button>
@@ -20,7 +29,7 @@ export default {
   components: {
 
   },
-  props: ['cards', 'nickname', 'color', 'gameStatus'],
+  props: ['cards', 'nickname', 'color', 'gameStatus', 'playerFound'],
   data () {
     return {
       presser: 'non'
@@ -38,6 +47,11 @@ export default {
         this.$emit('pressEvent', 'non')
         this.$emit('resetCardsEvent')
       }, 4000)
+    },
+    popScore () {
+      setTimeout(() => {
+        this.$emit('collectEvent', false)
+      }, 1000)
     }
   }
 }
@@ -45,26 +59,24 @@ export default {
 </script>
 <style scoped>
 .score{
-  margin: 0;
   display: flex;
   flex-direction: column;
 }
 
-.tag{
-  width: 40%;
-  margin: 0 auto;
-}
-.green{
+.greenBackground{
   background-color: #23D160;
 }
-.grey{
+.greyBackground{
   background-color: lightgray;
 }
-.isGreen{
+.purpleBackground{
+  background-color: plum;
+}
+.greenBorder{
   border:1px solid #23D160;
 }
 
-.isGreen:hover{
+.greenBorder:hover{
   background-color: #23D160;
 }
 
@@ -74,48 +86,14 @@ export default {
   margin: 0 auto;
   box-shadow:0 2.5px 0px 0px #15B358;
 }
-.isPurple{
+.purpleBorder{
   border:1px solid purple;
 }
 
-.isPurple:hover{
+.purpleBorder:hover{
   background-color: plum;
 }
 
-.tagIsPurple{
-  background: #d173d1;
-  width: 40%;
-  margin: 0 auto;
-  box-shadow:0 2.5px 0px 0px purple;
-}
-.btn{
-  border: none;
-  vertical-align: middle;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border-radius: 4px;
-  color: #4a4a4a;
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  font-size: 0.75rem;
-  height: 2em;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  line-height: 1.5;
-  padding-left: 0.75em;
-  padding-right: 0.75em;
-  white-space: nowrap;
-  font-family: 'Jua';
-}
-
-.btn:active {
-  transform: translate(0px, 5px);
-  -webkit-transform: translate(0px, 5px);
-  box-shadow: 0px 0px 0px 0px;
-}
 .greenPressed {
   background-color: lightgreen;
   border: 1px solid #23D160;
@@ -128,4 +106,88 @@ export default {
   box-shadow: none;
 }
 
+/********* 2 players staff*/
+  .btn {
+  border-radius: 50%;
+  font-size: 1em;
+  text-decoration: none;
+  font-family: 'Jua';
+}
+
+.btn:active {
+  transform: translate(0px, 5px);
+  -webkit-transform: translate(0px, 5px);
+  box-shadow: 0px 0px 0px 0px;
+}
+
+.purplebutton {
+  background-color: #d173d1;
+  box-shadow:0 5px 0px 0px purple;
+}
+
+.purplePressed {
+  background-color: plum;
+  transform: translate(0px, 5px);
+  -webkit-transform: translate(0px, 5px);
+  box-shadow: 0px 0px 0px 0px;
+}
+
+.greenPressed {
+  background-color: #48E68B;
+  transform: translate(0px, 5px);
+  -webkit-transform: translate(0px, 5px);
+  box-shadow: 0px 0px 0px 0px;
+}
+
+.purplebutton:hover {
+  background-color: plum;
+}
+
+.greenbutton {
+  background-color: #23D160;
+  box-shadow: 0px 5px 0px 0px #15B358;
+}
+
+.greenbutton:hover {
+  background-color: #48E68B;
+}
+
+.greenClicked{
+  border: solid 3px #15B358;
+}
+
+.purpleClicked{
+  border: solid 3px purple;
+}
+
+/* tablet & mobile */
+@media only screen and (max-width: 767px) {
+  .purpleButton{
+    width: 20%;
+    float: right;
+  }
+  .greenButton{
+    width: 20%;
+    float: left;
+  }
+}
+/* desktop */
+@media only screen and (min-width: 768px) {
+  .purpleButton{
+    display:flex;
+    order: 3;
+  }
+}
+@media only screen and (min-width: 560px) {
+  .btn {
+    width: 60px;
+    height: 60px;
+  }
+}
+@media only screen and (max-width: 559px) {
+  .btn {
+    width: 60px;
+    height: 60px;
+  }
+}
 </style>
