@@ -45,20 +45,19 @@ const backGame = {
               ? this.findSet(array, x, y + 1, y + 2)
               : this.findSet(array, x, y, z + 1))
   },
-  haveTheSameCard (cardsViewsArray, cardsDeck) {
-    for (let i = 0; i < cardsViewsArray.length; i++) {
-      for (let j = i + 1; j < cardsViewsArray.length - 1; j++) {
-        if (cardsViewsArray[i].getCardData === cardsViewsArray[j].getCardData) {
-          cardsViewsArray[i].setNewCardAtrr(this.takeNewCard(cardsDeck))
-          this.allwaysSetOnTheTable(cardsViewsArray, cardsDeck, i)
+  haveTheSameCard (cardsViewsArray) {
+    for (let i = 0; i < cardsViewsArray.length - 1; i++) {
+      for (let j = i + 1; j < cardsViewsArray.length; j++) {
+        if (cardsViewsArray[i].getCardData() === cardsViewsArray[j].getCardData()) {
+          return (i, j)
         }
       }
     }
+    return 'non'
   },
   allwaysSetOnTheTable (cardsViewsArray, cardsDeck, i) {
-    while (this.findSet(cardsViewsArray, 0, 1, 2) === 'no set here') {
+    while (this.findSet(cardsViewsArray, 0, 1, 2) === 'no set here' || this.haveTheSameCard(cardsViewsArray) !== 'non') {
       cardsViewsArray[i].setNewCardAtrr(this.takeNewCard(cardsDeck))
-      // this.haveTheSameCard(cardsViewsArray, cardsDeck)
     }
   },
   switchCards (cardVArray, cardsArray, setArray) {
@@ -66,8 +65,8 @@ const backGame = {
     let oneOfThemIndex = 0
     tempArray.forEach((card, i) => {
       if (setArray[0] === card || setArray[1] === card || setArray[2] === card) {
-        tempArray[i].setNewCardAtrr(this.takeNewCard(cardsArray))
         tempArray[i].state = 'isTaken'
+        tempArray[i].setNewCardAtrr(this.takeNewCard(cardsArray))
         oneOfThemIndex = i
       }
     })

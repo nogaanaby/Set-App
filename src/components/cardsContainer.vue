@@ -45,19 +45,11 @@ export default{
     }
     if (this.cardsDeck.length < this.length) {
       this.cardsDeck = this.cardsData
-      this.haveTheSameCard(this.cardViews, this.cardsDeck)
+      backGame.haveTheSameCard(this.cardViews, this.cardsDeck)
     }
   },
   methods: {
-    haveTheSameCard (cardsViewsArray, cardsDeck) {
-      for (let i = 0; i < cardsViewsArray.length; i++) {
-        for (let j = i + 1; j < cardsViewsArray.length - 1; j++) {
-          if (cardsViewsArray[i].getCardData === cardsViewsArray[j].getCardData) {
-            cardsViewsArray[i].setNewCardAtrr(backGame.takeNewCard(cardsDeck))
-          }
-        }
-      }
-    },
+
     allwaysSetOnTheTable (cardsViewsArray, cardsDeck, i) {
       while (backGame.findSet(cardsViewsArray, 0, 1, 2) === 'no set here') {
         cardsViewsArray[i].setNewCardAtrr(backGame.takeNewCard(cardsDeck))

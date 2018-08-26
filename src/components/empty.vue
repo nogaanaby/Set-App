@@ -1,7 +1,7 @@
 <template>
   <div class="empty">
         <cards-container
-        v-bind:cardsData = "cardsData.cardsDeckArray"
+        v-bind:cardsData = "cardsData"
         v-bind:length = "length"></cards-container>
   </div>
 </template>
@@ -24,8 +24,14 @@ export default{
   },
   data () {
     return {
-      length: 9,
-      cardsData: new CardsDeck()
+      length: 6,
+      cardsData: [
+        backGame.cardObject('rect', 'red', 3, 'full'),
+        backGame.cardObject('rect', 'blue', 3, 'full'),
+        backGame.cardObject('rect', 'purple', 3, 'full'),
+        backGame.cardObject('rect', 'green', 3, 'full'),
+        backGame.cardObject('rect', 'yellow', 3, 'full')
+      ]
     }
   },
   created () {

@@ -29,7 +29,7 @@
                 v-bind:winner="'you'"
                 v-bind:fathersTitle="'Game Over'"
                 v-bind:mainCollection = "collectedCards.length / 3"
-                v-bind:gameStatus="single"
+                v-bind:gameStatus="'single'"
                 @playAgainEvent= "playAgain"></game-over>
         </div>
       </div>
@@ -115,8 +115,8 @@ export default{
 
         if (this.set.length === 3) {
           if (this.isSet()) {
-            this.takeCardsAndHaveFun()
             this.flipDeck()
+            this.takeCardsAndHaveFun()
           }
           this.set.splice(0)
         }
@@ -134,7 +134,6 @@ export default{
       if (this.cards.cardsDeckArray.length <= 10) {
         console.log('flipping deck')
         this.cards = new CardsDeck()
-        backGame.haveTheSameCard(this.cardsViewsOnTheTable, this.cards.cardsDeckArray)
       }
     },
     /*****************************
