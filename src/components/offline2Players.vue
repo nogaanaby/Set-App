@@ -7,7 +7,7 @@
             v-bind:cardsViewsArray = "cardsViewsOnTheTable"
             v-bind:hintState = "hintState"
             @findSetEvent= "getHelp"></help>
-            
+
             <score class = "column fiture2"
             v-bind:cards = "player2Collect.length"
             v-bind:nickname = "players.player2"
@@ -40,8 +40,10 @@
                 </div>
               </div><!--end of cardsContainer-->
             <game-over class="game-over" v-if="pageState === 'over'"
-              v-bind:collectedCardsLength="player1Collect.length"
               v-bind:fathersTitle="returnTheWinner()"
+              v-bind:winner="winnersNick"
+              v-bind:mainCollection = "biggestCollection / 3"
+              v-bind:gameStatus = "'copple'"
               v-bind:fathersColumn1="players.player1 + ' collected ' + player1Collect.length / 3 + ' sets'"
               v-bind:fathersColumn2="players.player2 + ' collected ' + player2Collect.length / 3 + ' sets'"
               @playAgainEvent= "playAgain"></game-over>
@@ -85,7 +87,9 @@ export default{
       timeToPlay: 4 * 60 * 1000,
       hintState: 1,
       player1Found: false,
-      player2Found: false
+      player2Found: false,
+      winnersNick: '',
+      biggestCollection: 0
     }
   },
   created () {
@@ -97,7 +101,7 @@ export default{
       card.cardCanvas = this.$refs[`card${i}`][0]
       card.drawCard()
     })
-    backGame.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.CardsDeckArray)
+    backGame.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.CardsDeckArray, 1)
     if (store.onlineUsersCopy.users.length !== 0) {
       this.updateMyStatus('onGame')
     }
@@ -162,10 +166,16 @@ export default{
     },
     returnTheWinner () {
       if (this.player1Collect > this.player2Collect) {
+        this.biggestCollection = this.player1Collect.length
+        this.winnersNick = this.players.player1
         return 'Congradulations! ' + this.players.player1 + ' Is The Winner!'
       } else if (this.player1Collect < this.player2Collect) {
+        this.biggestCollection = this.player2Collect.length
+        this.winnersNick = this.players.player2
         return 'Congradulations! ' + this.players.player2 + ' Is The Winner!'
       } else {
+        this.biggestCollection = this.player1Collect.length
+        this.winnersNick = 'you'
         return 'This Is A Tie!'
       }
     },

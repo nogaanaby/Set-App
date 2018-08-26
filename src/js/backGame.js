@@ -12,6 +12,10 @@ const backGame = {
   cardTable staff
   *************************************/
   takeNewCard: (array) => (array.splice((Math.floor(Math.random() * array.length)), 1)[0]),
+  pickRandomCard: (array) => {
+    const randomIndex = Math.floor(Math.random() * array.length)
+    return array[randomIndex]
+  },
   resetCardState (cardViewsArray) {
     cardViewsArray.forEach((element) => { element.state = 'unclicked' })
   },
@@ -46,25 +50,28 @@ const backGame = {
       for (let j = i + 1; j < cardsViewsArray.length - 1; j++) {
         if (cardsViewsArray[i].getCardData === cardsViewsArray[j].getCardData) {
           cardsViewsArray[i].setNewCardAtrr(this.takeNewCard(cardsDeck))
+          this.allwaysSetOnTheTable(cardsViewsArray, cardsDeck, i)
         }
       }
     }
   },
-  allwaysSetOnTheTable (cardsViewsArray, cardsDeck) {
+  allwaysSetOnTheTable (cardsViewsArray, cardsDeck, i) {
     while (this.findSet(cardsViewsArray, 0, 1, 2) === 'no set here') {
-      cardsViewsArray[1].setNewCardAtrr(this.takeNewCard(cardsDeck))
+      cardsViewsArray[i].setNewCardAtrr(this.takeNewCard(cardsDeck))
       // this.haveTheSameCard(cardsViewsArray, cardsDeck)
     }
   },
   switchCards (cardVArray, cardsArray, setArray) {
     const tempArray = cardVArray
+    let oneOfThemIndex = 0
     tempArray.forEach((card, i) => {
       if (setArray[0] === card || setArray[1] === card || setArray[2] === card) {
         tempArray[i].setNewCardAtrr(this.takeNewCard(cardsArray))
         tempArray[i].state = 'isTaken'
+        oneOfThemIndex = i
       }
     })
-    this.allwaysSetOnTheTable(tempArray, cardsArray)
+    this.allwaysSetOnTheTable(tempArray, cardsArray, oneOfThemIndex)
     return tempArray
   }
 }

@@ -32,6 +32,7 @@ import clock from '@/components/clock.vue'
 import help from '@/components/help.vue'
 import score from '@/components/score.vue'
 import nissim from '@/components/nissim.vue'
+import cardsContainer from '@/components/cardsContainer.vue'
 
 export default {
   name: 'app',
@@ -52,7 +53,8 @@ export default {
     clock,
     help,
     score,
-    nissim
+    nissim,
+    cardsContainer
   },
   data () {
     return {
@@ -242,7 +244,7 @@ a:hover{
 }
 .huge-title{
   font-size: 2em;
-  font-family: 'Jua', cursive;  
+  font-family: 'Jua', cursive;
 }
 .center-medium-title{
   text-align: center;

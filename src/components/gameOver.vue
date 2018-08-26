@@ -4,12 +4,12 @@
           <h1 class="huge-title">{{fathersTitle}}</h1>
         </header>
         <div class="myScore bounceIn">
-          <p>You Collected: </p>
-          <h1 class="title-is-big">{{collection}}</h1>
+          <p>{{winner}} Collected: </p>
+          <h1 class="title-is-big">{{mainCollection}}</h1>
           <p>Sets</p>
         </div>
           <a class="button is-medium is-success playAgain" @click = "PlayAgain()">Play Again</a>
-          <div class="columns is-mobile gameOver">
+          <div v-show="gameStatus==='copple'" class="columns is-mobile gameOver">
             <p class="column collected1">
               {{fathersColumn1}}
             </p>
@@ -26,7 +26,7 @@ export default{
   components: {
 
   },
-  props: ['collectedCardsLength', 'fathersTitle', 'fathersColumn2', 'fathersColumn1', 'collection'],
+  props: ['fathersTitle', 'fathersColumn2', 'fathersColumn1', 'winner', 'gameStatus', 'mainCollection'],
   data () {
     return {
       pageState: 'game',

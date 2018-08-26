@@ -59,7 +59,7 @@ export default {
 }
 
 .isYellow{
-  border:1px solid #FFDD58;  
+  border:1px solid #FFDD58;
 }
 
 .isYellow:hover{

@@ -23,6 +23,7 @@ import onlineGame from '@/components/onlineGame'
 import clock from '@/components/clock'
 import help from '@/components/help'
 import score from '@/components/score'
+import cardsContainer from '@/components/cardsContainer.vue'
 
 Vue.config.productionTip = false
 
@@ -129,6 +130,11 @@ const routes = [
     path: '/score',
     name: 'score',
     component: score
+  },
+  {
+    path: '/cardsContainer',
+    name: 'cardsContainer',
+    component: cardsContainer
   }
 ]
 

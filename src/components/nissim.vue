@@ -1,9 +1,6 @@
 <template>
   <div class="template-div">
         <h1>Welcome</h1>
-        <empty
-        v-bind:cardsData = "cardsData.cardsDeckArray"
-        v-bind:length = "length"></empty>
         <input placeholder="choose nickname" v-model="nickname"/>
         <p>Click here to make a POST /pvp/register request:</p>
         <button @click="pvpRegister">Register with nickname {{nickname}}</button>

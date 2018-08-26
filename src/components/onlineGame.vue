@@ -86,7 +86,7 @@ export default{
     this.findTheOpponent()
   },
   mounted () {
-    // utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.CardsDeckArray)
+    // utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.CardsDeckArray, 1)
     if (store.onlineUsersCopy.users.length !== 0) {
       this.updateMyStatus('onGame')
     }

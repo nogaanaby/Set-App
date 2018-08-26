@@ -26,11 +26,10 @@
             </div>
           </div>
               <game-over v-if="pageState === 'over'"
-                v-bind:collectedCardsLength="collectedCards.length"
+                v-bind:winner="'you'"
                 v-bind:fathersTitle="'Game Over'"
-                v-bind:fathersColumn1="'you collected ' + collectedCards.length / 3 + ' sets'"
-                v-bind:fathersColumn2="'you collected ' + collectedCards.length + ' cards'"
-                v-bind:collection="collectedCards.length / 3"
+                v-bind:mainCollection = "collectedCards.length / 3"
+                v-bind:gameStatus="single"
                 @playAgainEvent= "playAgain"></game-over>
         </div>
       </div>
@@ -81,7 +80,7 @@ export default{
       card.cardCanvas = this.$refs[`card${i}`][0]
       card.drawCard()
     })
-    backGame.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.cardsDeckArray)
+    backGame.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.cardsDeckArray, 1)
     if (store.onlineUsersCopy.users.length !== 0) {
       this.updateMyStatus('onGame')
     }
@@ -133,7 +132,9 @@ export default{
     },
     flipDeck () {
       if (this.cards.cardsDeckArray.length <= 10) {
+        console.log('flipping deck')
         this.cards = new CardsDeck()
+        backGame.haveTheSameCard(this.cardsViewsOnTheTable, this.cards.cardsDeckArray)
       }
     },
     /*****************************
