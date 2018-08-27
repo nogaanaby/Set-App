@@ -17,6 +17,7 @@ export default {
   props: ['cardsViewsArray', 'hintState'],
   data () {
     return {
+      setCard: ''
     }
   },
   mounted () {
@@ -26,20 +27,37 @@ export default {
     signTheCard (setCard) {
       this.cardsViewsArray.forEach((card, i) => {
         if (setCard === card) {
-          this.cardsViewsArray[i].state = 'toldMe'
+          return this.cardsViewsArray[i]
         }
       })
     },
     hint () {
       const setArray = backGame.findSet(this.cardsViewsArray, 0, 1, 2)
       if (this.hintState === 1) {
-        this.signTheCard(setArray[0])
+        this.setCard = this.signTheCard(setArray[0])
       } else if (this.hintState === 2) {
-        this.signTheCard(setArray[1])
+        this.setCard = this.signTheCard(setArray[1])
       }
-      console.log('hint state: ' + this.hintState)
-      this.$emit('findSetEvent', this.cardsViewsArray)
+
+      this.$emit('findSetEvent', this.setCard)
     },
+    // signTheCard (setCard) {
+    //   this.cardsViewsArray.forEach((card, i) => {
+    //     if (setCard === card) {
+    //       this.cardsViewsArray[i].state = 'toldMe'
+    //     }
+    //   })
+    // },
+    // hint () {
+    //   const setArray = backGame.findSet(this.cardsViewsArray, 0, 1, 2)
+    //   if (this.hintState === 1) {
+    //     this.signTheCard(setArray[0])
+    //   } else if (this.hintState === 2) {
+    //     this.signTheCard(setArray[1])
+    //   }
+    //   console.log('hint state: ' + this.hintState)
+    //   this.$emit('findSetEvent', this.cardsViewsArray)
+    // },
     findSetButton () {
       const setArray = backGame.findSet(this.cardsViewsArray, 0, 1, 2)
       this.cardsViewsArray.forEach((card, i) => {

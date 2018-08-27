@@ -1,16 +1,17 @@
 to add the game
 
-animations- library or my one css animations file
+current:
 
-MOBILE!!! - make sure the game and start page is ok and arrange the practice and instractions page
-game : end of game + clock
+the cardsData main array in the server is the same one all the time
+כשחשקן אחד לוחץ על קלץ השני יכול לתפוס לו והמחשב חושב שאם אתה לוחץ 3 פעמים על אותו קלף, זה סט - קיצר שאי יהיה אפשר "לתפוס" - 5 שניות תפסן לכל שחקן ואחרי שהוא לוקח סט זה נגמר
+finish the 'hint' button
+the 'play again' button on online game
 
-design - there are staff I can improv, dorn will be the guy dont spend time on it
+update offline2players to have the new cardsContainer
 
-dont repit yourself on code:
 
-almost every page has the coontext and computed\mounted methods, witch turning complicated every time,
-make sure theres a different component for the canvasses and the drowings
+
+
 
 user accounts - login
 sql database (leader bord)

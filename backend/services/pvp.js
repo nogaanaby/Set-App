@@ -45,10 +45,10 @@ class Users {
 class Game {
   constructor () {
     this.cards81 = cardsDeck.cardsDeckArray
-    this.cardsOnTheTable = []
+    this.cards81mixed = []
 
-    for (let i = 0; i < 12; i++) {
-      this.cardsOnTheTable.push(backGame.takeNewCard(this.cards81))
+    for (let i = 0; i < 81; i++) {
+      this.cards81mixed.push(backGame.takeNewCard(this.cards81))
     }
   }
 }
@@ -79,8 +79,8 @@ class Pvp {
     })
 
     socket.on('sendInvitation', (invited) => {
-      io.sockets.connected[socket.id].emit('getCards', this.cards.cardsOnTheTable)
-      this.getSocketByNickname(io, invited).emit('getCards', this.cards.cardsOnTheTable)
+      io.sockets.connected[socket.id].emit('getCards', this.cards.cards81mixed)
+      this.getSocketByNickname(io, invited).emit('getCards', this.cards.cards81mixed)
       console.log(invited + ' invite ' + socket.nickname)
       this.getSocketByNickname(io, invited).emit('getInvitation', {
         socketId: socket.id,
@@ -120,7 +120,7 @@ class Pvp {
     })
 
     socket.on('letsStartPlay', (invited) => {
-      this.getSocketByNickname(io, invited).emit('closeM', this.cards.cardsOnTheTable)
+      this.getSocketByNickname(io, invited).emit('closeM')
     })
 
     socket.on('clickCard', (oppAndCard) => {

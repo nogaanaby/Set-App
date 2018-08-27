@@ -44,21 +44,32 @@ module.exports = {
               ? this.findSet(array, x, y + 1, y + 2)
               : this.findSet(array, x, y, z + 1))
   },
-
-  allwaysSetOnTheTable (cardsViewsArray, cardsDeck) {
-    while (this.findSet(cardsViewsArray, 0, 1, 2) === 'no set here') {
-      cardsViewsArray[1].setNewCardAtrr(this.takeNewCard(cardsDeck))
+  haveTheSameCard (cardsViewsArray) {
+    for (let i = 0; i < cardsViewsArray.length - 1; i++) {
+      for (let j = i + 1; j < cardsViewsArray.length; j++) {
+        if (cardsViewsArray[i].getCardData() === cardsViewsArray[j].getCardData()) {
+          return (i, j)
+        }
+      }
+    }
+    return 'non'
+  },
+  allwaysSetOnTheTable (cardsViewsArray, cardsDeck, i) {
+    while (this.findSet(cardsViewsArray, 0, 1, 2) === 'no set here' || this.haveTheSameCard(cardsViewsArray) !== 'non') {
+      cardsViewsArray[i].setNewCardAtrr(this.takeNewCard(cardsDeck))
     }
   },
   switchCards (cardVArray, cardsArray, setArray) {
     const tempArray = cardVArray
+    let oneOfThemIndex = 0
     tempArray.forEach((card, i) => {
       if (setArray[0] === card || setArray[1] === card || setArray[2] === card) {
-        tempArray[i].setNewCardAtrr(this.takeNewCard(cardsArray))
         tempArray[i].state = 'isTaken'
+        tempArray[i].setNewCardAtrr(this.takeNewCard(cardsArray))
+        oneOfThemIndex = i
       }
     })
-    this.allwaysSetOnTheTable(tempArray, cardsArray)
+    this.allwaysSetOnTheTable(tempArray, cardsArray, oneOfThemIndex)
     return tempArray
   }
 }

@@ -4,11 +4,11 @@
         <header class="card-header fadeInDown" v-if="pageState === 'game'">
           <div class="menu-fitures columns is-mobile">
             <help class = "column"
-            v-bind:cardsViewsArray = "cardsViewsOnTheTable"
+            v-bind:cardsViewsArray = "cardV"
             v-bind:hintState = "hintState"
             @findSetEvent= "getHelp"></help>
             <score class = "column"
-            v-bind:cards = "collectedCards.length"
+            v-bind:cards = "collectedCards"
             v-bind:nickname = "'sets'"
             v-bind:color = "'green'"
             v-bind:gameStatus = "'single'"
@@ -19,18 +19,20 @@
           </div>
         </header>
         <div class="card-content fadeInDown">
-          <div class = "cardsContainer" v-show="pageState === 'game'">
-            <div v-for="(card, i) in cardsViewsOnTheTable" :key="card.index" class = "cardDiv" :class = "{notSet: notSet}">
-              <canvas class="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
-              <canvas class="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{clicked: card.state === 'clicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
-            </div>
-          </div>
-              <game-over v-if="pageState === 'over'"
-                v-bind:winner="'you'"
-                v-bind:fathersTitle="'Game Over'"
-                v-bind:mainCollection = "collectedCards.length / 3"
-                v-bind:gameStatus="'single'"
-                @playAgainEvent= "playAgain"></game-over>
+          <cards-container v-show="pageState === 'game'"
+            v-bind:fathersCardViews = "cardV"
+            v-bind:cardsData = "cardsData"
+            v-bind:length = "9"
+            v-bind:hintCard="setCard"
+            @foundASet="foundASet"
+            @getCardViews="getCardViews">
+          </cards-container>
+          <game-over v-if="pageState === 'over'"
+            v-bind:winner="'you'"
+            v-bind:fathersTitle="'Game Over'"
+            v-bind:mainCollection = "collectedCards / 3"
+            v-bind:gameStatus="'single'"
+            @playAgainEvent= "playAgain"></game-over>
         </div>
       </div>
       <brand-footer class="footer"></brand-footer>
@@ -46,6 +48,8 @@ import gameOver from '@/components/gameOver.vue'
 import gameMenu from '@/components/nav.vue'
 import brandFooter from '@/components/brandFooter.vue'
 import store from '../js/store.js'
+import utils from '../js/utils.js'
+import cardsContainer from '@/components/cardsContainer.vue'
 
 export default{
   name: 'game',
@@ -55,16 +59,16 @@ export default{
     gameMenu,
     clock,
     help,
-    score
+    score,
+    cardsContainer
   },
   data () {
     return {
-      id: 0,
-      notSet: false, // bazzes the cards in a mistaken set
       pageState: 'game',
-      cardsViewsOnTheTable: [],
-      cards: new CardsDeck(),
-      collectedCards: [],
+      cardV: [],
+      setCard: '',
+      cardsData: utils.mixArray(new CardsDeck().cardsDeckArray),
+      collectedCards: 0,
       set: [],
       timeToPlay: 2 * 60 * 1000,
       hintState: 1,
@@ -72,15 +76,8 @@ export default{
     }
   },
   created () {
-    this.cardsViewsOnTheTable = frontGame.createCanvases(this.cards.cardsDeckArray)
   },
   mounted () {
-    this.cardsViewsOnTheTable.forEach((card, i) => {
-      card.shapeCanvas = this.$refs[`shape${i}`][0]
-      card.cardCanvas = this.$refs[`card${i}`][0]
-      card.drawCard()
-    })
-    backGame.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.cardsDeckArray, 1)
     if (store.onlineUsersCopy.users.length !== 0) {
       this.updateMyStatus('onGame')
     }
@@ -89,71 +86,35 @@ export default{
     /**************************************
      game
     *************************************/
-    isSet: function () {
-      if (backGame.isSet(this.set, 0, 1, 2)) {
-        this.collectedCards.push(...this.set)
-        this.playerFound = true
-        setTimeout(() => {
-          this.playerFound = false
-        }, 1000)
-        return true
-      } else {
-        this.notSet = true
-        backGame.resetCardState(this.cardsViewsOnTheTable)
-        return false
-      }
-    },
-    clickedCard: function (card, i) {
-      this.notSet = false
-      if (card.state === 'clicked') {
-        card.state = 'unclicked'
-        this.set.pop()
-      } else {
-        this.set.push(card)
-        card.state = 'clicked'
-        this.$forceUpdate()
-
-        if (this.set.length === 3) {
-          if (this.isSet()) {
-            this.flipDeck()
-            this.takeCardsAndHaveFun()
-          }
-          this.set.splice(0)
-        }
-      }
-    }, // end of click
-
-    takeCardsAndHaveFun () {
-      this.cardsViewsOnTheTable = backGame.switchCards(this.cardsViewsOnTheTable, this.cards.cardsDeckArray, this.set)
-      this.hintState = 1
+    foundASet () {
+      this.collectedCards += 3
+      this.playerFound = true
       setTimeout(() => {
-        backGame.resetCardState(this.cardsViewsOnTheTable)
+        this.playerFound = false
       }, 1000)
+      this.hintState = 1
     },
-    flipDeck () {
-      if (this.cards.cardsDeckArray.length <= 10) {
-        console.log('flipping deck')
-        this.cards = new CardsDeck()
-      }
+    getCardViews (cardV) {
+      this.cardV = cardV
     },
     /*****************************
      * fitures
      *************************/
-    getHelp (cardsArray) {
+    getHelp (setCard) {
       if (this.hintState < 3) {
-        this.cardsViewsOnTheTable = cardsArray
+        this.setCard = setCard
         this.hintState++
       }
     },
     playAgain () {
-      this.collectedCards.splice(0)
+      this.collectedCards = 0
       this.pageState = 'game'
       this.updateMyStatus('onGame')
       this.$forceUpdate()
     },
     gameOver () {
       this.pageState = 'over'
-      backGame.resetCardState(this.cardsViewsOnTheTable)
+      // backGame.resetCardState(this.cardsViewsOnTheTable)
       this.hintState = 1
       this.updateMyStatus('availble')
       this.$forceUpdate()
