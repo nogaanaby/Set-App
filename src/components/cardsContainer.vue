@@ -2,7 +2,7 @@
     <div class = "cardsContainer" :class = "{notSet: notSet}">
       <div v-for="(card, i) in cardViews" :key="card.index" class = "cardDiv">
         <canvas class="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
-        <canvas class="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{clicked: card.state === 'clicked', oppClicked: card.state === 'oppClicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}"></canvas>
+        <canvas class="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickCard(card, i)" :class= "{clicked: card.state === 'clicked', oppClicked: card.state === 'oppClicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}"></canvas>
       </div>
     </div>
 </template>
@@ -53,24 +53,8 @@ export default{
   },
   sockets: {
     opponentHasClicked (card) {
-      const findCard = this.cardViews.find(cv => cv.shape === card.shape &&
-                                                      cv.color === card.color &&
-                                                      cv.number === card.number &&
-                                                      cv.fill === card.fill)
-
-      findCard.state = 'oppClicked'
-      this.$forceUpdate()
-
-      this.set.push(findCard)
-      if (this.set.length === 3) {
-        if (backGame.isSet(this.set, 0, 1, 2)) {
-          this.$emit('oppFoundASet')
-          this.switchCards()
-        } else {
-          backGame.resetCardState(this.cardViews)
-        }
-        this.set.splice(0)
-      }
+      const findCard = this.cardViews.find(cv => cv.shape === card.shape && cv.color === card.color && cv.number === card.number && cv.fill === card.fill)
+      this.click('opponent', findCard, 'oppClicked')
     }
   },
   methods: {
@@ -79,20 +63,33 @@ export default{
         cardViewsArray[i].setNewCardAtrr(this.cardsDeck.splice(i, 1)[0])
       }
     },
-    clickedCard (card, i) {
+    clickCard (card, i) {
+      this.click('me', card, 'clicked')
+    },
+    click (clickFrom, card, clickedState) {
       this.notSet = false
-      if (card.state === 'clicked') {
+      if (card.state === clickedState) {
         card.state = 'unclicked'
         this.set.pop()
+        if (clickFrom === 'me') {
+          this.$emit('clickCardEvent', card)
+        }
       } else {
         this.set.push(card)
-        card.state = 'clicked'
+        card.state = clickedState
         this.$forceUpdate()
-        this.$emit('clickCardEvent', card)
+        if (clickFrom === 'me') {
+          this.$emit('clickCardEvent', card)
+        }
 
         if (this.set.length === 3) {
           if (backGame.isSet(this.set, 0, 1, 2)) {
-            this.$emit('foundASet')
+            if (clickFrom === 'me') {
+              this.$emit('foundASet')
+            } else if (clickFrom === 'opponent') {
+              this.$emit('oppFoundASet')
+            }
+
             this.switchCards()
           } else {
             this.notSet = true
