@@ -28,7 +28,8 @@ export default{
       cardViews: [],
       cardsDeck: this.cardsData,
       notSet: false,
-      set: []
+      set: [],
+      whoClicked: 'non'
     }
   },
   created () {
@@ -54,6 +55,7 @@ export default{
   sockets: {
     opponentHasClicked (card) {
       const findCard = this.cardViews.find(cv => cv.shape === card.shape && cv.color === card.color && cv.number === card.number && cv.fill === card.fill)
+      this.whoClicked = 'opp'
       this.click('opponent', findCard, 'oppClicked')
     }
   },
@@ -64,7 +66,7 @@ export default{
       }
     },
     clickCard (card, i) {
-      this.click('me', card, 'clicked')
+      this.click('me', card, 'clicked')   
     },
     click (clickFrom, card, clickedState) {
       this.notSet = false
@@ -74,10 +76,18 @@ export default{
         if (clickFrom === 'me') {
           this.$emit('clickCardEvent', card)
         }
-      } else {
+      } else if (this.whoClicked !== 'opp' || clickFrom !== 'me') {
         this.set.push(card)
         card.state = clickedState
         this.$forceUpdate()
+
+        setTimeout(() => {
+          this.whoClicked = 'non'
+          this.set.splice(0)
+          card.state = 'unclicked'
+          this.$forceUpdate()
+        }, 2000)
+
         if (clickFrom === 'me') {
           this.$emit('clickCardEvent', card)
         }
@@ -92,7 +102,9 @@ export default{
 
             this.switchCards()
           } else {
-            this.notSet = true
+            if (clickFrom === 'me') {
+              this.notSet = true
+            }
             backGame.resetCardState(this.cardViews)
           }
           this.set.splice(0)

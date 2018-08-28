@@ -20,8 +20,9 @@
             v-bind:color = "'green'"
             v-bind:gameStatus = "'single'"></score>
 
-            <clock class = "column"
+            <clock v-if="startTimer" class = "column"
             v-bind:timeToPlay = "timeToPlay"
+            v-bind:startTimer = "startTimer"
             @timeOver= "gameOver"></clock>
           </div>
         </header>
@@ -79,9 +80,10 @@ export default{
       opponentCollection: 0,
       set: [],
       notSet: false, // bazzes the cards in a mistaken set
-      timeToPlay: 1 * 60 * 1000,
+      timeToPlay: 4 * 60 * 1000,
       hintState: 1,
-      playerFound: false
+      playerFound: false,
+      startTimer: false
     }
   },
   created () {
@@ -94,7 +96,9 @@ export default{
     }
   },
   sockets: {
-
+    startTimer () {
+      this.startTimer = true
+    }
   },
   methods: {
     findTheOpponent () {
