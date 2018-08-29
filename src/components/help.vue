@@ -41,6 +41,8 @@ export default {
         this.setCard = this.signTheCard(setArray[1])
       }
       store.askForHelp = true
+      console.log('hint state: ' + this.hintState)
+      console.log('askForHelp: ' + store.askForHelp)
       this.$emit('findSetEvent', this.setCard)
     },
     // signTheCard (setCard) {

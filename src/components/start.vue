@@ -27,11 +27,22 @@
                   </p>
                 </router-link>
 
+                <router-link class="link" to="/onlineSignUp">
+                  <p class="control">
+                    <a class="button is-large is-light-orange is-fullwidth">
+                      <span class="icon is-small">
+                        <img class="icon" src='@/assets/multiplayer.png'>
+                      </span>
+                      <span>multiPlayer online</span>
+                    </a>
+                  </p>
+                </router-link>
+
                 <router-link class="link" to="/instractionsTables">
                   <p class="control">
                     <a class="button is-large is-light-orange is-fullwidth">
                       <span class="icon is-small">
-                        <img class="icon" src='@/assets/HowToIcon.png'>
+                        <!-- <img class="icon" src='~/assets/HowToIcon.png'> -->
                       </span>
                       <span>How To Play</span>
                     </a>
@@ -45,17 +56,6 @@
                         <img class="icon" src='@/assets/pencil.png'>
                       </span>
                       <span>Practice!</span>
-                    </a>
-                  </p>
-                </router-link>
-
-                <router-link class="link" to="/onlineSignUp">
-                  <p class="control">
-                    <a class="button is-large is-light-orange is-fullwidth">
-                      <span class="icon is-small">
-                        <img class="icon" src='@/assets/multiplayer.png'>
-                      </span>
-                      <span>multiPlayer online</span>
                     </a>
                   </p>
                 </router-link>

@@ -1,2 +1,2 @@
-process.env.NODE_ENV = 'prod'
+process.env.NODE_ENV = 'production'
 require('./index.js')

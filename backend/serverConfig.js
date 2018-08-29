@@ -5,7 +5,7 @@ const isProd = process.env.NODE_ENV === 'production'
 // console.log('serverConfig isProd:', isProd)
 
 module.exports = {
-  apiPort: isProd ? 443 : 8050,
+  apiPort: isProd ? 80 : 8050,
   allowHelpAPI: debugMode,
   logAllRequests: debugMode,
   corsOrigin: isProd

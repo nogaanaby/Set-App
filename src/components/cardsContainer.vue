@@ -29,6 +29,7 @@ export default{
       cardsDeck: this.cardsData,
       notSet: false,
       set: [],
+      askForHelp: store.askForHelp,
       whoClicked: 'non'
     }
   },
@@ -46,9 +47,6 @@ export default{
       card.drawCard()
     })
     store.cardV = this.cardViews
-    if (store.askForHelp) {
-      this.hintCards()
-    }
     if (this.cardViews.length >= 3) {
       this.allwaysSetOnTheTable(this.cardViews, this.cardsDeck, 1)
     }
@@ -70,7 +68,7 @@ export default{
       }
     },
     clickCard (card, i) {
-      this.click('me', card, 'clicked')   
+      this.click('me', card, 'clicked')
     },
     click (clickFrom, card, clickedState) {
       this.notSet = false
@@ -122,7 +120,10 @@ export default{
       }, 1000)
     },
     hintCards () {
-      this.cardViews = store.cardV
+      if (this.askForHelp) {
+        console.log('in the hintCads function on cardsContainer')
+        this.cardViews = store.cardV
+      }
     }
   }
 }
