@@ -9,7 +9,7 @@ there are still the same cards on the table sometimes
 
 update offline2players to have the new cardsContainer
 
-
+there is a problum with the @ icons
 
 
 
