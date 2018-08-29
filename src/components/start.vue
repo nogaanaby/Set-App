@@ -49,12 +49,16 @@
                   </p>
                 </router-link>
 
-                <a class="button is-large is-fullwidth" v-show="false">
-                  <span class="icon is-small">
-                    <img class="icon" src='@/assets/multiplayer.png'>
-                  </span>
-                  <router-link class="menu-links cardText" to="/onlineSignUp">multiPlayer online</router-link>
-                </a>
+                <router-link class="link" to="/onlineSignUp">
+                  <p class="control">
+                    <a class="button is-large is-light-orange is-fullwidth">
+                      <span class="icon is-small">
+                        <img class="icon" src='@/assets/multiplayer.png'>
+                      </span>
+                      <span>multiPlayer online</span>
+                    </a>
+                  </p>
+                </router-link>
             </div>
           </div>
       </div>
