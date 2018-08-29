@@ -4,7 +4,6 @@
         <header class="card-header fadeInDown" v-if="pageState === 'game'">
           <div class="menu-fitures columns is-mobile">
             <help class = "column"
-            v-bind:cardsViewsArray = "cardV"
             v-bind:hintState = "hintState"
             @findSetEvent= "getHelp"></help>
             <score class = "column"
@@ -20,12 +19,10 @@
         </header>
         <div class="card-content fadeInDown">
           <cards-container v-show="pageState === 'game'"
-            v-bind:fathersCardViews = "cardV"
             v-bind:cardsData = "cardsData"
             v-bind:length = "9"
             v-bind:hintCard="setCard"
-            @foundASet="foundASet"
-            @getCardViews="getCardViews">
+            @foundASet="foundASet">
           </cards-container>
           <game-over v-if="pageState === 'over'"
             v-bind:winner="'you'"
@@ -65,7 +62,6 @@ export default{
   data () {
     return {
       pageState: 'game',
-      cardV: [],
       setCard: '',
       cardsData: utils.mixArray(new CardsDeck().cardsDeckArray),
       collectedCards: 0,
@@ -93,9 +89,6 @@ export default{
         this.playerFound = false
       }, 1000)
       this.hintState = 1
-    },
-    getCardViews (cardV) {
-      this.cardV = cardV
     },
     /*****************************
      * fitures

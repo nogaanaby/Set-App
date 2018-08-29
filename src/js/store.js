@@ -21,6 +21,9 @@ export class PracticeSetClass {
 }
 
 export default{
+  /** Single Game */
+  cardV: [],
+  askForHelp: false,
   onGame: false,
   multplayerOffline: {
     player1: '',

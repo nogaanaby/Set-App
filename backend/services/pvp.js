@@ -56,7 +56,7 @@ class Game {
 class Pvp {
   constructor () {
     this.onlineUsers = new Users()
-    this.cards = new Game()
+    // this.cards81 = cardsDeck.cardsDeckArray
   }
   getSocketIdByNickname (nickname) {
     return this.onlineUsers.getUserByNickname(nickname).socketId
@@ -79,8 +79,16 @@ class Pvp {
     })
 
     socket.on('sendInvitation', (invited) => {
-      io.sockets.connected[socket.id].emit('getCards', this.cards.cards81mixed)
-      this.getSocketByNickname(io, invited).emit('getCards', this.cards.cards81mixed)
+      const cards81 = []
+      cardsDeck.cardsDeckArray.forEach(card => cards81.push(card))
+      const mixed = []
+      for (let i = 0; i < cards81.length + mixed.length; i++) {
+        let card = backGame.takeNewCard(cards81)
+        mixed.push(card)
+      }
+
+      io.sockets.connected[socket.id].emit('getCards', mixed)
+      this.getSocketByNickname(io, invited).emit('getCards', mixed)
       console.log(invited + ' invite ' + socket.nickname)
       this.getSocketByNickname(io, invited).emit('getInvitation', {
         socketId: socket.id,
@@ -121,6 +129,8 @@ class Pvp {
 
     socket.on('letsStartPlay', (invited) => {
       this.getSocketByNickname(io, invited).emit('closeM')
+      this.getSocketByNickname(io, invited).emit('startTimer')
+      io.sockets.connected[socket.id].emit('startTimer')
     })
 
     socket.on('clickCard', (oppAndCard) => {

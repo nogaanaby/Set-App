@@ -2,10 +2,10 @@ to add the game
 
 current:
 
-the cardsData main array in the server is the same one all the time
-כשחשקן אחד לוחץ על קלץ השני יכול לתפוס לו והמחשב חושב שאם אתה לוחץ 3 פעמים על אותו קלף, זה סט - קיצר שאי יהיה אפשר "לתפוס" - 5 שניות תפסן לכל שחקן ואחרי שהוא לוקח סט זה נגמר
+in the end of the game there is no resetcards state
 finish the 'hint' button
 the 'play again' button on online game
+there are still the same cards on the table sometimes
 
 update offline2players to have the new cardsContainer
 
