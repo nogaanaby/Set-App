@@ -27,7 +27,9 @@ import cardsContainer from '@/components/cardsContainer.vue'
 
 Vue.config.productionTip = false
 
-const socketURL = 'http://localhost:8050/'
+const socketURL = (process.env.NODE_ENV !== 'production')
+  ? 'http://localhost:8050'
+  : 'http://set-game.com'
 export const SocketInstance = socketio(socketURL)
 Vue.use(VueSocketIO, SocketInstance)
 Vue.use(Router)
