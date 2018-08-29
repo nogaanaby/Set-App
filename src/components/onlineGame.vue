@@ -80,7 +80,7 @@ export default{
       opponentCollection: 0,
       set: [],
       notSet: false, // bazzes the cards in a mistaken set
-      timeToPlay: 2 * 10 * 1000,
+      timeToPlay: 4 * 60 * 1000,
       hintState: 1,
       playerFound: false,
       startTimer: false
