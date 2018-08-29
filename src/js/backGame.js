@@ -72,6 +72,9 @@ const backGame = {
     })
     this.allwaysSetOnTheTable(tempArray, cardsArray, oneOfThemIndex)
     return tempArray
+  },
+  findCard (array, card) {
+    return array.find(c => c === card)
   }
 }
 

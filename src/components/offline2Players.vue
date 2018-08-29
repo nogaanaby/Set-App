@@ -3,10 +3,6 @@
       <div class="card">
         <header class="card-header fadeInDown" v-if="pageState === 'game'">
           <div class="menu-fitures columns is-mobile">
-            <help class = "column fiture2"
-            v-bind:cardsViewsArray = "cardsViewsOnTheTable"
-            v-bind:hintState = "hintState"
-            @findSetEvent= "getHelp"></help>
 
             <score class = "column fiture2"
             v-bind:cards = "player2Collect.length"
@@ -17,6 +13,10 @@
             @pressEvent= "press"
             @resetCardsEvent = "resetCardsState"></score>
 
+            <clock class = "column fiture2"
+            v-bind:timeToPlay = "timeToPlay"
+            @timeOver= "gameOver"></clock>
+
             <score class = "column fiture2"
             v-bind:cards = "player1Collect.length"
             v-bind:nickname = "players.player1"
@@ -26,9 +26,6 @@
             @pressEvent= "press"
             @resetCardsEvent = "resetCardsState"></score>
 
-            <clock class = "column fiture2"
-            v-bind:timeToPlay = "timeToPlay"
-            @timeOver= "gameOver"></clock>
           </div>
         </header>
         <div class="card-content fadeInDown">
@@ -183,12 +180,6 @@ export default{
     /*****************************
      * fitures
      *************************/
-    getHelp (cardsArray) {
-      if (this.hintState < 3) {
-        this.cardsViewsOnTheTable = cardsArray
-        this.hintState++
-      }
-    },
     playAgain () {
       this.player1Collect.splice(0)
       this.player2Collect.splice(0)
@@ -220,10 +211,6 @@ export default{
 }
 .card-header{
   padding: 0;
-}
-.fiture2{
-  width: 70%;
-  height: 70%;
 }
 /*************************************
 2players game

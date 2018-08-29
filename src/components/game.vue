@@ -3,9 +3,7 @@
       <div class="card">
         <header class="card-header fadeInDown" v-if="pageState === 'game'">
           <div class="menu-fitures columns is-mobile">
-            <help class = "column"
-            v-bind:hintState = "hintState"
-            @findSetEvent= "getHelp"></help>
+            <help class = "column"></help>
             <score class = "column"
             v-bind:cards = "collectedCards"
             v-bind:nickname = "'sets'"
@@ -21,7 +19,7 @@
           <cards-container v-show="pageState === 'game'"
             v-bind:cardsData = "cardsData"
             v-bind:length = "9"
-            v-bind:hintCard="setCard"
+            v-bind:from = "'single'"
             @foundASet="foundASet">
           </cards-container>
           <game-over v-if="pageState === 'over'"
@@ -93,12 +91,6 @@ export default{
     /*****************************
      * fitures
      *************************/
-    getHelp (setCard) {
-      if (this.hintState < 3) {
-        this.setCard = setCard
-        this.hintState++
-      }
-    },
     playAgain () {
       this.collectedCards = 0
       this.pageState = 'game'
@@ -130,7 +122,5 @@ export default{
 .card-header{
   padding: 0;
 }
-.fitures{
-  margin: 0 7px;
-}
+
 </style>

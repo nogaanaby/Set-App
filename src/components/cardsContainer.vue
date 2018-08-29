@@ -17,19 +17,19 @@ import gameOver from '@/components/gameOver.vue'
 import gameMenu from '@/components/nav.vue'
 import brandFooter from '@/components/brandFooter.vue'
 import store from '../js/store.js'
+import { EventBus } from '../js/event-bus.js'
 export default{
   name: 'cardsContainer',
   components: {
 
   },
-  props: ['cardsData', 'length'],
+  props: ['cardsData', 'length', 'hintCard', 'from'],
   data () {
     return {
       cardViews: [],
       cardsDeck: this.cardsData,
       notSet: false,
       set: [],
-      askForHelp: store.askForHelp,
       whoClicked: 'non'
     }
   },
@@ -47,18 +47,26 @@ export default{
       card.drawCard()
     })
     store.cardV = this.cardViews
-    if (this.cardViews.length >= 3) {
-      this.allwaysSetOnTheTable(this.cardViews, this.cardsDeck, 1)
-    }
-    if (this.cardsDeck.length < this.length) {
-      this.cardsDeck = this.cardsData
-    }
+    this.makeSure()
+
+    EventBus.$on('findSetEvent', setCard => {
+      const hintCardIndex = this.cardViews.findIndex(c => c.shape === setCard.shape && c.color === setCard.color && c.number === setCard.number && c.fill === setCard.fill)
+      this.cardViews[hintCardIndex].state = 'toldMe'
+      this.$forceUpdate()
+    })
+
   },
   sockets: {
     opponentHasClicked (card) {
       const findCard = this.cardViews.find(cv => cv.shape === card.shape && cv.color === card.color && cv.number === card.number && cv.fill === card.fill)
       this.whoClicked = 'opp'
       this.click('opponent', findCard, 'oppClicked')
+      setTimeout(() => {
+        this.whoClicked = 'non'
+        this.set.splice(0)
+        findCard.state = 'unclicked'
+        this.$forceUpdate()
+      }, 2000)
     }
   },
   methods: {
@@ -67,10 +75,27 @@ export default{
         cardViewsArray[i].setNewCardAtrr(this.cardsDeck.splice(i, 1)[0])
       }
     },
+    makeSure () {
+      if (this.cardViews.length >= 3) {
+        this.allwaysSetOnTheTable(this.cardViews, this.cardsDeck, 1)
+      }
+      if (this.cardsDeck.length < this.length) {
+        this.cardsDeck = this.cardsData
+      }
+    },
     clickCard (card, i) {
       this.click('me', card, 'clicked')
+      if (this.from === 'online') {
+        setTimeout(() => {
+          this.whoClicked = 'non'
+          this.set.splice(0)
+          card.state = 'unclicked'
+          this.$forceUpdate()
+        }, 2000)
+      }
     },
     click (clickFrom, card, clickedState) {
+      console.log(card)
       this.notSet = false
       if (card.state === clickedState) {
         card.state = 'unclicked'
@@ -82,13 +107,6 @@ export default{
         this.set.push(card)
         card.state = clickedState
         this.$forceUpdate()
-
-        setTimeout(() => {
-          this.whoClicked = 'non'
-          this.set.splice(0)
-          card.state = 'unclicked'
-          this.$forceUpdate()
-        }, 2000)
 
         if (clickFrom === 'me') {
           this.$emit('clickCardEvent', card)
@@ -118,12 +136,6 @@ export default{
       setTimeout(() => {
         backGame.resetCardState(this.cardViews)
       }, 1000)
-    },
-    hintCards () {
-      if (this.askForHelp) {
-        console.log('in the hintCads function on cardsContainer')
-        this.cardViews = store.cardV
-      }
     }
   }
 }

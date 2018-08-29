@@ -10,65 +10,35 @@
 <script>
 import backGame from '../js/backGame.js'
 import store from '../js/store.js'
+import { EventBus } from '../js/event-bus.js'
 export default {
   name: 'help',
   components: {
 
   },
-  props: ['hintState'],
+  // props: ['hintState'],
   data () {
     return {
       setCard: '',
-      cardsViewsArray: store.cardV
+      cardsViewsArray: [],
+      hintState: 1
     }
   },
   mounted () {
-
+    setTimeout(() => {
+      this.cardsViewsArray = store.cardV
+    }, 500)
   },
   methods: {
-    signTheCard (setCard) {
-      this.cardsViewsArray.forEach((card, i) => {
-        if (setCard === card) {
-          store.cardV[i].state = 'toldMe'
-        }
-      })
-    },
     hint () {
       const setArray = backGame.findSet(this.cardsViewsArray, 0, 1, 2)
       if (this.hintState === 1) {
-        this.setCard = this.signTheCard(setArray[0])
+        EventBus.$emit('findSetEvent', setArray[0])
+        this.hintState++
       } else if (this.hintState === 2) {
-        this.setCard = this.signTheCard(setArray[1])
+        EventBus.$emit('findSetEvent', setArray[1])
+        this.hintState = 1
       }
-      store.askForHelp = true
-      console.log('hint state: ' + this.hintState)
-      console.log('askForHelp: ' + store.askForHelp)
-      this.$emit('findSetEvent', this.setCard)
-    },
-    // signTheCard (setCard) {
-    //   this.cardsViewsArray.forEach((card, i) => {
-    //     if (setCard === card) {
-    //       this.cardsViewsArray[i].state = 'toldMe'
-    //     }
-    //   })
-    // },
-    // hint () {
-    //   const setArray = backGame.findSet(this.cardsViewsArray, 0, 1, 2)
-    //   if (this.hintState === 1) {
-    //     this.signTheCard(setArray[0])
-    //   } else if (this.hintState === 2) {
-    //     this.signTheCard(setArray[1])
-    //   }
-    //   console.log('hint state: ' + this.hintState)
-    //   this.$emit('findSetEvent', this.cardsViewsArray)
-    // },
-    findSetButton () {
-      const setArray = backGame.findSet(this.cardsViewsArray, 0, 1, 2)
-      this.cardsViewsArray.forEach((card, i) => {
-        if (setArray[0] === card || setArray[1] === card || setArray[2] === card) {
-          this.cardsViewsArray[i].state = 'toldMe'
-        }
-      })
     }
   }
 }

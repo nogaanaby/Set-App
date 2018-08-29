@@ -161,6 +161,9 @@ export default {
 /***********************
  GENERAL DESIGN
  **********************/
+ .fitures{
+  margin: 0 7px;
+}
 html, .main, body{
   height: 100%;
 }

@@ -3,10 +3,6 @@
       <div class="card">
         <header class="card-header fadeInDown" v-if="pageState === 'game'">
           <div class="menu-fitures columns is-mobile">
-            <!--<help class = "column"
-            v-bind:cardsViewsArray = "cardsViewsOnTheTable"
-            v-bind:hintState = "hintState"
-            @findSetEvent= "getHelp"></help>!-->
 
             <score class = "column"
             v-bind:cards = "opponentCollection"
@@ -14,22 +10,23 @@
             v-bind:color = "'grey'"
             v-bind:gameStatus = "'single'"></score>
 
+            <clock v-if="startTimer" class = "column"
+            v-bind:timeToPlay = "timeToPlay"
+            v-bind:startTimer = "startTimer"
+            @timeOver= "gameOver"></clock>
+
             <score class = "column"
             v-bind:cards = "myCollection"
             v-bind:nickname = "myNickname"
             v-bind:color = "'green'"
             v-bind:gameStatus = "'single'"></score>
-
-            <clock v-if="startTimer" class = "column"
-            v-bind:timeToPlay = "timeToPlay"
-            v-bind:startTimer = "startTimer"
-            @timeOver= "gameOver"></clock>
           </div>
         </header>
         <div class="card-content fadeInDown">
                 <cards-container v-show="pageState === 'game'"
                   v-bind:cardsData = "cardsOnTheTable"
                   v-bind:length = "length"
+                  v-bind:from = "'online'"
                   @clickCardEvent = "sendTheClickToTheOpponent"
                   @foundASet="foundASet"
                   @oppFoundASet="oppFoundASet">
@@ -81,7 +78,6 @@ export default{
       set: [],
       notSet: false, // bazzes the cards in a mistaken set
       timeToPlay: 4 * 60 * 1000,
-      hintState: 1,
       playerFound: false,
       startTimer: false
     }
@@ -90,7 +86,6 @@ export default{
     this.findTheOpponent()
   },
   mounted () {
-    console.log(store.cardsOnTheTable)
     if (store.onlineUsersCopy.users.length !== 0) {
       this.updateMyStatus('onGame')
     }
@@ -107,9 +102,6 @@ export default{
       } else {
         this.opponentNickname = store.inviter.nickname
       }
-    },
-    putCards () {
-
     },
     /**************************************
      game
@@ -148,12 +140,6 @@ export default{
     /*****************************
      * fitures
      *************************/
-    // getHelp (cardsArray) {
-    //   if (this.hintState < 3) {
-    //     this.cardsViewsOnTheTable = cardsArray
-    //     this.hintState++
-    //   }
-    // },
     playAgain () {
       this.myCollection = 0
       this.opponentCollection = 0
@@ -179,5 +165,11 @@ export default{
 </script>
 
 <style scoped>
+.column{
+  padding: 0;
+}
+.card-header{
+  padding: 0;
+}
 
 </style>

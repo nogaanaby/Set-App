@@ -3,11 +3,13 @@ to add the game
 current:
 
 in the end of the game there is no resetcards state
-finish the 'hint' button
+
 the 'play again' button on online game
 there are still the same cards on the table sometimes
 
 update offline2players to have the new cardsContainer
+
+css- desktop and elements
 
 there is a problum with the @ icons
 
