@@ -9,15 +9,17 @@
 
 <script>
 import backGame from '../js/backGame.js'
+import store from '../js/store.js'
 export default {
   name: 'help',
   components: {
 
   },
-  props: ['cardsViewsArray', 'hintState'],
+  props: ['hintState'],
   data () {
     return {
-      setCard: ''
+      setCard: '',
+      cardsViewsArray: store.cardV
     }
   },
   mounted () {
@@ -27,7 +29,7 @@ export default {
     signTheCard (setCard) {
       this.cardsViewsArray.forEach((card, i) => {
         if (setCard === card) {
-          return this.cardsViewsArray[i]
+          store.cardV[i].state = 'toldMe'
         }
       })
     },
@@ -38,7 +40,7 @@ export default {
       } else if (this.hintState === 2) {
         this.setCard = this.signTheCard(setArray[1])
       }
-
+      store.askForHelp = true
       this.$emit('findSetEvent', this.setCard)
     },
     // signTheCard (setCard) {

@@ -45,6 +45,10 @@ export default{
       card.cardCanvas = this.$refs[`card${i}`][0]
       card.drawCard()
     })
+    store.cardV = this.cardViews
+    if (store.askForHelp) {
+      this.hintCards()
+    }
     if (this.cardViews.length >= 3) {
       this.allwaysSetOnTheTable(this.cardViews, this.cardsDeck, 1)
     }
@@ -117,11 +121,8 @@ export default{
         backGame.resetCardState(this.cardViews)
       }, 1000)
     },
-    // sendCardViews () {
-    //   this.$emit('getCardViews', this.cardViews)
-    // },
-    hintCards (cardsArray) {
-      this.cardViews = cardsArray
+    hintCards () {
+      this.cardViews = store.cardV
     }
   }
 }
