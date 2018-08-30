@@ -1,6 +1,7 @@
 # Set-Game
 
 > "The Set Game" as an app which you can play alone or with friends
+go to --->  http://set-game.com/
 
 ## Build Setup
 

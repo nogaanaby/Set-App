@@ -2,8 +2,11 @@
   <div class="brandFooter">
     <footer class="footer">
       <div class="content">
+        <a class="github" href="https://github.com/nogaanaby/Set-App" target="_blank">
+        <span><img class="icon" src='@/assets/github.png'></span>
+        </a>
         <p class="createBy">
-          @created by the famouse author N. Lichtenshtain Anaby
+          @created by the famous author N. Lichtenshtain Anaby
         </p>
       </div>
     </footer>
@@ -37,7 +40,14 @@ all devices
 
 .createBy{
   font-size: 0.7em;
-  margin: auto;
+  padding: 10px;
+}
+.content{
+  display: flex;
+  justify-content: center;
+}
+.github{
+  padding: 5px;
 }
 
 /*************************************

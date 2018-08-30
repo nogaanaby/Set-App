@@ -60,7 +60,8 @@ export default {
     }
   },
   mounted () {
-    this.pvpGetOnlinePlayers()
+    // new players
+    // this.pvpGetOnlinePlayers()
   },
   sockets: { // listeners
     getARefuse (rejecter) {

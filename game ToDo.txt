@@ -1,11 +1,14 @@
 to add the game
 
 current:
-
+when registering there is some problums
 in the end of the game there is no resetcards state
-
 the 'play again' button on online game
 there are still the same cards on the table sometimes
+when going out of the game
+when user is leving of thesocket disconnect
+some priblum with the path of the domain
+set-game/game - not found
 
 update offline2players to have the new cardsContainer
 
