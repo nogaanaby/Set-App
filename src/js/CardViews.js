@@ -51,6 +51,16 @@ export class CardView {
     this.drawCard()
   }
 
+  getCardData () {
+    const cardDataObj = {
+      color: this.color,
+      fill: this.fill,
+      numbrt: this.number,
+      shape: this.shape
+    }
+    return (cardDataObj)
+  }
+
   drawCard () {
     // set the properties to the shape - witch is not displayed
     this.drawShape()
@@ -304,34 +314,9 @@ export class CardView {
     }
   }
 
-  equalTo (card) {
-    if (this.shape === card.shape &&
-        this.color === card.color &&
-        this.number === card.number &&
-        this.fill === card.fill) {
-      return true
-    }
-    return false
-  }
-
-  printCard () {
-    console.log(`card: ` + this.shape + ` ` + this.color + ` ` + this.number + ` ` + this.fill)
-  }
-
   drawQuestionMark () {
     this.getCardContext.font = '90px Kirang Haerang'
     this.getCardContext.fillStyle = 'grey'
     this.getCardContext.fillText('?', 50, 110)
-  }
-}
-
-export class Set {
-  constructor (shape, color, fill, number, canvas, take) {
-    this.shape = shape
-    this.color = color
-    this.fill = fill
-    this.number = number
-    this.canvas = canvas
-    this.take = take
   }
 }

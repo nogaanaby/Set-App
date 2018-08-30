@@ -1,6 +1,5 @@
 <template>
   <div class="template-div">
-    <gameMenu></gameMenu>
         <h1>Welcome</h1>
         <input placeholder="choose nickname" v-model="nickname"/>
         <p>Click here to make a POST /pvp/register request:</p>
@@ -12,26 +11,29 @@
             <span>{{user}}</span>
           </li>
         </ul>
-      <div class="cardsCracker"><fourInosentCards></fourInosentCards></div>
   </div>
 </template>
 
 <script>
 import gameMenu from '@/components/nav.vue'
-import fourInosentCards from '@/components/fourInosentCards.vue'
+import empty from '@/components/empty.vue'
+import { CardsDeck } from '../js/backGame'
 export default {
   name: 'nissim',
   components: {
     gameMenu,
-    fourInosentCards
+    empty
   },
   data () {
     return {
       nickname: '',
-      onlineUsers: []
+      onlineUsers: [],
+      length: 9,
+      cardsData: new CardsDeck()
     }
   },
   mounted () {
+
   },
   methods: {
     async pvpRegister () {

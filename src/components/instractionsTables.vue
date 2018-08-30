@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="instractions template-div">
     <div class="card">
       <header class="card-header">
         <h1 class="noga-title">
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-
+import backGame from '../js/backGame.js'
 import utils from '../js/utils.js'
 import { CardView } from '../js/CardViews.js'
 import vxIcon from '@/components/vx-icon'
@@ -80,29 +80,29 @@ export default {
       context: [],
       sets: [
         [
-          utils.cardObject('sub', 'purple', 1, 'stripes'),
-          utils.cardObject('sub', 'purple', 2, 'stripes'),
-          utils.cardObject('sub', 'purple', 3, 'stripes')
+          backGame.cardObject('sub', 'purple', 1, 'stripes'),
+          backGame.cardObject('sub', 'purple', 2, 'stripes'),
+          backGame.cardObject('sub', 'purple', 3, 'stripes')
         ],
         [
-          utils.cardObject('tri', 'green', 2, 'stripes'),
-          utils.cardObject('sub', 'red', 2, 'stripes'),
-          utils.cardObject('rect', 'purple', 2, 'stripes')
+          backGame.cardObject('tri', 'green', 2, 'stripes'),
+          backGame.cardObject('sub', 'red', 2, 'stripes'),
+          backGame.cardObject('rect', 'purple', 2, 'stripes')
         ],
         [
-          utils.cardObject('tri', 'green', 2, 'stripes'),
-          utils.cardObject('sub', 'red', 2, 'stripes'),
-          utils.cardObject('rect', 'purple', 3, 'stripes')
+          backGame.cardObject('tri', 'green', 2, 'stripes'),
+          backGame.cardObject('sub', 'red', 2, 'stripes'),
+          backGame.cardObject('rect', 'purple', 3, 'stripes')
         ],
         [
-          utils.cardObject('sub', 'green', 1, 'empty'),
-          utils.cardObject('tri', 'purple', 2, 'stripes'),
-          utils.cardObject('rect', 'red', 3, 'full')
+          backGame.cardObject('sub', 'green', 1, 'empty'),
+          backGame.cardObject('tri', 'purple', 2, 'stripes'),
+          backGame.cardObject('rect', 'red', 3, 'full')
         ],
         [
-          utils.cardObject('sub', 'green', 1, 'empty'),
-          utils.cardObject('tri', 'purple', 2, 'stripes'),
-          utils.cardObject('rect', 'purple', 3, 'full')
+          backGame.cardObject('sub', 'green', 1, 'empty'),
+          backGame.cardObject('tri', 'purple', 2, 'stripes'),
+          backGame.cardObject('rect', 'purple', 3, 'full')
         ]
       ],
       setIcon: [[], [], [], [], []],
@@ -216,7 +216,7 @@ all devices
       display: flex;
       width: 30%;
       height: 30%;
-      margin: 0 5%;
+      margin: 0 2%;
     }
     .content{
       font-size: 1em;

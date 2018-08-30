@@ -28,7 +28,8 @@
                     </span>
                     <span class="vertical-gap-small">Invite</span>
                   </a>
-                    <span v-show="user.status === 'not availble'" class="tag vertical-gap-small is-danger is-tiny">not Availble</span>
+                    <span v-show="user.status === 'unavailble'" class="tag vertical-gap-small is-danger is-tiny">unAvailble</span>
+                    <span v-show="user.status === 'onGame'" class="tag vertical-gap-small is-tiny">on game</span>
                     <span v-show="user.status === 'hold'" class="tag vertical-gap-small isGrey is-tiny">on hold</span>
                 </p>
               </li>
@@ -53,20 +54,24 @@ export default {
   data () {
     return {
       nickname: '',
-      onlineUsers: [],
+      onlineUsers: store.onlineUsersCopy.users,
       error: false,
       comment: ''
     }
   },
   mounted () {
+    this.pvpGetOnlinePlayers()
   },
   sockets: { // listeners
     getARefuse (rejecter) {
-      this.onlineUsers.find(e => e.nickname === rejecter.nickname).status = 'not availble'
+      this.onlineUsers.find(e => e.nickname === rejecter.nickname).status = 'unavailble'
+    },
+    getNewUser (newUser) {
+      this.onlineUsers.push(newUser)
+    },
+    getUpdateOnStatusChangings (userAndStatus) {
+      this.onlineUsers.find(e => e.nickname === userAndStatus.nickname).status = userAndStatus.status
     }
-    // getNewUser (newUser) {
-    //   this.onlineUsers.push(newUser)
-    // }
   },
   methods: {
     async pvpRegister () {
@@ -77,7 +82,6 @@ export default {
         })
         this.comment = 'You Are In!'
         this.error = false
-        // this.$socket.emit('reportAllUsersAboutTheNew')
         store.thisUser.nickname = this.nickname
         this.pvpGetOnlinePlayers()
       } catch (e) {
@@ -87,11 +91,11 @@ export default {
     },
     async pvpGetOnlinePlayers () {
       const response = await this.$axios.get('pvp/onlineUsers')
-      this.onlineUsers = response.data
-      store.onlineUsersCopy.users = this.onlineUsers
+      store.onlineUsersCopy.users = response.data
     },
     invite (invited) {
       this.onlineUsers.find(e => e.nickname === invited).status = 'hold'
+      store.invited.nickname = invited
       // send to server invite request
       this.$socket.emit('sendInvitation', invited)
       this.$forceUpdate()

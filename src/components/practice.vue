@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="template-div">
     <div class="card">
       <header class="card-header">
         <h1 class="noga-title" v-show="comment === 'nothing'">
@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import backGame, { CardsDeck } from '../js/backGame.js'
+import frontGame from '../js/frontGame.js'
 import utils from '../js/utils.js'
 import { CardView } from '../js/CardViews.js'
 import store from '../js/store.js'
@@ -85,7 +87,7 @@ export default {
   },
   methods: {
     clickCard: function (card, i) {
-      utils.resetCardState(this.sets[this.contentIndex].optionsForTheThird)
+      backGame.resetCardState(this.sets[this.contentIndex].optionsForTheThird)
       if (card.state === 'clicked') {
         this.comment = 'nothing'
         this.$forceUpdate()
@@ -104,7 +106,7 @@ export default {
       this.sets[this.contentIndex].optionsForTheThird.forEach((card, i) => {
         if (card.state === 'clicked') {
           setArray.push(card)
-          if (utils.isSet(setArray, 0, 1, 2)) {
+          if (backGame.isSet(setArray, 0, 1, 2)) {
             this.comment = 'right'
             this.putThirdCard()
             this.flipPageOnRightAnswer(this.contentIndex + 1)
@@ -175,7 +177,7 @@ all devices
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    width: 22%;
+    width: 27%;
     height: 38%;
     margin: 2%;
     position: relative;
@@ -187,13 +189,13 @@ all devices
     flex-wrap: wrap;
     justify-content: center;
     margin: auto;
-    border: 1px solid #00D1B2;
+    border: 1px solid lightgrey;
     padding: 10px 20px 0 20px;
     border-radius: 5px;
     background-color: white;
   }
   .setContainer{
-    border: 1px solid lightpink;
+    border: 1px solid lightgrey;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -201,8 +203,17 @@ all devices
     margin: auto;
     border-radius: 5px;
     margin-bottom: 20px;
+    padding: 20px;
     background-color: white;
   }
+.card{
+  height: 100%;
+  max-height: 547px;
+}
+.card-content{
+  height: inherit;
+  max-height: 547px;
+}
   /*************************************
 desktop
 ***************************************/
@@ -240,11 +251,11 @@ mobile
     padding: 0;
   }
   .container6{
-    width: 100%;
-    height: 65%;
+    width: 90%;
+    height: 50%;
   }
   .setContainer{
-    width: 100%;
+    width: 90%;
   }
 }
 </style>

@@ -13,15 +13,23 @@ import footerNextPage from '@/components/footer'
 import offline2Players from '@/components/offline2Players'
 import onlineSignUp from '@/components/onlineSignUp'
 import offlineSignUp from '@/components/offlineSignUp'
-import fourInosentCards from '@/components/fourInosentCards'
+import pause from '@/components/pause'
 import nissim from '@/components/nissim'
 import invitation from '@/components/invitation'
 import socketio from 'socket.io-client'
 import VueSocketIO from 'vue-socket.io'
+import empty from '@/components/empty'
+import onlineGame from '@/components/onlineGame'
+import clock from '@/components/clock'
+import help from '@/components/help'
+import score from '@/components/score'
+import cardsContainer from '@/components/cardsContainer.vue'
 
 Vue.config.productionTip = false
 
-const socketURL = 'http://localhost:8050/'
+const socketURL = (process.env.NODE_ENV !== 'production')
+  ? 'http://localhost:8050'
+  : 'http://set-game.com'
 export const SocketInstance = socketio(socketURL)
 Vue.use(VueSocketIO, SocketInstance)
 Vue.use(Router)
@@ -76,9 +84,9 @@ const routes = [
     component: offline2Players
   },
   {
-    path: '/fourInosentCards',
-    name: 'fourInosentCards',
-    component: fourInosentCards
+    path: '/pause',
+    name: 'pause',
+    component: pause
   },
   {
     path: '/onlineSignUp',
@@ -99,11 +107,42 @@ const routes = [
     path: '/invitation',
     name: 'invitation',
     component: invitation
-  }  
+  },
+  {
+    path: '/empty',
+    name: 'empty',
+    component: empty
+  },
+  {
+    path: '/onlineGame',
+    name: 'onlineGame',
+    component: onlineGame
+  },
+  {
+    path: '/clock',
+    name: 'clock',
+    component: clock
+  },
+  {
+    path: '/help',
+    name: 'help',
+    component: help
+  },
+  {
+    path: '/score',
+    name: 'score',
+    component: score
+  },
+  {
+    path: '/cardsContainer',
+    name: 'cardsContainer',
+    component: cardsContainer
+  }
 ]
 
 const router = new Router({
-  routes
+  routes,
+  mode: 'history'
 })
 
 /* eslint-disable no-new */

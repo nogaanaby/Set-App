@@ -3,7 +3,9 @@
     <div class="main">
       <gameMenu></gameMenu>
       <invitation class="massage fadeIn"
-      v-if="openMassage.gotInvitation">
+      v-if="openMassage.gotInvitation"
+      v-bind:massage = "massageContent"
+      v-bind:pingpong = "pinpongStatus">
       </invitation>
       <router-link to="/game" class="link"></router-link>
       <router-view :class='{blur: openMassage.gotInvitation}'></router-view>
@@ -23,6 +25,14 @@ import onlineSignUp from '@/components/onlineSignUp'
 import offlineSignUp from '@/components/offlineSignUp'
 import brandFooter from '@/components/brandFooter'
 import invitation from '@/components/invitation.vue'
+import pause from '@/components/pause.vue'
+import empty from '@/components/empty.vue'
+import onlineGame from '@/components/onlineGame.vue'
+import clock from '@/components/clock.vue'
+import help from '@/components/help.vue'
+import score from '@/components/score.vue'
+import nissim from '@/components/nissim.vue'
+import cardsContainer from '@/components/cardsContainer.vue'
 
 export default {
   name: 'app',
@@ -36,23 +46,42 @@ export default {
     onlineSignUp,
     offlineSignUp,
     brandFooter,
-    invitation
+    invitation,
+    pause,
+    empty,
+    onlineGame,
+    clock,
+    help,
+    score,
+    nissim,
+    cardsContainer
   },
   data () {
     return {
       openMassage: store.gotMassage,
       inviter: store.inviter,
-      gotInv: store.gotMassage
+      gotInv: store.gotMassage,
+      massageContent: '',
+      pinpongStatus: ''
     }
   },
   mounted () {
+
   },
   sockets: { // listeners
-    getInvitation (inviter) {
-    //  if (this.thisUser.onPage !== 'game') {
-      this.inviter.nickname = inviter.nickname
+    getInvitation (sender) {
+      this.inviter.nickname = sender.nickname
+      this.massageContent = `Do You Want To Play With ` + sender.nickname + ` ?`
+      this.pinpongStatus = 'firstCatch'
       this.gotInv.gotInvitation = true
-    //  }
+    },
+    getTheAccept (invited) {
+      this.massageContent = invited.nickname + ' got your invitation, start to play now!'
+      this.gotInv.gotInvitation = true
+      this.pinpongStatus = 'secondCatch'
+    },
+    getCards (tableCardsData) {
+      store.cardsOnTheTable = tableCardsData
     }
   },
   methods: {
@@ -78,7 +107,7 @@ export default {
 /* tablet & desktop */
 @media only screen and (min-width: 560px) {
   .cardsContainer {
-    width: 60%;
+    width: 48%;
     height: 90%;
   }
   .roundedButton{
@@ -89,6 +118,7 @@ export default {
     margin: 0;
     font-size: 2em;
     color: black;
+    font-family: 'Jua';
   }
   .noga-title{
     font-size: 1.5em;
@@ -104,18 +134,19 @@ export default {
   .cardsContainer {
     min-width: 100%;
     height: 80%;
+    padding-top: 20px;
   }
 
   .menu-links, a{
     font-size: 0.7em;
   }
   .roundedButton{
-    height: 50px;
-    width: 50px;
+    height: 60px;
+    width: 60px;
   }
   .title-in{
     margin: 0;
-    font-size: 1.2em;
+    font-size: 1.7em;
     color: black;
   }
   .noga-title{
@@ -130,21 +161,31 @@ export default {
 /***********************
  GENERAL DESIGN
  **********************/
+ .fitures{
+  margin: 0 7px;
+}
 html, .main, body{
   height: 100%;
 }
 
 .template-div{
-  height: 87%;
+  height: 82%;
 }
-.card-content, .card{
-  height: 90%;
+.card{
+  height: 100%;
+}
+.card-content{
+  height: 80%;
+}
+.card-header{
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 .footer{
   padding: 2% auto;
 }
   html{
-  background-color: red;
+  background-color: gainsboro;
   margin: 0px;
   padding: 0px;
 }
@@ -171,7 +212,7 @@ html, .main, body{
   color:  #404040;
 }
 a:hover{
-  color:  #15B358;  
+  color:  #15B358;
 }
 
 .vertical-gap-medium{
@@ -191,6 +232,9 @@ a:hover{
   color: black;
   margin-top: -10px;
 }
+.p-small{
+  font-size: 0.7em;
+}
 .noga-title{
   text-align: center;
   font-family: 'Jua', cursive;
@@ -200,6 +244,10 @@ a:hover{
 .noga{
    font-family: 'Jua', cursive;
    color: #404040;
+}
+.huge-title{
+  font-size: 2em;
+  font-family: 'Jua', cursive;
 }
 .center-medium-title{
   text-align: center;
@@ -216,6 +264,10 @@ a:hover{
   z-index: 1;
   width: 50%;
   margin: 5% 10%;
+}
+.game-tags{
+  width: 50%;
+  margin: 0 auto;
 }
 
 /**************************************
@@ -246,8 +298,12 @@ GAME BOARD
 /**mobile**/
 @media only screen and (max-width: 500px) {
   .cardCanvas{
-  max-height: 80px;
-}
+    max-height: 118px;
+  }
+  .cardDiv {
+    width: 25%;
+    height: 37%;
+  }
 }
 .cardDiv {
   display: -webkit-box;
@@ -255,12 +311,11 @@ GAME BOARD
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 17%;
-  height: 28%;
   margin: 2% 2%;
 }
 .clicked {
-  border: solid 2px #33cccc;
+  border: solid 3px #6fe4e4;
+  box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.2), 0 6px 8px 0 rgba(0, 0, 0, 0.19);
 }
 .takeSet {
     opacity: 1;
@@ -285,6 +340,13 @@ fitures
 }
 .button.is-orange{
   border: solid 1px #ff6500;
+}
+.button.is-light-orange:hover{
+  background-color: #e7ab86;
+  border: solid 2px #f28b4b;
+}
+.button.is-light-orange{
+  border: solid 1px #f0985e;
 }
   .button.is-purple:hover{
   background-color: plum;
@@ -311,11 +373,6 @@ fitures
 .is-grouped{
   display: flex;
   justify-content: space-between;
-}
-.is-narrow{
-  width: 40%;
-  margin: auto;
-  min-width: 200px;
 }
 
 /**************************************

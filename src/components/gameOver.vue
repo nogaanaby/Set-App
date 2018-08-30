@@ -1,27 +1,32 @@
 <template>
   <div class="gameOver">
         <header class="fadeInDown">
-          <h1 class="noga-title">{{fathersTitle}}</h1>
+          <h1 class="huge-title">{{fathersTitle}}</h1>
         </header>
+        <div class="myScore bounceIn">
+          <p>{{winner}} Collected: </p>
+          <h1 class="title-is-big">{{mainCollection}}</h1>
+          <p>Sets</p>
+        </div>
           <a class="button is-medium is-success playAgain" @click = "PlayAgain()">Play Again</a>
-          <div class="columns is-mobile gameOver">
-            <p class="noga-title column collected1">
+          <div v-show="gameStatus==='copple'" class="columns is-mobile gameOver">
+            <p class="column collected1">
               {{fathersColumn1}}
             </p>
-            <p class="noga-title column collected2">
+            <p class="column collected2">
               {{fathersColumn2}}
             </p>
           </div><!-- end of colums game over -->
   </div> <!-- end game over -->
 </template>
 <script>
-
+import store from '../js/store.js'
 export default{
   name: 'gameOver',
   components: {
 
   },
-  props: ['collectedCardsLength', 'fathersTitle', 'fathersColumn2', 'fathersColumn1'],
+  props: ['fathersTitle', 'fathersColumn2', 'fathersColumn1', 'winner', 'gameStatus', 'mainCollection'],
   data () {
     return {
       pageState: 'game',
@@ -32,10 +37,8 @@ export default{
 
   },
   mounted () {
-
   },
   methods: {
-
     PlayAgain: function () {
       this.$emit('playAgainEvent')
     }
@@ -47,6 +50,21 @@ export default{
 /*************************************
 All device
 ***************************************/
+.myScore{
+  border: 1px solid orange;
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.title-is-big{
+  font-family: 'Jua', cursive;
+  font-size: 3em;
+}
 /*************************************
 desktop
 ***************************************/

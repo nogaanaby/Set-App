@@ -1,41 +1,46 @@
 <template>
   <div class="game template-div">
       <div class="card">
-        <header class="card-header fadeInDown" v-show="pageState === 'game'">
-          <div class="menu-fitures">
-            <a class="button is-warning is-outlined roundedButton" @click = "findSet">
-              <img class="icon" src='@/assets/tellMe.png'>
-            </a>
-              <a class="btn" @click="greenPress" :class="{green:whoPressed ==='non' || whoPressed ==='blue', greenPressed:whoPressed ==='green'}">
-                <div class="collect player2Collected">
-                  <h1 class="title-in" id="collected">{{this.player2Collect.length / 3}}</h1>
-                  <h4 class="playerName">{{players.player2}}</h4>
-                </div>
-              </a>
-             <a class="btn" @click="bluePress" :class="{blue:whoPressed ==='non' || whoPressed ==='green', bluePressed:whoPressed ==='blue'}">
-                <div class="collect player1Collected">
-                  <h1 class="title-in" id="collected">{{this.player1Collect.length / 3}}</h1>
-                  <h4 class="playerName">{{players.player1}}</h4>
-                </div>
-              </a>
-            <a class="button is-orange is-outlined roundedButton" >
-              <p id="time">{{formatTime()}}</p>
-            </a>
+        <header class="card-header fadeInDown" v-if="pageState === 'game'">
+          <div class="menu-fitures columns is-mobile">
+
+            <score class = "column fiture2"
+            v-bind:cards = "player2Collect.length"
+            v-bind:nickname = "players.player2"
+            v-bind:color = "'green'"
+            v-bind:gameStatus = "'copple'"
+            v-bind:playerFound = "player2Found"
+            @pressEvent= "press"
+            @resetCardsEvent = "resetCardsState"></score>
+
+            <clock class = "column fiture2"
+            v-bind:timeToPlay = "timeToPlay"
+            @timeOver= "gameOver"></clock>
+
+            <score class = "column fiture2"
+            v-bind:cards = "player1Collect.length"
+            v-bind:nickname = "players.player1"
+            v-bind:color = "'purple'"
+            v-bind:gameStatus = "'copple'"
+            v-bind:playerFound = "player1Found"
+            @pressEvent= "press"
+            @resetCardsEvent = "resetCardsState"></score>
+
           </div>
         </header>
         <div class="card-content fadeInDown">
-          <div class="columns" v-show="pageState === 'game'">
-              <div class = "cardsContainer column is-two-thirds">
+              <div class = "cardsContainer" v-show="pageState === 'game'">
               <!--{{JSON.stringify(cards)}}-->
                 <div v-for="(card, i) in cardsViewsOnTheTable" :key="card.index" class = "cardDiv" :class = "{notSet: notSet}">
                   <canvas class="shapeCanvas" v-show="false" :ref="'shape'+i" width="150" height="66"></canvas>
-                  <canvas class="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{blueClicked: card.state === 'blueClicked', greenClicked: card.state === 'greenClicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
+                  <canvas class="cardCanvas" :ref="'card'+i" width="150" height="198" @click = "clickedCard(card, i)" :class= "{purpleClicked: card.state === 'purpleClicked', greenClicked: card.state === 'greenClicked', zoomIn: card.state === 'isTaken', findSet: card.state === 'toldMe'}" ></canvas>
                 </div>
               </div><!--end of cardsContainer-->
-            </div>
             <game-over class="game-over" v-if="pageState === 'over'"
-              v-bind:collectedCardsLength="player1Collect.length"
               v-bind:fathersTitle="returnTheWinner()"
+              v-bind:winner="winnersNick"
+              v-bind:mainCollection = "biggestCollection / 3"
+              v-bind:gameStatus = "'copple'"
               v-bind:fathersColumn1="players.player1 + ' collected ' + player1Collect.length / 3 + ' sets'"
               v-bind:fathersColumn2="players.player2 + ' collected ' + player2Collect.length / 3 + ' sets'"
               @playAgainEvent= "playAgain"></game-over>
@@ -47,15 +52,21 @@
 <script>
 import utils from '../js/utils.js'
 import store from '../js/store.js'
-import { CardView } from '../js/CardViews.js'
-import { CardsDeck } from '../js/CardsDeck.js'
+import clock from '@/components/clock.vue'
+import backGame, { CardsDeck } from '../js/backGame.js'
+import frontGame from '../js/frontGame.js'
 import gameOver from '@/components/gameOver.vue'
 import brandFooter from '@/components/brandFooter.vue'
+import help from '@/components/help.vue'
+import score from '@/components/score.vue'
 export default{
   name: 'offline2Players',
   components: {
     gameOver,
-    brandFooter
+    brandFooter,
+    clock,
+    help,
+    score
   },
   data () {
     return {
@@ -70,18 +81,16 @@ export default{
       player1Collect: [],
       player2Collect: [],
       set: [],
-      startTime: 0,
-      timeToPlay: 2 * 60 * 1000,
-      timeLeft: 2 * 60 * 1000
+      timeToPlay: 4 * 60 * 1000,
+      hintState: 1,
+      player1Found: false,
+      player2Found: false,
+      winnersNick: '',
+      biggestCollection: 0
     }
   },
   created () {
-    // pull out random card from the card deck and puts it on the table
-    for (let i = 0; i < 12; i++) {
-      this.cardsViewsOnTheTable[i] = new CardView('notThereYet', 'notThereYet', utils.takeNewCard(this.cards.cardsDeckArray))
-    }
-    this.startTime = Date.now()
-    setInterval(this.countDown, 100)
+    this.cardsViewsOnTheTable = frontGame.createCanvases(this.cards.cardsDeckArray)
   },
   mounted () {
     this.cardsViewsOnTheTable.forEach((card, i) => {
@@ -89,30 +98,33 @@ export default{
       card.cardCanvas = this.$refs[`card${i}`][0]
       card.drawCard()
     })
-    utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.CardsDeckArray)
+    backGame.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.CardsDeckArray, 1)
+    if (store.onlineUsersCopy.users.length !== 0) {
+      this.updateMyStatus('onGame')
+    }
   },
   methods: {
     /**************************************
      game
     *************************************/
     isSet: function () {
-      if (utils.isSet(this.set, 0, 1, 2)) {
+      if (backGame.isSet(this.set, 0, 1, 2)) {
         if (this.whoPressed === 'green') {
           this.player2Collect.push(...this.set)
-        } else if (this.whoPressed === 'blue') {
+        } else if (this.whoPressed === 'purple') {
           this.player1Collect.push(...this.set)
         }
         return true
       } else {
         this.notSet = true
-        utils.resetCardState(this.cardsViewsOnTheTable)
+        backGame.resetCardState(this.cardsViewsOnTheTable)
         return false
       }
     },
 
     clickedCard: function (card, i) {
       this.notSet = false
-      if (card.state === 'blueClicked' || card.state === 'greenClicked') {
+      if (card.state === 'purpleClicked' || card.state === 'greenClicked') {
         card.state = 'unclicked'
         this.set.pop()
       } else if (this.whoPressed !== 'non') {
@@ -122,7 +134,8 @@ export default{
 
         if (this.set.length === 3) {
           if (this.isSet()) {
-            this.switchCards()
+            this.cardsViewsOnTheTable = backGame.switchCards(this.cardsViewsOnTheTable, this.cards.cardsDeckArray, this.set)
+            this.hintState = 1
             if (this.cards.cardsDeckArray.length <= 9) {
               this.cards = new CardsDeck()
             }
@@ -130,85 +143,75 @@ export default{
           this.set.splice(0)
         }
       }
-    }, // end of click
-
-    switchCards: function () {
-      this.cardsViewsOnTheTable.forEach((element, i) => {
-        if (element.state === 'blueClicked' || element.state === 'greenClicked') {
-          this.cardsViewsOnTheTable[i].setNewCardAtrr(utils.takeNewCard(this.cards.cardsDeckArray))
-          element.state = 'isTaken'
-        }
-      })
-      utils.allwaysSetOnTheTable(this.cardsViewsOnTheTable, this.cards.cardsDeckArray)
+    },
+    resetCardsState: function () {
+      this.cardsViewsOnTheTable.forEach((element) => { element.state = 'unclicked' })
     },
     /**************************************
      2 pleyers staf
     *************************************/
-    bluePress () {
-      this.whoPressed = 'blue'
-      setTimeout(() => {
-        this.whoPressed = 'non'
-        console.log(this.whoPressed)
-      }, 4000)
-      this.$forceUpdate()
-      console.log(this.whoPressed)
+    press (color) {
+      this.whoPressed = color
     },
-    greenPress () {
-      this.whoPressed = 'green'
-      setTimeout(() => {
-        this.whoPressed = 'non'
-        console.log(this.whoPressed)
-      }, 4000)
-      this.$forceUpdate()
-      console.log(this.whoPressed)
-    },
+
     collectByPlayer (card) {
       if (this.whoPressed === 'green') {
         card.state = 'greenClicked'
-      } else if (this.whoPressed === 'blue') {
-        card.state = 'blueClicked'
+      } else if (this.whoPressed === 'purple') {
+        card.state = 'purpleClicked'
       }
     },
     returnTheWinner () {
       if (this.player1Collect > this.player2Collect) {
+        this.biggestCollection = this.player1Collect.length
+        this.winnersNick = this.players.player1
         return 'Congradulations! ' + this.players.player1 + ' Is The Winner!'
       } else if (this.player1Collect < this.player2Collect) {
+        this.biggestCollection = this.player2Collect.length
+        this.winnersNick = this.players.player2
         return 'Congradulations! ' + this.players.player2 + ' Is The Winner!'
       } else {
+        this.biggestCollection = this.player1Collect.length
+        this.winnersNick = 'you'
         return 'This Is A Tie!'
       }
-    },
-    playAgain () {
-      this.player1Collect.splice(0)
-      this.player2Collect.splice(0)
-      this.pageState = 'game'
-      this.timeLeft = this.timeToPlay
-      this.startTime = Date.now()
-      this.$forceUpdate()
     },
 
     /*****************************
      * fitures
      *************************/
-    findSet () {
-      utils.findSetButton(this.cardsViewsOnTheTable)
+    playAgain () {
+      this.player1Collect.splice(0)
+      this.player2Collect.splice(0)
+      this.pageState = 'game'
+      this.updateMyStatus('onGame')
       this.$forceUpdate()
     },
-    countDown () {
-      this.timeLeft = utils.countDown(this.startTime, this.timeToPlay)
-      if (this.timeLeft === 0) {
-        this.pageState = 'over'
-        this.$forceUpdate()
-      }
+    gameOver () {
+      this.pageState = 'over'
+      this.resetCardsState()
+      this.hintState = 1
+      this.updateMyStatus('availble')
+      this.$forceUpdate()
     },
-    formatTime () {
-      return utils.formatTime(this.timeLeft)
+    updateMyStatus (status) {
+      const userAndStatus = {
+        nickname: store.thisUser.nickname,
+        status: status
+      }
+      this.$socket.emit('updateOnChangingStatus', userAndStatus)
     }
   }
 }
 </script>
 
 <style scoped>
+.column{
+  padding: 0;
+}
+.card-header{
+  padding: 0;
+}
 /*************************************
 2players game
 ***************************************/
@@ -228,12 +231,12 @@ export default{
   box-shadow: 0px 0px 0px 0px;
 }
 
-.blue {
+.purple {
   background-color: #d173d1;
   box-shadow:0 5px 0px 0px purple;
 }
 
-.bluePressed {
+.purplePressed {
   background-color: plum;
 }
 
@@ -241,7 +244,7 @@ export default{
   background-color: #48E68B;
 }
 
-.blue:hover {
+.purple:hover {
   background-color: plum;
 }
 
@@ -255,20 +258,16 @@ export default{
 }
 
 .greenClicked{
-  border: solid 3px #48E68B;
+  border: solid 3px #15B358;
 }
 
-.blueClicked{
-  border: solid 3px plum;
+.purpleClicked{
+  border: solid 3px purple;
 }
 
 .playerName{
   color: black;
   margin-top: -10px;
-}
-
-.card-content{
-  display: flex;
 }
 .game-over{
   margin: auto;

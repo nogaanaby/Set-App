@@ -1,13 +1,42 @@
 to add the game
 
-animations- library or my one css animations file
+current:
 
-MOBILE!!! - make sure the game and start page is ok and arrange the practice and instractions page
-game : end of game + clock
+in the end of the game there is no resetcards state
 
-design - there are staff I can improv, dorn will be the guy dont spend time on it
+the 'play again' button on online game
+there are still the same cards on the table sometimes
 
-dont repit yourself on code:
+update offline2players to have the new cardsContainer
 
-almost every page has the coontext and computed\mounted methods, witch turning complicated every time,
-make sure theres a different component for the canvasses and the drowings
+css- desktop and elements
+
+there is a problum with the @ icons
+
+
+
+user accounts - login
+sql database (leader bord)
+
+google anlytics
+
+domain
+
+rest api
+
+egghead - learn express
+
+לא קשור למשחק:
+משחק של פקודות גיט
+hackerrunk
+open the git project to the word
+add in the redme link to the application
+linkdin: update the resume
+publish the application
+and send to nissim
+javascript es6
+acync await
+var let
+array manipulations -
+foreactch, find, m ap, reduce, filter, etzetra
+Set - its like array

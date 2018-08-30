@@ -1,9 +1,10 @@
+const backGame = require('../services/backGame')
+const cardsDeck = require('../services/cardsDeck')
 class User {
   constructor (nickname, socketId) {
     this.nickname = nickname
     this.socketId = socketId
     this.status = 'availble'
-    this.onPage = ''
   }
 }
 
@@ -41,50 +42,99 @@ class Users {
   }
 }
 
+class Game {
+  constructor () {
+    this.cards81 = cardsDeck.cardsDeckArray
+    this.cards81mixed = []
+
+    for (let i = 0; i < 81; i++) {
+      this.cards81mixed.push(backGame.takeNewCard(this.cards81))
+    }
+  }
+}
+
 class Pvp {
   constructor () {
     this.onlineUsers = new Users()
+    // this.cards81 = cardsDeck.cardsDeckArray
+  }
+  getSocketIdByNickname (nickname) {
+    return this.onlineUsers.getUserByNickname(nickname).socketId
+  }
+  getSocketByNickname (io, nickname) {
+    return io.sockets.connected[this.getSocketIdByNickname(nickname)]
   }
   initSocket (socket, io, newNickname) {
-    // socket.on('reportAllUsersAboutTheNew', () => {
-    //   const newUserSocketId = this.onlineUsers.getUserByNickname(newNickname).socketId
-    //   // 2. call getNewUser to update alll the users about the new one
-    //   console.log(this.onlineUsers.list)
-    //   console.log('newNickname: ' + newNickname)
-    //   this.onlineUsers.list.forEach(user => {
-    //     const currSocket = io.sockets.connected[user.socketId]
-    //     console.log('forEatch online user, all the users: ' + user.nickname)
-    //     currSocket.emit('getNewUser', {
-    //       socketId: newUserSocketId,
-    //       nickname: newNickname
-    //     })
-    //   })
-    // })
+    /*******************
+     * Invitation
+     ******************/
+    // 2. call getNewUser to update alll the users about the new one
+    Object.keys(io.sockets.connected).forEach(key => {
+      const currSocket = io.sockets.connected[key]
+      currSocket.emit('getNewUser', {
+        socketId: this.getSocketIdByNickname(newNickname),
+        nickname: newNickname,
+        status: 'availble'
+      })
+    })
 
     socket.on('sendInvitation', (invited) => {
-      console.log(socket.nickname + ' invites ' + invited)
-      // 1. find the socket of the user whos nickname is 'invited'
-      const peerSocketId = this.onlineUsers.getUserByNickname(invited).socketId
-      const peerSocket = io.sockets.connected[peerSocketId]
-      // 2. emit 'getInvitation' from THAT socket
-      peerSocket.emit('getInvitation', {
+      const cards81 = []
+      cardsDeck.cardsDeckArray.forEach(card => cards81.push(card))
+      const mixed = []
+      for (let i = 0; i < cards81.length + mixed.length; i++) {
+        let card = backGame.takeNewCard(cards81)
+        mixed.push(card)
+      }
+
+      io.sockets.connected[socket.id].emit('getCards', mixed)
+      this.getSocketByNickname(io, invited).emit('getCards', mixed)
+      console.log(invited + ' invite ' + socket.nickname)
+      this.getSocketByNickname(io, invited).emit('getInvitation', {
         socketId: socket.id,
         nickname: socket.nickname
       })
     })
 
     socket.on('refuseInvitation', (sender) => {
-      console.log(sender + ' this is the person who got rejention')
-      console.log(socket.nickname + ' this is the person who reject')
-      const senderSocketId = this.onlineUsers.getUserByNickname(sender).socketId
-      const senderSocket = io.sockets.connected[senderSocketId]
-      senderSocket.emit('getARefuse', {
+      this.getSocketByNickname(io, sender).emit('getARefuse', {
         socketId: socket.id,
         nickname: socket.nickname
       })
     })
 
-    socket.on('and another one...', (payload) => {
+    socket.on('dropGame', (invited) => {
+      this.getSocketByNickname(io, invited).emit('yourOpponentLeft', {
+        socketId: socket.id,
+        nickname: socket.nickname
+      })
+    })
+
+    socket.on('updateOnChangingStatus', (userAndStatus) => {
+      // 2.update alll the users about the new one
+      Object.keys(io.sockets.connected).forEach(key => {
+        const currSocket = io.sockets.connected[key]
+        currSocket.emit('getUpdateOnStatusChangings', userAndStatus)
+      })
+    })
+    /*******************
+     * game
+     ******************/
+    socket.on('acceptInvitation', (sender) => {
+      this.getSocketByNickname(io, sender).emit('getTheAccept', {
+        socketId: socket.id,
+        nickname: socket.nickname
+      })
+    })
+
+    socket.on('letsStartPlay', (invited) => {
+      this.getSocketByNickname(io, invited).emit('closeM')
+      this.getSocketByNickname(io, invited).emit('startTimer')
+      io.sockets.connected[socket.id].emit('startTimer')
+    })
+
+    socket.on('clickCard', (oppAndCard) => {
+      this.getSocketByNickname(io, oppAndCard.nickname).emit('opponentHasClicked', oppAndCard.card)
     })
   }
   nickNameIsTaken (nickname) {
@@ -97,7 +147,6 @@ class Pvp {
     this.initSocket(socket, io, nickname)
   }
   getOnlineUsers () {
-    // console.log(`getOnlineUsers ${JSON.stringify(this.onlineUsers)}`)
     return this.onlineUsers.list
   }
   dismissPlayer (socketId) {
