@@ -27,7 +27,7 @@ export default{
   data () {
     return {
       cardViews: [],
-      cardsDeck: this.cardsData,
+      cardsDeck: JSON.parse(JSON.stringify(this.cardsData)),
       notSet: false,
       set: [],
       whoClicked: 'non'
@@ -47,7 +47,7 @@ export default{
       card.drawCard()
     })
     store.cardV = this.cardViews
-    this.makeSure()
+    backGame.allwaysSetOnTheTable(this.cardViews, this.cardsDeck, 1)
 
     EventBus.$on('findSetEvent', setCard => {
       const hintCardIndex = this.cardViews.findIndex(c => c.shape === setCard.shape && c.color === setCard.color && c.number === setCard.number && c.fill === setCard.fill)
@@ -70,19 +70,6 @@ export default{
     }
   },
   methods: {
-    allwaysSetOnTheTable (cardViewsArray, cardsDeck, i) {
-      while (backGame.findSet(cardViewsArray, 0, 1, 2) === 'no set here' || backGame.haveTheSameCard(cardViewsArray) !== 'non') {
-        cardViewsArray[i].setNewCardAtrr(this.cardsDeck.splice(i, 1)[0])
-      }
-    },
-    makeSure () {
-      if (this.cardViews.length >= 3) {
-        this.allwaysSetOnTheTable(this.cardViews, this.cardsDeck, 1)
-      }
-      if (this.cardsDeck.length < this.length) {
-        this.cardsDeck = this.cardsData
-      }
-    },
     clickCard (card, i) {
       this.click('me', card, 'clicked')
       if (this.from === 'online') {
@@ -133,6 +120,9 @@ export default{
     },
     switchCards () {
       this.cardViews = backGame.switchCards(this.cardViews, this.cardsDeck, this.set)
+      if (this.cardsDeck.length < this.length + 3) {
+        this.cardsDeck = JSON.parse(JSON.stringify(this.cardsData))
+      }
       setTimeout(() => {
         backGame.resetCardState(this.cardViews)
       }, 1000)

@@ -342,7 +342,7 @@ fitures
   border: solid 1px #ff6500;
 }
 .button.is-light-orange:hover{
-  background-color: #e7ab86;
+  background-color: #FFDD58;
   border: solid 2px #f28b4b;
 }
 .button.is-light-orange{

@@ -6,58 +6,58 @@
             <div class="buttons fadeInDown">
 
               <router-link class="link" to="/game">
-               <p class="control">
-                  <a class="button is-large is-light-orange is-fullwidth">
-                    <span class="icon is-small">
-                      <img class="icon" src='@/assets/single.png'>
-                    </span>
+               <!-- <p class="control"> -->
+                  <span class="greenIcon">
+                    <img class="" src='@/assets/singleGreen.png'>
+                  </span>
+                  <a class="button is-large is-light-orange sameSize">
                     <span>Single-Player</span>
                   </a>
-                </p>
+                <!-- </p> -->
                 </router-link>
 
                 <router-link class="link" to="/offlineSignUp">
-                  <p class="control">
-                    <a class="button is-large is-light-orange is-fullwidth">
-                      <span class="icon is-small">
-                        <img class="icon" src='@/assets/multiplayer.png'>
-                      </span>
+                  <!-- <p class="control"> -->
+                    <span class="greenIcon">
+                      <img class="" src='@/assets/multiplayerOffline.png'>
+                    </span>
+                    <a class="button is-large is-light-orange sameSize">
                       <span>multiPlayer offline</span>
                     </a>
-                  </p>
+                  <!-- </p> -->
                 </router-link>
 
                 <router-link class="link" to="/onlineSignUp">
-                  <p class="control">
-                    <a class="button is-large is-light-orange is-fullwidth">
-                      <span class="icon is-small">
-                        <img class="icon" src='@/assets/multiplayer.png'>
-                      </span>
+                  <!-- <p class="control"> -->
+                    <span class="greenIcon">
+                      <img class="" src='@/assets/multiplayerOnline.png'>
+                    </span>
+                    <a class="button is-large is-light-orange sameSize">
                       <span>multiPlayer online</span>
                     </a>
-                  </p>
+                  <!-- </p> -->
                 </router-link>
 
                 <router-link class="link" to="/instractionsTables">
-                  <p class="control">
-                    <a class="button is-large is-light-orange is-fullwidth">
-                      <span class="icon is-small">
-                        <!-- <img class="icon" src='~/assets/HowToIcon.png'> -->
-                      </span>
+                  <!-- <p class="control"> -->
+                    <span class="greenIcon">
+                      <img class="" src='@/assets/instractions.png'>
+                    </span>
+                    <a class="button is-large is-light-orange sameSize">
                       <span>How To Play</span>
                     </a>
-                  </p>
+                  <!-- </p> -->
                 </router-link>
 
                 <router-link class="link" to="/Practice">
-                  <p class="control">
-                    <a class="button is-large is-light-orange is-fullwidth">
-                      <span class="icon is-small">
-                        <img class="icon" src='@/assets/pencil.png'>
-                      </span>
+                  <!-- <p class="control"> -->
+                    <span class="greenIcon">
+                      <img class="" src='@/assets/pencilGreen.png'>
+                    </span>
+                    <a class="button is-large is-light-orange sameSize">
                       <span>Practice!</span>
                     </a>
-                  </p>
+                  <!-- </p> -->
                 </router-link>
             </div>
           </div>
@@ -103,5 +103,20 @@ allDevices
 .link{
   width: 100%;
 }
-
+.greenIcon{
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  height: 3rem;
+  width: 3rem;
+}
+.sameSize{
+  width: 228px;
+}
 </style>
